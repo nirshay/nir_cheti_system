@@ -16,3 +16,18 @@ Simple dashboard that collects and organizes invoices
 
 ## 📊 Status
 Idea → Planning
+
+# Invoice System
+
+## 🎯 Goal
+Build a simple invoice management system
+
+## ⚙️ Tasks
+- [ ] Define core features
+- [ ] Decide MVP scope
+- [ ] Design basic structure
+
+## 📅 Next Daily Tasks
+- [ ] Define core features
+- [ ] Decide MVP scope
+- [ ] Sketch first structure
