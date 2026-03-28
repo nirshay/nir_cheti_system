@@ -31,3 +31,8 @@ Build a simple invoice management system
 - [ ] Define core features
 - [ ] Decide MVP scope
 - [ ] Sketch first structure
+
+## 📅 Next Daily Tasks
+- [ ] Define core features
+- [ ] Decide MVP scope
+- [ ] Sketch first structure
