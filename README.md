@@ -32,3 +32,8 @@ Daily → Ideas → Projects → Execution
 Not everything stays in Daily.
 Daily is for work.
 Only valuable outputs move forward.
+
+### Usage
+
+Work in DAILY during the day.  
+At the end of the day, extract and distribute information into the system.
