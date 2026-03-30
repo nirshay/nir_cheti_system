@@ -7547,13 +7547,13 @@ const Y1_Structure = {
           <div class="yad1-card-name">${v.model}</div>
           <div class="yad1-capabilities">
             <span class="cap-chip"><span class="cap-icon">🐎</span><span class="cap-val">${v.horsepower}</span>&nbsp;כ״ס</span>
-            <span class="cap-chip"><span class="cap-icon">⛓</span><span class="cap-val">${v.towing_capacity.toLocaleString()}</span>&nbsp;ק״ג גרירה</span>
+            ${v.towing_capacity > 0 ? `<span class="cap-chip"><span class="cap-icon">⛓</span><span class="cap-val">${v.towing_capacity.toLocaleString()}</span>&nbsp;ק״ג גרירה</span>` : v.range_or_consumption ? `<span class="cap-chip"><span class="cap-icon">🔋</span><span class="cap-val">${v.range_or_consumption}</span>&nbsp;טווח</span>` : ''}
             <span class="cap-chip"><span class="cap-icon">🔩</span>${v.drivetrain.replace('4X4','4×4')}</span>
             <span class="cap-chip"><span class="cap-icon">⛽</span>${Y1_Engine.ENGINE_TYPE_LABELS[v.engine_type] || v.engine_type}</span>
           </div>
           <div class="yad1-card-footer">
             <div>
-              <div class="yad1-card-price">₪${v.price.toLocaleString()}</div>
+              <div class="yad1-card-price">${v.price > 0 ? '₪' + v.price.toLocaleString() : 'מחיר בהתאמה'}</div>
               <div class="yad1-card-price-note">${v.year} · ייבוא אישי</div>
             </div>
             ${!isSold ? `<div class="yad1-card-cta">
@@ -7568,35 +7568,39 @@ const Y1_Structure = {
   renderCapabilities(v) {
     const engineLabel = Y1_Engine.ENGINE_TYPE_LABELS[v.engine_type] || v.engine_type;
     const driveLabel  = v.drivetrain.replace('4X4', '4×4');
+    const isElectric  = v.engine_type === 'ELECTRIC';
     const items = [
       { icon:'🐎', val: v.horsepower + ' כ״ס', label: 'כוח סוס', desc: 'מנוע ' + engineLabel + ' · ' + v.gearbox },
-      { icon:'⛓', val: v.towing_capacity.toLocaleString() + ' ק״ג', label: 'יכולת גרירה', desc: 'טריילרים, ציוד כבד, סירות' },
-      { icon:'🔩', val: driveLabel, label: 'כונן', desc: 'נעילת דיפרנציאל אחורי + לוקר' },
-      { icon:'⛽', val: v.range_or_consumption, label: 'צריכת דלק', desc: 'בנסיעה מעורבת עיר/כביש' },
-      { icon:'📅', val: String(v.year), label: 'שנת ייצור', desc: 'רכב חדש ישירות מהמפעל' },
-      { icon:'🛡', val: '3 שנות אחריות', label: 'אחריות', desc: 'אחריות יבואן מלאה' },
+      ...(v.towing_capacity > 0 ? [{ icon:'⛓', val: v.towing_capacity.toLocaleString() + ' ק״ג', label: 'יכולת גרירה', desc: '' }] : []),
+      { icon:'🔩', val: driveLabel, label: 'כונן', desc: '' },
+      ...(v.range_or_consumption ? [{ icon: isElectric ? '🔋' : '⛽', val: v.range_or_consumption, label: isElectric ? 'טווח' : 'צריכת דלק', desc: '' }] : []),
+      { icon:'📅', val: String(v.year), label: 'שנת ייצור', desc: '' },
     ];
     return items.map(c => `
       <div class="capability-item">
         <span class="cap-icon-large">${c.icon}</span>
         <div class="cap-value">${c.val}</div>
         <div class="cap-label">${c.label}</div>
-        <div class="cap-desc">${c.desc}</div>
+        ${c.desc ? `<div class="cap-desc">${c.desc}</div>` : ''}
       </div>`).join('');
   },
 
   renderFullSpecs(v) {
     const engineLabel = Y1_Engine.ENGINE_TYPE_LABELS[v.engine_type] || v.engine_type;
     const driveLabel  = v.drivetrain.replace('4X4', '4×4');
+    const isElectric  = v.engine_type === 'ELECTRIC';
     const rows = [
-      ['יצרן', v.manufacturer], ['דגם', v.model], ['שנה', v.year],
-      ['מנוע', engineLabel], ['כוח סוס', v.horsepower + ' כ״ס'],
-      ['כונן', driveLabel], ['תיבת הילוכים', v.gearbox],
-      ['גרירה', v.towing_capacity.toLocaleString() + ' ק״ג'],
-      ['צריכת דלק', v.range_or_consumption],
+      ['יצרן', v.manufacturer],
+      ['דגם', v.model],
+      ['שנה', String(v.year)],
+      ['מנוע', engineLabel],
+      ['כוח סוס', v.horsepower + ' כ״ס'],
+      ['כונן', driveLabel],
+      ['תיבת הילוכים', v.gearbox],
+      ...(v.towing_capacity > 0 ? [['גרירה', v.towing_capacity.toLocaleString() + ' ק״ג']] : []),
+      ...(v.range_or_consumption ? [[isElectric ? 'טווח' : 'צריכת דלק', v.range_or_consumption]] : []),
       ['זמינות', Y1_Engine.AVAIL_LABELS[v.availability] || v.availability],
-      ['מחיר', '₪' + v.price.toLocaleString()],
-      ['אחריות', '3 שנות אחריות'],
+      ...(v.price > 0 ? [['מחיר', '₪' + v.price.toLocaleString()]] : []),
     ];
     return rows.map(([l, v]) => `
       <div class="spec-row">
