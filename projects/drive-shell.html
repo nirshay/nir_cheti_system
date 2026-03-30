@@ -633,15 +633,16 @@ body {
 .hp-hero-stage {
   position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 640px;
+  min-height: 100vh;
+  min-height: max(100vh, 640px);
   display: flex;
   flex-direction: column;
   align-items: center;
   /* Controlled vertical placement — not center which loses header clearance */
   justify-content: flex-start;
   padding-top: calc(64px + 48px); /* fixed header + breathing room */
-  overflow: hidden;
+  padding-bottom: 60px; /* ensure CTAs clear the section bottom */
+  overflow: visible;
   background: #0a0906;
 }
 
@@ -649,6 +650,7 @@ body {
 .hp-stage-bg {
   position: absolute; inset: 0;
   pointer-events: none; z-index: 0;
+  overflow: hidden;
 }
 .hp-stage-bg-radial {
   position: absolute; inset: 0;
