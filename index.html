@@ -5780,6 +5780,7 @@ body {
             <div class="sidebar-user-name">מיכאל כהן</div>
             <div class="sidebar-user-role">Superadmin</div>
           </div>
+          <button class="admin-logout-btn" onclick="AdminAuth.logout()">יציאה</button>
         </div>
       </aside>
 
@@ -6302,6 +6303,7 @@ body {
           <div class="name">מיכאל כהן</div>
           <div class="role">מנהל מכירות</div>
         </div>
+        <button class="admin-logout-btn" onclick="AdminAuth.logout()">יציאה</button>
       </div>
     </div>
 
@@ -9650,6 +9652,179 @@ if (DRIVE_SMART_BTN_ENABLED) {
 })();
 
 }
+</script>
+
+<!-- ============================================================
+     ADMIN LOGIN OVERLAY
+============================================================ -->
+<div id="admin-login-overlay" style="display:none;">
+  <div class="admin-login-box">
+    <div class="admin-login-logo">Drive</div>
+    <div class="admin-login-title">כניסת מנהלים</div>
+    <div class="admin-login-sub">Admin Access Only</div>
+    <div class="admin-login-field">
+      <label class="admin-login-label">אימייל</label>
+      <input id="admin-login-email" class="admin-login-input" type="email" placeholder="admin@drive.local" dir="ltr">
+    </div>
+    <div class="admin-login-field">
+      <label class="admin-login-label">סיסמה</label>
+      <input id="admin-login-password" class="admin-login-input" type="password" placeholder="••••••" dir="ltr">
+    </div>
+    <div id="admin-login-error" class="admin-login-error" style="display:none;">אימייל או סיסמה שגויים</div>
+    <button class="admin-login-btn" onclick="AdminAuth.attempt()">כניסה ←</button>
+    <button class="admin-login-cancel" onclick="AdminAuth.cancelLogin()">ביטול</button>
+  </div>
+</div>
+
+<style>
+#admin-login-overlay {
+  position: fixed; inset: 0; z-index: 99998;
+  background: rgba(5,5,8,0.94);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-login-box {
+  background: #0e1016;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 6px;
+  padding: 40px 36px 32px;
+  width: 340px;
+  display: flex; flex-direction: column; gap: 0;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  font-family: 'Heebo', sans-serif;
+  direction: rtl;
+}
+.admin-login-logo {
+  font-size: 22px; font-weight: 900; color: #c8a84b;
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.admin-login-title {
+  font-size: 20px; font-weight: 800; color: #f0ece4;
+  margin-bottom: 4px;
+}
+.admin-login-sub {
+  font-size: 12px; color: rgba(255,255,255,0.3);
+  letter-spacing: 1px; margin-bottom: 28px;
+}
+.admin-login-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.admin-login-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 1px; text-transform: uppercase; }
+.admin-login-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 14px; color: #f0ece4;
+  outline: none;
+  transition: border-color 180ms;
+}
+.admin-login-input:focus { border-color: #c8a84b; }
+.admin-login-error { font-size: 12px; color: #e05050; margin-bottom: 10px; }
+.admin-login-btn {
+  margin-top: 8px;
+  padding: 12px;
+  background: #c8a84b; color: #000;
+  font-size: 14px; font-weight: 800;
+  border: none; border-radius: 4px;
+  cursor: pointer; font-family: 'Heebo', sans-serif;
+  transition: background 180ms;
+}
+.admin-login-btn:hover { background: #d9ba60; }
+.admin-login-cancel {
+  margin-top: 10px; padding: 8px;
+  background: transparent; color: rgba(255,255,255,0.3);
+  font-size: 12px; border: none; cursor: pointer;
+  font-family: 'Heebo', sans-serif;
+  transition: color 180ms;
+}
+.admin-login-cancel:hover { color: rgba(255,255,255,0.6); }
+.admin-logout-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 3px;
+  color: rgba(255,255,255,0.35);
+  font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: 'Heebo', sans-serif;
+  transition: all 180ms;
+}
+.admin-logout-btn:hover { border-color: #e05050; color: #e05050; }
+</style>
+
+<script>
+const AdminAuth = {
+  CREDS: { email: 'admin@drive.local', password: '123456' },
+  LS_KEY: 'isAdminAuthenticated',
+  _pendingDest: null,
+
+  isAuthenticated() {
+    return localStorage.getItem(this.LS_KEY) === 'true';
+  },
+
+  requireAuth(dest) {
+    if (this.isAuthenticated()) return true;
+    this._pendingDest = dest;
+    document.getElementById('admin-login-overlay').style.display = 'flex';
+    document.getElementById('admin-login-error').style.display = 'none';
+    document.getElementById('admin-login-email').value = '';
+    document.getElementById('admin-login-password').value = '';
+    return false;
+  },
+
+  attempt() {
+    const email    = document.getElementById('admin-login-email').value.trim();
+    const password = document.getElementById('admin-login-password').value;
+    const errEl    = document.getElementById('admin-login-error');
+    if (email === this.CREDS.email && password === this.CREDS.password) {
+      localStorage.setItem(this.LS_KEY, 'true');
+      document.getElementById('admin-login-overlay').style.display = 'none';
+      if (this._pendingDest) {
+        const dest = this._pendingDest;
+        this._pendingDest = null;
+        if (dest === 'y1-admin') { y1_showScreen('admin'); }
+        else { ShellRouter.go('admin'); }
+      }
+    } else {
+      errEl.style.display = 'block';
+    }
+  },
+
+  logout() {
+    localStorage.removeItem(this.LS_KEY);
+    ShellRouter.go('home');
+  },
+
+  cancelLogin() {
+    this._pendingDest = null;
+    document.getElementById('admin-login-overlay').style.display = 'none';
+  },
+};
+
+// Support Enter key on login form
+document.getElementById('admin-login-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') AdminAuth.attempt();
+});
+
+// Intercept ShellRouter admin navigation
+const _origShellGo = ShellRouter.go.bind(ShellRouter);
+ShellRouter.go = function(dest, hash) {
+  if (dest === 'admin' && !AdminAuth.isAuthenticated()) {
+    AdminAuth.requireAuth('admin');
+    return;
+  }
+  _origShellGo(dest, hash);
+};
+
+// Intercept y1_showScreen admin navigation
+const _origY1ShowScreen = y1_showScreen;
+window.y1_showScreen = function(name) {
+  if (name === 'admin' && !AdminAuth.isAuthenticated()) {
+    AdminAuth.requireAuth('y1-admin');
+    return;
+  }
+  _origY1ShowScreen(name);
+};
 </script>
 
 </body>
