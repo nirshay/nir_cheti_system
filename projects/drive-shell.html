@@ -634,14 +634,13 @@ body {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  min-height: max(100vh, 640px);
   display: flex;
   flex-direction: column;
   align-items: center;
   /* Controlled vertical placement — not center which loses header clearance */
   justify-content: flex-start;
   padding-top: calc(64px + 48px); /* fixed header + breathing room */
-  padding-bottom: 60px; /* ensure CTAs clear the section bottom */
+  padding-bottom: 120px;
   overflow: visible;
   background: #0a0906;
 }
@@ -1098,7 +1097,7 @@ body {
 
 /* ── MOBILE ────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .hp-hero-stage { height: auto; min-height: 100vh; padding-top: calc(64px + 24px); padding-bottom: 32px; }
+  .hp-hero-stage { min-height: 100vh; padding-top: calc(64px + 24px); padding-bottom: 120px; }
   .hp-stage-scene { height: 260px; perspective: 800px; transform: scale(1); }
   .hp-stage-platform-wrap { width: 500px; height: 500px; }
   .hp-stage-floor { width: 500px; height: 500px; }
