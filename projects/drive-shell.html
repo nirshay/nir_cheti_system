@@ -5314,15 +5314,15 @@ body {
 
   <!-- Active vehicle info panel — updated by controller -->
   <div class="hp-stage-info" id="hp-stage-info">
-    <div class="hp-stage-info-brand" id="hp-stage-info-brand">GMC</div>
-    <div class="hp-stage-info-model" id="hp-stage-info-model">Sierra 2500HD</div>
+    <div class="hp-stage-info-brand" id="hp-stage-info-brand">Chevrolet</div>
+    <div class="hp-stage-info-model" id="hp-stage-info-model">Silverado Trailboss</div>
     <div class="hp-stage-info-year"  id="hp-stage-info-year">2024</div>
     <div class="hp-stage-info-specs" id="hp-stage-info-specs">
-      <span id="hp-stage-info-hp">420 כ״ס</span>
+      <span id="hp-stage-info-hp">725 כ״ס</span>
       <span class="hp-stage-info-dot">·</span>
-      <span id="hp-stage-info-drive">4×4</span>
+      <span id="hp-stage-info-drive">FWD</span>
       <span class="hp-stage-info-dot">·</span>
-      <span id="hp-stage-info-tow">5,670 ק״ג גרירה</span>
+      <span id="hp-stage-info-tow">764 קמ׳ טווח</span>
     </div>
     <div class="hp-stage-info-ctas">
       <button class="hp-stage-cta-primary" id="hp-stage-cta-primary"
@@ -5619,10 +5619,10 @@ body {
         <div class="hero-content">
           <div class="hero-eyebrow">
             <span class="hero-eyebrow-line"></span>
-            <span id="y1-heroEyebrow">GMC · Sierra 1500</span>
+            <span id="y1-heroEyebrow">Chevrolet · Silverado</span>
           </div>
-          <h1 class="hero-title" id="y1-heroTitle">Sierra<br><em>2500HD</em></h1>
-          <p class="hero-tagline" id="y1-heroTagline">Denali Ultimate. גרסת הדגל. נוצרה לגרור יותר, לעבוד יותר, להרשים יותר.</p>
+          <h1 class="hero-title" id="y1-heroTitle">Silverado<br><em>Trailboss</em></h1>
+          <p class="hero-tagline" id="y1-heroTagline">כוח חשמלי. פורצניע אמריקאי.</p>
           <div class="hero-ctas">
             <button class="btn-hero-primary" onclick="y1_logLead('whatsapp')">
               💬 שלחו לנו וואטסאפ
@@ -7148,7 +7148,18 @@ const HP_TurntableController = {
     document.getElementById('hp-stage-info-year').textContent  = v.year;
     document.getElementById('hp-stage-info-hp').textContent    = `${v.horsepower} כ״ס`;
     document.getElementById('hp-stage-info-drive').textContent = (v.drivetrain || '4X4').replace('4X4','4×4');
-    document.getElementById('hp-stage-info-tow').textContent   = `${(v.towing_capacity||0).toLocaleString()} ק״ג גרירה`;
+    const towEl = document.getElementById('hp-stage-info-tow');
+    if (towEl) {
+      if (v.towing_capacity > 0) {
+        towEl.textContent = v.towing_capacity.toLocaleString() + ' ק״ג גרירה';
+        towEl.style.display = '';
+      } else if (v.engine_type === 'ELECTRIC' && v.range_km) {
+        towEl.textContent = v.range_km + ' קמ׳ טווח';
+        towEl.style.display = '';
+      } else {
+        towEl.style.display = 'none';
+      }
+    }
 
     const waBtn = document.getElementById('hp-stage-cta-wa');
     if (waBtn) {
