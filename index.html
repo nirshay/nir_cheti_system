@@ -10156,7 +10156,7 @@ const AdminApp = {
 
     return '<div class="adm-screen"><div class="adm-topbar">' +
       '<h1 class="adm-title">יד 1 — ניהול מלאי</h1>' +
-      '<button class="adm-btn adm-btn-primary" onclick="AdminApp.editY1(null)">+ הוסף רכב</button>' +
+      '<button class="adm-btn" style="background:#1a4731;color:#a8d5b5;border:1px solid #2a6344;" onclick="AdminApp.editY1(null)">+ הוסף רכב</button>' +
       '</div><div class="adm-content">' +
       '<div class="adm-panel" style="overflow-x:auto">' +
       '<div class="adm-panel-head">כלי רכב (' + veh.length + ')</div>' +
@@ -10188,13 +10188,13 @@ const AdminApp = {
       '<div class="adm-form-grid">' +
         '<div class="adm-field"><label>יצרן</label><input class="adm-input" id="af-y1-manufacturer" value="' + this._esc(v.manufacturer||'') + '"></div>' +
         '<div class="adm-field"><label>דגם</label><input class="adm-input" id="af-y1-model" value="' + this._esc(v.model||'') + '"></div>' +
-        '<div class="adm-field"><label>שנה</label><input class="adm-input" id="af-y1-year" type="number" value="' + this._esc(v.year||2024) + '"></div>' +
-        '<div class="adm-field"><label>כוח סוס</label><input class="adm-input" id="af-y1-hp" type="number" value="' + this._esc(v.horsepower||0) + '"></div>' +
+        '<div class="adm-field"><label>שנה</label><input class="adm-input" id="af-y1-year" type="text" inputmode="numeric" pattern="[0-9]*" value="' + this._esc(v.year || '') + '"></div>' +
+        '<div class="adm-field"><label>כוח סוס</label><input class="adm-input" id="af-y1-hp" type="text" inputmode="numeric" pattern="[0-9]*" value="' + this._esc(v.horsepower || '') + '"></div>' +
         '<div class="adm-field"><label>סוג מנוע</label><select class="adm-select" id="af-y1-engine_type">' + etOpts + '</select></div>' +
         '<div class="adm-field"><label>הנעה</label><select class="adm-select" id="af-y1-drivetrain">' + drOpts + '</select></div>' +
         '<div class="adm-field"><label>טווח / צריכה</label><input class="adm-input" id="af-y1-range" value="' + this._esc(v.range_or_consumption||'') + '"></div>' +
-        '<div class="adm-field"><label>כושר גרירה (ק״ג)</label><input class="adm-input" id="af-y1-towing" type="number" value="' + this._esc(v.towing_capacity||0) + '"></div>' +
-        '<div class="adm-field"><label>מחיר (₪)</label><input class="adm-input" id="af-y1-price" type="number" value="' + this._esc(v.price||0) + '"></div>' +
+        '<div class="adm-field"><label>כושר גרירה (ק״ג)</label><input class="adm-input" id="af-y1-towing" type="text" inputmode="numeric" pattern="[0-9]*" value="' + this._esc(v.towing_capacity || '') + '"></div>' +
+        '<div class="adm-field"><label>מחיר (₪)</label><input class="adm-input" id="af-y1-price" type="text" inputmode="numeric" pattern="[0-9]*" value="' + this._esc(v.price || '') + '"></div>' +
         '<div class="adm-field"><label>זמינות</label><select class="adm-select" id="af-y1-availability">' + avOpts + '</select></div>' +
         '<div class="adm-field"><label>תמונה (URL)</label><input class="adm-input" id="af-y1-image_url" value="' + this._esc((v.images||[])[0]||'') + '"></div>' +
         '<div class="adm-field" style="justify-content:flex-end;padding-top:20px">' +
@@ -10213,7 +10213,13 @@ const AdminApp = {
     this._y1EditId = id;
     this._y1ShowForm = true;
     const main = document.getElementById('adm-main');
-    if (main) main.innerHTML = this._tYad1();
+    if (main) {
+      main.innerHTML = this._tYad1();
+      requestAnimationFrame(() => {
+        const form = document.getElementById('adm-y1-form');
+        if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
   },
 
   saveY1(id) {
@@ -10305,7 +10311,7 @@ const AdminApp = {
       '<div class="adm-toolbar">' +
         '<input class="adm-search-input" placeholder="מספר מודעה..." id="adm-y2-ad" oninput="AdminApp._applyY2Filter()"' + adVal + '>' +
         '<input class="adm-search-input" placeholder="יצרן..." id="adm-y2-mfr" oninput="AdminApp._applyY2Filter()"' + mfrVal + '>' +
-        '<input class="adm-search-input" placeholder="מחיר מקסימום..." type="number" id="adm-y2-maxprice" oninput="AdminApp._applyY2Filter()"' + mpVal + '>' +
+        '<input class="adm-search-input" placeholder="מחיר מקסימום..." type="text" inputmode="numeric" id="adm-y2-maxprice" oninput="AdminApp._applyY2Filter()"' + mpVal + '>' +
         '<button class="adm-btn adm-btn-sec" onclick="AdminApp._clearY2Filter()">נקה</button>' +
       '</div>' +
       '<div class="adm-panel" style="overflow-x:auto">' +
@@ -10357,7 +10363,7 @@ const AdminApp = {
         '<div class="adm-field"><label>דגם</label><input class="adm-input" id="af-y2-model" value="' + this._esc(v.model||'') + '"></div>' +
         '<div class="adm-field"><label>תת-דגם</label><input class="adm-input" id="af-y2-sub_model" value="' + this._esc(v.sub_model||'') + '"></div>' +
         '<div class="adm-field"><label>שנה</label><input class="adm-input" id="af-y2-year" type="number" value="' + this._esc(v.year||2023) + '"></div>' +
-        '<div class="adm-field"><label>מחיר (₪)</label><input class="adm-input" id="af-y2-price" type="number" value="' + this._esc(v.price||0) + '"></div>' +
+        '<div class="adm-field"><label>מחיר (₪)</label><input class="adm-input" id="af-y2-price" type="text" inputmode="numeric" value="' + this._esc(v.price || '') + '"></div>' +
         '<div class="adm-field"><label>ק״מ</label><input class="adm-input" id="af-y2-km" type="number" value="' + this._esc(v.km||0) + '"></div>' +
         '<div class="adm-field"><label>יד</label><input class="adm-input" id="af-y2-hand" type="number" value="' + this._esc(v.hand||1) + '"></div>' +
         '<div class="adm-field"><label>תיבת הילוכים</label><select class="adm-select" id="af-y2-gearbox">' + gbOpts + '</select></div>' +
