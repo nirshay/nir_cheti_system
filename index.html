@@ -1137,7 +1137,7 @@ body {
   position: relative;
   display: flex; flex-direction: column;
   justify-content: flex-end;
-  padding: 56px 48px 40px;
+  padding: 64px 56px;
   overflow: hidden;
   cursor: pointer;
   transition: flex-grow 480ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -1254,63 +1254,44 @@ body {
   transition: transform 220ms ease;
 }
 .panel-cta:hover .panel-cta-arrow { transform: translateX(-3px); }
-/* ── SPLIT PANEL — heading block + vehicle preview grid ─── */
-.hp-split-head {
-  display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px;
-  margin-bottom: 16px;
-}
+/* ── SPLIT PANEL — vehicle preview grid ────────────────── */
 .hp-split-title {
-  font-size: clamp(34px, 3.8vw, 46px); font-weight: 900;
-  letter-spacing: -2px; line-height: 1.0; margin: 0;
+  font-size: 42px; font-weight: 800; letter-spacing: -1.5px;
+  line-height: 1.1; margin: 8px 0 18px;
 }
 .hp-split-title-y1 {
-  background: linear-gradient(130deg, #c8a84b 0%, #f97316 100%);
+  background: linear-gradient(130deg, #3b82f6 0%, #f97316 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.hp-split-title-y2 {
-  font-size: clamp(34px, 3.8vw, 46px); color: #1a2745;
-}
-.hp-split-count-badge {
-  display: inline-flex; align-items: center;
-  padding: 3px 11px; border-radius: 20px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
-  white-space: nowrap;
-  background: rgba(200,168,75,0.13); border: 1px solid rgba(200,168,75,0.28);
-  color: #c8a84b;
-}
-[data-theme="split-yad2"] .hp-split-count-badge {
-  background: rgba(35,86,232,0.08); border-color: rgba(35,86,232,0.22);
-  color: #2356e8;
-}
+.hp-split-title-y2 { font-size: 36px; color: #111; }
 .hp-split-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px;
 }
 .hp-split-item {
-  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
   border-radius: 8px; padding: 8px; cursor: pointer;
   transition: background 160ms ease;
 }
-.hp-split-item:hover { background: rgba(255,255,255,0.14); }
+.hp-split-item:hover { background: rgba(255,255,255,0.13); }
 [data-theme="split-yad2"] .hp-split-item {
-  background: rgba(26,39,69,0.06); border: 1px solid rgba(26,39,69,0.13);
+  background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.09);
 }
-[data-theme="split-yad2"] .hp-split-item:hover { background: rgba(26,39,69,0.11); }
+[data-theme="split-yad2"] .hp-split-item:hover { background: rgba(0,0,0,0.09); }
 .hp-split-item-img {
-  width: 100%; aspect-ratio: 16/9; border-radius: 5px; margin-bottom: 7px;
-  background: rgba(255,255,255,0.06); display: flex;
+  width: 100%; aspect-ratio: 16/9; border-radius: 5px; margin-bottom: 6px;
+  background: rgba(255,255,255,0.05); display: flex;
   align-items: center; justify-content: center;
-  font-size: 28px; overflow: hidden;
+  font-size: 26px; overflow: hidden;
 }
-[data-theme="split-yad2"] .hp-split-item-img { background: rgba(26,39,69,0.07); }
 .hp-split-item-img img { width: 100%; height: 100%; object-fit: cover; }
 .hp-split-item-model {
   font-size: 11.5px; font-weight: 700; color: #f0ece6;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;
 }
-[data-theme="split-yad2"] .hp-split-item-model { color: #1a2745; }
+[data-theme="split-yad2"] .hp-split-item-model { color: #111; }
 .hp-split-item-price { font-size: 11px; color: rgba(240,236,230,0.55); font-weight: 500; }
-[data-theme="split-yad2"] .hp-split-item-price { color: #4a5270; }
+[data-theme="split-yad2"] .hp-split-item-price { color: #555; }
 
 /* Divider line between panels */
 .split-divider {
@@ -5452,11 +5433,13 @@ body {
   <!-- YAD1 PANEL — left (RTL: first) -->
   <div class="split-panel" data-theme="split-yad1" onclick="ShellRouter.go('yad1')">
     <div class="panel-bg-emoji">🛻</div>
+    <div class="panel-count">
+      <span class="panel-count-num" id="hp-panelYad1Count">6</span>
+      <span>דגמים זמינים</span>
+    </div>
     <div class="panel-content">
-      <div class="hp-split-head">
-        <h2 class="hp-split-title hp-split-title-y1">רכבים חדשים</h2>
-        <span class="hp-split-count-badge"><span id="hp-panelYad1Count">6</span> דגמים</span>
-      </div>
+      <div class="panel-tag">יד 1 — ייבוא אישי</div>
+      <h2 class="hp-split-title hp-split-title-y1">רכבים חדשים</h2>
       <div class="hp-split-grid" id="hp-split-y1-grid"></div>
       <button class="panel-cta" onclick="event.stopPropagation();ShellRouter.go('yad1')">
         קרא עוד
@@ -5468,11 +5451,13 @@ body {
   <!-- YAD2 PANEL — right (RTL: second) -->
   <div class="split-panel" data-theme="split-yad2" onclick="ShellRouter.go('yad2')">
     <div class="panel-bg-emoji">🚗</div>
+    <div class="panel-count">
+      <span class="panel-count-num" id="hp-panelYad2Count">142</span>
+      <span>רכבים במלאי</span>
+    </div>
     <div class="panel-content">
-      <div class="hp-split-head">
-        <h2 class="hp-split-title hp-split-title-y2">רכבים יד 2</h2>
-        <span class="hp-split-count-badge"><span id="hp-panelYad2Count">142</span> רכבים</span>
-      </div>
+      <div class="panel-tag">יד 2 — מלאי עשיר</div>
+      <h2 class="hp-split-title hp-split-title-y2">רכבים יד 2</h2>
       <div class="hp-split-grid" id="hp-split-y2-grid"></div>
       <button class="panel-cta" onclick="event.stopPropagation();ShellRouter.go('yad2')">
         קרא עוד
