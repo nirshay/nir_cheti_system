@@ -1261,10 +1261,22 @@ body {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
 }
 .hp-split-item {
+  position: relative;
   background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
   border-radius: 12px; padding: 14px; cursor: pointer;
   transition: background 160ms ease;
 }
+.hp-split-item::after {
+  content: '›';
+  position: absolute; bottom: 10px; right: 12px;
+  font-size: 16px; font-weight: 300;
+  color: rgba(255,255,255,0.22);
+  transition: color 160ms ease;
+  pointer-events: none;
+}
+.hp-split-item:hover::after { color: rgba(255,255,255,0.55); }
+[data-theme="split-yad2"] .hp-split-item::after { color: rgba(0,0,0,0.15); }
+[data-theme="split-yad2"] .hp-split-item:hover::after { color: rgba(0,0,0,0.38); }
 .hp-split-item:hover { background: rgba(255,255,255,0.13); }
 [data-theme="split-yad2"] .hp-split-item {
   background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.09);
@@ -6022,7 +6034,7 @@ body {
       <header class="yad2-header">
         <div class="yad2-header-top" dir="ltr">
           <div>
-            <div class="yad2-logo-wrap" onclick="y2_showScreen('catalog')" style="cursor:pointer;">
+            <div class="yad2-logo-wrap" onclick="ShellRouter.go('home')" style="cursor:pointer;">
               <img class="y2-logo-img" src="./image.png" alt="Drive Car Rental">
             </div>
           </div>
@@ -6148,7 +6160,7 @@ body {
       <header class="yad2-header">
         <div class="yad2-header-top" dir="ltr">
           <div>
-            <div class="yad2-logo-wrap" onclick="y2_showScreen('catalog')" style="cursor:pointer;">
+            <div class="yad2-logo-wrap" onclick="ShellRouter.go('home')" style="cursor:pointer;">
               <img class="y2-logo-img" src="./image.png" alt="Drive Car Rental">
             </div>
           </div>
