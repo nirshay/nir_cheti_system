@@ -5545,7 +5545,7 @@ body {
         onmouseover="this.style.background='rgba(255,255,255,0.10)'"
         onmouseout="this.style.background='rgba(255,255,255,0.06)'"
       >
-        📞 050-000-0000
+        📞 08-6605010
       </button>
     </div>
   </div>
@@ -5719,7 +5719,7 @@ body {
                 💬 שלחו וואטסאפ — תגובה מיידית
               </button>
               <button class="btn-lead-phone" onclick="y1_logLead('phone')">
-                📞 050-000-0000 — חייגו עכשיו
+                📞 08-6605010 — חייגו עכשיו
               </button>
             </div>
           </div>
@@ -5732,7 +5732,7 @@ body {
               </div>
               <div class="lead-form-field">
                 <label class="lead-form-label">טלפון</label>
-                <input class="lead-form-input" type="tel" placeholder="050-000-0000">
+                <input class="lead-form-input" type="tel" placeholder="08-6605010">
               </div>
               <div class="lead-form-field">
                 <label class="lead-form-label">הודעה (אופציונלי)</label>
@@ -6271,7 +6271,7 @@ body {
               </div>
               <div class="cta-block">
                 <button class="btn btn-wa" onclick="y2_logLead('whatsapp')">💬 וואטסאפ — צרו קשר</button>
-                <button class="btn btn-phone" onclick="y2_logLead('phone')">📞 050-123-4567</button>
+                <button class="btn btn-phone" onclick="y2_logLead('phone')">📞 08-6605010</button>
               </div>
               <div class="lead-form">
                 <div class="lead-form-title">השאירו פרטים ונחזור אליכם</div>
@@ -7420,7 +7420,8 @@ const HP_TurntableController = {
       const name = `${v.manufacturer} ${v.model} ${v.year}`;
       waBtn.onclick = () => {
         HP_Engine.captureLead({ source:'WHATSAPP', car_id:id, car_name:name, listing_type:'yad1' });
-        alert('💬 פותח וואטסאפ...\nהפנייה נרשמה.');
+        const txt = `שלום, אני מעוניין ב-${name}`;
+        window.open('https://wa.me/972549320181?text=' + encodeURIComponent(txt), '_blank');
       };
     }
 
@@ -7448,11 +7449,12 @@ function logContact(source, carId, carName) {
     listing_type: carId ? (carId.startsWith('y1') ? 'yad1' : 'yad2') : 'general',
     name: '', phone: '',
   });
-  const msgs = {
-    whatsapp: '💬 פותח וואטסאפ...',
-    phone:    '📞 מחייג...',
-  };
-  if (msgs[source]) alert(msgs[source] + '\nהפנייה נרשמה.');
+  if (source === 'whatsapp') {
+    const txt = carName ? `שלום, אני מעוניין ב-${carName}` : 'שלום, אני מעוניין לקבל מידע על רכב';
+    window.open('https://wa.me/972549320181?text=' + encodeURIComponent(txt), '_blank');
+  } else if (source === 'phone') {
+    window.open('tel:0866050010');
+  }
 }
 
 function submitContactForm() {
@@ -8098,8 +8100,14 @@ function y1_logLead(source, carId, carName) {
     car_id: id, car_name: name,
     listing_type: 'yad1', source: source.toUpperCase()
   });
-  const msg = { whatsapp: '💬 פותח וואטסאפ...', phone: '📞 מחייג...', form: '✅ הפנייה נשלחה!' }[source] || '✅';
-  alert(msg + '\nהליד נרשם במערכת.');
+  if (source === 'whatsapp') {
+    const txt = name ? `שלום, אני מעוניין ב-${name}` : 'שלום, אני מעוניין לקבל מידע על רכב';
+    window.open('https://wa.me/972549320181?text=' + encodeURIComponent(txt), '_blank');
+  } else if (source === 'phone') {
+    window.open('tel:0866050010');
+  } else {
+    alert('✅ הפנייה נשלחה!\nנציג ייצור איתך קשר בהקדם.');
+  }
 }
 
 function y1_toggleFeatured(id) {
@@ -8617,7 +8625,14 @@ function y2_logLead(source, carId, carName) {
     source: source.toUpperCase(),
     message: ''
   });
-  alert(`✅ פנייה נרשמה!\nמקור: ${source}\nמזהה: ${lead.id}`);
+  if (source === 'whatsapp') {
+    const txt = carName ? `שלום, אני מעוניין ב-${carName}` : 'שלום, אני מעוניין לקבל מידע על רכב';
+    window.open('https://wa.me/972549320181?text=' + encodeURIComponent(txt), '_blank');
+  } else if (source === 'phone') {
+    window.open('tel:0866050010');
+  } else {
+    alert('✅ הפנייה נשלחה!\nנציג ייצור איתך קשר בהקדם.');
+  }
 }
 
 function y2_renderDashboard() {
