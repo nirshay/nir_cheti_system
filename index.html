@@ -6690,7 +6690,198 @@ body {
 
   </div><!-- /shell-yad2 -->
 
+  <!-- ============================================================
+       SECTION: UNIFIED ADMIN PANEL
+  ============================================================ -->
+  <div class="shell-section" id="shell-admin">
+  <div class="adm-app" data-theme="adm">
+    <aside class="adm-sidebar">
+      <div class="adm-brand">
+        <div class="adm-brand-name">Drive</div>
+        <div class="adm-brand-sub">מערכת ניהול</div>
+      </div>
+      <nav class="adm-nav">
+        <div class="adm-nav-section">ראשי</div>
+        <div class="adm-nav-item active" data-screen="dashboard" onclick="AdminApp.showScreen('dashboard')">
+          <span>◼</span><span>דשבורד</span>
+        </div>
+        <div class="adm-nav-section">מלאי</div>
+        <div class="adm-nav-item" data-screen="yad1" onclick="AdminApp.showScreen('yad1')">
+          <span>⭐</span><span>יד 1 — פרמיום</span>
+        </div>
+        <div class="adm-nav-item" data-screen="yad2" onclick="AdminApp.showScreen('yad2')">
+          <span>🚗</span><span>יד 2 — מלאי</span>
+        </div>
+        <div class="adm-nav-section">תוכן</div>
+        <div class="adm-nav-item" data-screen="homepage" onclick="AdminApp.showScreen('homepage')">
+          <span>🏠</span><span>עמוד הבית</span>
+        </div>
+        <div class="adm-nav-item" data-screen="smartbtn" onclick="AdminApp.showScreen('smartbtn')">
+          <span>🔘</span><span>כפתור חכם</span>
+        </div>
+        <div class="adm-nav-section">תפעול</div>
+        <div class="adm-nav-item" data-screen="leads" onclick="AdminApp.showScreen('leads')">
+          <span>📋</span><span>לידים</span>
+          <span class="adm-count" id="adm-leads-badge"></span>
+        </div>
+      </nav>
+      <div class="adm-sidebar-footer">
+        <span class="adm-user-label">admin</span>
+        <button class="adm-logout-btn" onclick="AdminAuth.logout()">יציאה</button>
+      </div>
+    </aside>
+    <div class="adm-main" id="adm-main"></div>
+  </div>
+  </div><!-- /shell-admin -->
+
 </div><!-- /drive-shell -->
+
+<style>
+/* ============================================================
+   ADMIN MVP — Unified Admin Panel (adm- prefix)
+   Front-end demo only. Not production auth.
+   ============================================================ */
+[data-theme="adm"] {
+  --adm-bg:       #080a0e;
+  --adm-surface:  #0e1116;
+  --adm-surface2: #14181f;
+  --adm-border:   rgba(255,255,255,0.07);
+  --adm-border2:  rgba(255,255,255,0.13);
+  --adm-gold:     #c8a84b;
+  --adm-gold-dim: rgba(200,168,75,0.14);
+  --adm-text:     #e2ddd8;
+  --adm-text2:    #9e9e9e;
+  --adm-text3:    #4a4a4a;
+  --adm-red:      #e05050;
+  --adm-green:    #3dcb7a;
+  --adm-blue:     #4a90d9;
+  --adm-sw:       220px;
+}
+#shell-admin { font-family:'Heebo',sans-serif; }
+.adm-app { display:flex; min-height:100vh; background:var(--adm-bg); color:var(--adm-text); direction:rtl; }
+
+/* Sidebar */
+.adm-sidebar { width:var(--adm-sw); min-height:100vh; background:var(--adm-surface); border-left:1px solid var(--adm-border); display:flex; flex-direction:column; flex-shrink:0; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.adm-brand { padding:22px 20px 14px; border-bottom:1px solid var(--adm-border); }
+.adm-brand-name { font-size:17px; font-weight:900; color:var(--adm-gold); letter-spacing:2px; text-transform:uppercase; }
+.adm-brand-sub { font-size:11px; color:var(--adm-text3); margin-top:2px; }
+.adm-nav { flex:1; padding:10px 8px; }
+.adm-nav-section { font-size:10px; color:var(--adm-text3); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 12px 4px; }
+.adm-nav-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:5px; cursor:pointer; font-size:14px; font-weight:500; color:var(--adm-text2); transition:all 170ms ease; margin-bottom:2px; }
+.adm-nav-item:hover { background:rgba(255,255,255,0.05); color:var(--adm-text); }
+.adm-nav-item.active { background:var(--adm-gold-dim); color:var(--adm-gold); }
+.adm-count { margin-right:auto; font-size:11px; background:var(--adm-red); color:#fff; border-radius:10px; padding:1px 6px; font-weight:700; }
+.adm-sidebar-footer { padding:14px 20px; border-top:1px solid var(--adm-border); display:flex; align-items:center; gap:10px; }
+.adm-user-label { font-size:13px; color:var(--adm-text2); flex:1; }
+.adm-logout-btn { background:none; border:1px solid var(--adm-border2); color:var(--adm-text2); padding:5px 12px; border-radius:4px; cursor:pointer; font-size:12px; font-family:'Heebo',sans-serif; transition:150ms; }
+.adm-logout-btn:hover { border-color:var(--adm-red); color:var(--adm-red); }
+
+/* Main */
+.adm-main { flex:1; display:flex; flex-direction:column; min-width:0; background:var(--adm-bg); }
+.adm-screen { flex:1; display:flex; flex-direction:column; }
+.adm-topbar { padding:20px 32px 16px; border-bottom:1px solid var(--adm-border); display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.adm-title { font-size:20px; font-weight:700; color:var(--adm-text); margin:0; flex:1; }
+.adm-content { padding:28px 32px; flex:1; }
+
+/* Summary cards */
+.adm-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:32px; }
+.adm-card { background:var(--adm-surface); border:1px solid var(--adm-border); border-radius:8px; padding:20px 20px 16px; }
+.adm-card-num { font-size:32px; font-weight:800; color:var(--adm-text); line-height:1; }
+.adm-card-label { font-size:14px; font-weight:600; color:var(--adm-text); margin-top:8px; }
+.adm-card-sub { font-size:12px; color:var(--adm-text3); margin-top:3px; }
+.adm-card-alert .adm-card-num { color:var(--adm-gold); }
+.adm-card-ok .adm-card-num { color:var(--adm-green); }
+.adm-card-off .adm-card-num { color:var(--adm-text3); }
+
+/* Two-col section row */
+.adm-section-row { display:grid; grid-template-columns:1fr 280px; gap:16px; }
+
+/* Panels */
+.adm-panel { background:var(--adm-surface); border:1px solid var(--adm-border); border-radius:8px; overflow:hidden; }
+.adm-panel-head { padding:13px 20px; border-bottom:1px solid var(--adm-border); font-size:13px; font-weight:700; color:var(--adm-text2); letter-spacing:0.5px; }
+
+/* Tables */
+.adm-table { width:100%; border-collapse:collapse; font-size:13px; }
+.adm-table th { padding:10px 14px; text-align:right; background:var(--adm-surface2); color:var(--adm-text3); font-weight:700; font-size:11px; letter-spacing:0.5px; border-bottom:1px solid var(--adm-border); white-space:nowrap; }
+.adm-table td { padding:9px 14px; border-bottom:1px solid var(--adm-border); color:var(--adm-text); vertical-align:middle; }
+.adm-table tr:last-child td { border-bottom:none; }
+.adm-table tr:hover td { background:rgba(255,255,255,0.02); }
+
+/* Badges */
+.adm-badge-tag { display:inline-block; padding:2px 8px; border-radius:3px; font-size:10px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; background:var(--adm-gold-dim); color:var(--adm-gold); }
+.adm-badge-tag.yad2 { background:rgba(74,144,217,0.14); color:var(--adm-blue); }
+.adm-badge-tag.homepage { background:rgba(61,203,122,0.13); color:var(--adm-green); }
+.adm-badge-tag.smart_button { background:rgba(224,80,80,0.12); color:var(--adm-red); }
+
+/* Buttons */
+.adm-btn { padding:8px 16px; border-radius:5px; font-family:'Heebo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:150ms; border:none; }
+.adm-btn-primary { background:var(--adm-gold); color:#0a0906; }
+.adm-btn-primary:hover { background:#d8bc6a; }
+.adm-btn-sec { background:var(--adm-surface2); color:var(--adm-text); border:1px solid var(--adm-border2); }
+.adm-btn-sec:hover { border-color:var(--adm-gold); color:var(--adm-gold); }
+.adm-btn-danger { background:rgba(224,80,80,0.12); color:var(--adm-red); border:1px solid rgba(224,80,80,0.2); }
+.adm-btn-danger:hover { background:rgba(224,80,80,0.25); }
+.adm-btn-sm { padding:5px 10px; font-size:12px; }
+
+/* Toolbar */
+.adm-toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:20px; }
+.adm-search-input { background:var(--adm-surface); border:1px solid var(--adm-border2); color:var(--adm-text); padding:8px 14px; border-radius:5px; font-family:'Heebo',sans-serif; font-size:13px; width:200px; direction:rtl; }
+.adm-search-input:focus { outline:none; border-color:var(--adm-gold); }
+.adm-filter-select { background:var(--adm-surface); border:1px solid var(--adm-border2); color:var(--adm-text); padding:8px 12px; border-radius:5px; font-family:'Heebo',sans-serif; font-size:13px; cursor:pointer; }
+.adm-filter-select:focus { outline:none; border-color:var(--adm-gold); }
+
+/* Quick actions */
+.adm-quick-actions { padding:16px; display:flex; flex-direction:column; gap:8px; }
+
+/* Forms */
+.adm-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.adm-form-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+.adm-field { display:flex; flex-direction:column; gap:6px; }
+.adm-field label { font-size:12px; font-weight:600; color:var(--adm-text2); }
+.adm-input,.adm-select,.adm-textarea { background:var(--adm-surface); border:1px solid var(--adm-border2); color:var(--adm-text); padding:9px 12px; border-radius:5px; font-family:'Heebo',sans-serif; font-size:13px; direction:rtl; width:100%; box-sizing:border-box; }
+.adm-input:focus,.adm-select:focus,.adm-textarea:focus { outline:none; border-color:var(--adm-gold); }
+.adm-textarea { resize:vertical; min-height:80px; }
+.adm-form-card { background:var(--adm-surface); border:1px solid var(--adm-border); border-radius:8px; padding:24px; margin-top:24px; }
+.adm-form-head { font-size:14px; font-weight:700; color:var(--adm-text); margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--adm-border); display:flex; align-items:center; gap:10px; }
+.adm-form-actions { display:flex; gap:10px; margin-top:20px; }
+
+/* Toggle */
+.adm-toggle { display:flex; align-items:center; gap:10px; cursor:pointer; }
+.adm-toggle-track { width:40px; height:22px; border-radius:11px; background:var(--adm-text3); position:relative; transition:background 200ms ease; cursor:pointer; }
+.adm-toggle-track.on { background:var(--adm-green); }
+.adm-toggle-thumb { position:absolute; top:3px; right:3px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform 200ms ease; }
+.adm-toggle-track.on .adm-toggle-thumb { transform:translateX(-18px); }
+.adm-toggle-label { font-size:13px; color:var(--adm-text); }
+
+/* Status chips */
+.adm-status { display:inline-block; padding:3px 8px; border-radius:3px; font-size:11px; font-weight:700; }
+.adm-status-active { background:rgba(61,203,122,0.14); color:var(--adm-green); }
+.adm-status-order  { background:rgba(200,168,75,0.14); color:var(--adm-gold); }
+.adm-status-sold   { background:rgba(224,80,80,0.12); color:var(--adm-red); }
+
+/* Star */
+.adm-star { cursor:pointer; font-size:16px; opacity:0.25; transition:opacity 150ms; }
+.adm-star.on { opacity:1; color:var(--adm-gold); }
+
+/* Empty */
+.adm-empty { text-align:center; padding:40px 0; color:var(--adm-text3); font-size:14px; }
+
+/* Notice */
+.adm-notice-ok { background:rgba(61,203,122,0.13); border:1px solid rgba(61,203,122,0.28); color:var(--adm-green); padding:10px 16px; border-radius:5px; margin-bottom:16px; font-size:13px; }
+
+/* Responsive */
+@media(max-width:900px){
+  [data-theme="adm"]{ --adm-sw:56px; }
+  .adm-brand-name,.adm-brand-sub,.adm-nav-section,.adm-user-label { display:none; }
+  .adm-nav-item span:last-child { display:none; }
+  .adm-nav-item { justify-content:center; padding:12px; }
+  .adm-count { position:absolute; top:6px; left:6px; }
+  .adm-content { padding:16px; }
+  .adm-cards { grid-template-columns:1fr 1fr; }
+  .adm-section-row { grid-template-columns:1fr; }
+  .adm-form-grid,.adm-form-grid-3 { grid-template-columns:1fr; }
+}
+</style>
 
 <script>
 console.log("DRIVE SHELL BOOT START — v" + new Date().toISOString());
@@ -6709,7 +6900,7 @@ const ShellRouter = {
     home:  'shell-home',
     yad1:  'shell-yad1',
     yad2:  'shell-yad2',
-    admin: 'shell-yad2',   // #admin hash → yad2 admin screen
+    admin: 'shell-admin',
   },
 
   go(dest, hash) {
@@ -6747,7 +6938,7 @@ const ShellRouter = {
     if (dest === 'home')  this._initHome();
     if (dest === 'yad1')  this._initYad1();
     if (dest === 'yad2')  this._initYad2(hash);
-    if (dest === 'admin') this._initYad2('admin');
+    if (dest === 'admin') this._initAdmin();
 
     console.log('[ShellRouter] section active:', sectionId);
   },
@@ -6755,6 +6946,7 @@ const ShellRouter = {
   _homeReady:  false,
   _yad1Ready:  false,
   _yad2Ready:  false,
+  _adminReady: false,
 
   _initHome() {
     if (this._homeReady) return;
@@ -6797,6 +6989,15 @@ const ShellRouter = {
         y2_safeShowScreen(screen);
       } catch(e) { console.error('[ShellRouter] yad2 screen switch error:', e); }
     }
+  },
+
+  _initAdmin() {
+    try {
+      if (typeof AdminApp !== 'undefined') {
+        AdminApp.init();
+        console.log('[ShellRouter] admin init OK');
+      }
+    } catch(e) { console.error('[ShellRouter] admin init error:', e); }
   },
 };
 
@@ -9663,8 +9864,8 @@ if (DRIVE_SMART_BTN_ENABLED) {
     <div class="admin-login-title">כניסת מנהלים</div>
     <div class="admin-login-sub">Admin Access Only</div>
     <div class="admin-login-field">
-      <label class="admin-login-label">אימייל</label>
-      <input id="admin-login-email" class="admin-login-input" type="email" placeholder="admin@drive.local" dir="ltr">
+      <label class="admin-login-label">שם משתמש</label>
+      <input id="admin-login-user" class="admin-login-input" type="text" placeholder="admin" dir="ltr" autocomplete="username">
     </div>
     <div class="admin-login-field">
       <label class="admin-login-label">סיסמה</label>
@@ -9754,7 +9955,8 @@ if (DRIVE_SMART_BTN_ENABLED) {
 
 <script>
 const AdminAuth = {
-  CREDS: { email: 'admin@drive.local', password: '123456' },
+  // NOTE: Front-end demo protection only — credentials visible in source.
+  CREDS: { username: 'admin', password: '123456' },
   LS_KEY: 'isAdminAuthenticated',
   _pendingDest: null,
 
@@ -9767,23 +9969,22 @@ const AdminAuth = {
     this._pendingDest = dest;
     document.getElementById('admin-login-overlay').style.display = 'flex';
     document.getElementById('admin-login-error').style.display = 'none';
-    document.getElementById('admin-login-email').value = '';
+    document.getElementById('admin-login-user').value = '';
     document.getElementById('admin-login-password').value = '';
     return false;
   },
 
   attempt() {
-    const email    = document.getElementById('admin-login-email').value.trim();
+    const username = document.getElementById('admin-login-user').value.trim();
     const password = document.getElementById('admin-login-password').value;
     const errEl    = document.getElementById('admin-login-error');
-    if (email === this.CREDS.email && password === this.CREDS.password) {
+    if (username === this.CREDS.username && password === this.CREDS.password) {
       localStorage.setItem(this.LS_KEY, 'true');
       document.getElementById('admin-login-overlay').style.display = 'none';
       if (this._pendingDest) {
         const dest = this._pendingDest;
         this._pendingDest = null;
-        if (dest === 'y1-admin') { y1_showScreen('admin'); }
-        else { ShellRouter.go('admin'); }
+        ShellRouter.go('admin');
       }
     } else {
       errEl.style.display = 'block';
@@ -9802,9 +10003,596 @@ const AdminAuth = {
 };
 
 // Support Enter key on login form
+document.getElementById('admin-login-user').addEventListener('keydown', e => {
+  if (e.key === 'Enter') AdminAuth.attempt();
+});
 document.getElementById('admin-login-password').addEventListener('keydown', e => {
   if (e.key === 'Enter') AdminAuth.attempt();
 });
+
+/* ============================================================
+   ADMIN MVP — AdminApp
+   Static front-end admin panel. No backend. Demo data only.
+   Credentials in source — NOT production auth.
+   ============================================================ */
+const AdminApp = {
+  currentScreen: 'dashboard',
+  _y1ShowForm: false,
+  _y1EditId:   null,
+  _y2ShowForm: false,
+  _y2EditId:   null,
+
+  /* ── Extra leads (yad1 / homepage / smart_button sources) */
+  leads: [
+    { id:'la001', name:'יוסי כהן',   phone:'050-111-2222', message:'מעוניין ב-Hummer EV 3X',    source:'yad1',         created_at:'2026-03-31 09:14' },
+    { id:'la002', name:'רחל לוי',    phone:'052-333-4444', message:'',                           source:'homepage',     created_at:'2026-03-30 08:45' },
+    { id:'la003', name:'אבי מזרחי',  phone:'054-555-6666', message:'שאלה על Sierra Denali EV',  source:'yad1',         created_at:'2026-03-29 16:20' },
+    { id:'la004', name:'מירה ברגר',  phone:'058-777-8888', message:'רוצה הצעת מחיר',            source:'smart_button', created_at:'2026-03-28 11:30' },
+    { id:'la005', name:'נועה שפירא', phone:'052-111-3333', message:'שאלה על Silverado EV',      source:'yad1',         created_at:'2026-03-27 10:12' },
+    { id:'la006', name:'דוד אברהם',  phone:'054-222-4444', message:'',                           source:'homepage',     created_at:'2026-03-26 09:00' },
+  ],
+
+  /* ── Homepage content (demo — not wired to live HP rendering) */
+  homepageContent: {
+    hero_title:      'רכבי אמריקה. ישירות אליך.',
+    hero_subtitle:   'יד 1 ויד 2. ייבוא אישי. מחיר שנכון.',
+    hero_image:      './stage-images/IMG_0091-removebg-preview.png',
+    section_1_title: 'יד 1 — פרמיום',
+    section_1_text:  'רכבים חדשים מאמריקה. ייבוא ישיר. אחריות מלאה.',
+    section_2_title: 'יד 2 — מלאי',
+    section_2_text:  'מגוון רחב של רכבי יד 2 מובחרים. מחירים אטרקטיביים.',
+    cta_text:        'צרו קשר עכשיו',
+    cta_link:        '#contact',
+  },
+
+  /* ── Smart button config (demo) */
+  smartButton: {
+    button_text:  'השכרת רכב',
+    button_color: '#c8a84b',
+    action_type:  'whatsapp',
+    action_value: '972501234567',
+    is_active:    true,
+  },
+
+  /* ── Navigation */
+  showScreen(name) {
+    this.currentScreen = name;
+    document.querySelectorAll('.adm-nav-item').forEach(el => el.classList.remove('active'));
+    const nav = document.querySelector('.adm-nav-item[data-screen="' + name + '"]');
+    if (nav) nav.classList.add('active');
+    const main = document.getElementById('adm-main');
+    if (!main) return;
+    if      (name === 'dashboard') main.innerHTML = this._tDashboard();
+    else if (name === 'yad1')      { this._y1ShowForm = false; this._y1EditId = null; main.innerHTML = this._tYad1(); }
+    else if (name === 'yad2')      { this._y2ShowForm = false; this._y2EditId = null; main.innerHTML = this._tYad2(); }
+    else if (name === 'homepage')  main.innerHTML = this._tHomepage();
+    else if (name === 'smartbtn')  main.innerHTML = this._tSmartBtn();
+    else if (name === 'leads')     main.innerHTML = this._tLeads('all');
+  },
+
+  init() {
+    this._y1ShowForm = false; this._y2ShowForm = false;
+    this._refreshBadge();
+    this.showScreen('dashboard');
+  },
+
+  _refreshBadge() {
+    const all = [...this.leads, ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads : [])];
+    const count = all.filter(l => l.status === 'NEW' || !l.status).length;
+    const el = document.getElementById('adm-leads-badge');
+    if (el) el.textContent = count || '';
+  },
+
+  _esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  },
+
+  _availLabel(a) {
+    return a === 'stock' ? 'במלאי' : a === 'order' ? 'הזמנה מוקדמת' : a === 'sold' ? 'נמכר' : (a || '');
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     DASHBOARD
+  ══════════════════════════════════════════════════════════════ */
+  _tDashboard() {
+    const y1 = typeof Y1_Engine !== 'undefined' ? Y1_Engine.vehicles.length : 0;
+    const y2 = typeof Y2_Engine !== 'undefined'
+      ? Y2_Engine.vehicles.filter(v => v.status !== 'SOLD' && v.status !== 'SOLD_HIDDEN').length : 0;
+    const all = [...this.leads, ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads : [])];
+    const newCount = all.filter(l => l.status === 'NEW' || !l.status).length;
+    const sbOn = this.smartButton.is_active;
+
+    const recentRows = all.slice(0,5).map(l =>
+      '<tr><td>' + this._esc(l.name) + '</td>' +
+      '<td dir="ltr">' + this._esc(l.phone) + '</td>' +
+      '<td><span class="adm-badge-tag ' + this._esc(l.source||'yad2') + '">' + this._esc(l.source||'yad2') + '</span></td>' +
+      '<td>' + this._esc(l.created_at||'') + '</td></tr>'
+    ).join('');
+
+    return '<div class="adm-screen"><div class="adm-topbar"><h1 class="adm-title">דשבורד</h1></div>' +
+      '<div class="adm-content">' +
+      '<div class="adm-cards">' +
+        '<div class="adm-card"><div class="adm-card-num">' + y1 + '</div><div class="adm-card-label">רכבי יד 1</div><div class="adm-card-sub">פרמיום / ייבוא</div></div>' +
+        '<div class="adm-card"><div class="adm-card-num">' + y2 + '</div><div class="adm-card-label">רכבי יד 2</div><div class="adm-card-sub">מלאי פעיל</div></div>' +
+        '<div class="adm-card adm-card-alert"><div class="adm-card-num">' + newCount + '</div><div class="adm-card-label">לידים חדשים</div><div class="adm-card-sub">ממתינים לטיפול</div></div>' +
+        '<div class="adm-card ' + (sbOn ? 'adm-card-ok' : 'adm-card-off') + '"><div class="adm-card-num">' + (sbOn ? '✓' : '✗') + '</div><div class="adm-card-label">כפתור חכם</div><div class="adm-card-sub">' + (sbOn ? 'פעיל' : 'כבוי') + '</div></div>' +
+      '</div>' +
+      '<div class="adm-section-row">' +
+        '<div class="adm-panel"><div class="adm-panel-head">לידים אחרונים</div>' +
+        '<table class="adm-table"><thead><tr><th>שם</th><th>טלפון</th><th>מקור</th><th>תאריך</th></tr></thead>' +
+        '<tbody>' + (recentRows || '<tr><td colspan="4" class="adm-empty">אין לידים</td></tr>') + '</tbody></table></div>' +
+        '<div class="adm-panel"><div class="adm-panel-head">פעולות מהירות</div>' +
+        '<div class="adm-quick-actions">' +
+          '<button class="adm-btn adm-btn-sec" onclick="AdminApp.showScreen(\'yad1\')">+ רכב יד 1</button>' +
+          '<button class="adm-btn adm-btn-sec" onclick="AdminApp.showScreen(\'yad2\')">+ רכב יד 2</button>' +
+          '<button class="adm-btn adm-btn-sec" onclick="AdminApp.showScreen(\'leads\')">כל הלידים</button>' +
+          '<button class="adm-btn adm-btn-sec" onclick="AdminApp.showScreen(\'smartbtn\')">כפתור חכם</button>' +
+        '</div></div>' +
+      '</div></div></div>';
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     YAD1 MANAGEMENT
+  ══════════════════════════════════════════════════════════════ */
+  _tYad1() {
+    const veh = typeof Y1_Engine !== 'undefined' ? Y1_Engine.vehicles : [];
+    const rows = veh.map(v =>
+      '<tr>' +
+      '<td><span class="adm-star ' + (v.is_featured ? 'on' : '') + '" onclick="AdminApp.toggleY1Featured(\'' + v.id + '\')" title="מומלץ">★</span></td>' +
+      '<td>' + this._esc(v.manufacturer) + '</td>' +
+      '<td>' + this._esc(v.model) + '</td>' +
+      '<td>' + this._esc(v.year) + '</td>' +
+      '<td>' + this._esc(v.engine_type) + '</td>' +
+      '<td>' + this._esc(v.horsepower) + '</td>' +
+      '<td>' + this._esc(v.drivetrain) + '</td>' +
+      '<td><span class="adm-status adm-status-' + this._esc(v.availability) + '">' + this._availLabel(v.availability) + '</span></td>' +
+      '<td>' + (v.price ? '₪' + Number(v.price).toLocaleString() : 'לפי פניה') + '</td>' +
+      '<td style="white-space:nowrap">' +
+        '<button class="adm-btn adm-btn-sm adm-btn-sec" onclick="AdminApp.editY1(\'' + v.id + '\')">עריכה</button> ' +
+        '<button class="adm-btn adm-btn-sm adm-btn-danger" onclick="AdminApp.deleteY1(\'' + v.id + '\')">מחיקה</button>' +
+      '</td></tr>'
+    ).join('');
+
+    return '<div class="adm-screen"><div class="adm-topbar">' +
+      '<h1 class="adm-title">יד 1 — ניהול מלאי</h1>' +
+      '<button class="adm-btn adm-btn-primary" onclick="AdminApp.editY1(null)">+ הוסף רכב</button>' +
+      '</div><div class="adm-content">' +
+      '<div class="adm-panel" style="overflow-x:auto">' +
+      '<div class="adm-panel-head">כלי רכב (' + veh.length + ')</div>' +
+      '<table class="adm-table"><thead><tr>' +
+        '<th>מומלץ</th><th>יצרן</th><th>דגם</th><th>שנה</th><th>מנוע</th><th>כ״ס</th><th>הנעה</th><th>זמינות</th><th>מחיר</th><th>פעולות</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      (this._y1ShowForm ? this._tY1Form(this._y1EditId) : '') +
+      '</div></div>';
+  },
+
+  _tY1Form(id) {
+    const isNew = (id === null || id === '');
+    const v = isNew ? {} : ((typeof Y1_Engine !== 'undefined' ? Y1_Engine.vehicles : []).find(x => x.id === id) || {});
+    const avOpts = ['stock','order','sold'].map(a =>
+      '<option value="' + a + '"' + (v.availability === a ? ' selected' : '') + '>' + this._availLabel(a) + '</option>'
+    ).join('');
+    const etOpts = ['ELECTRIC','PETROL','DIESEL','HYBRID'].map(a =>
+      '<option value="' + a + '"' + (v.engine_type === a ? ' selected' : '') + '>' + a + '</option>'
+    ).join('');
+    const drOpts = ['FWD','4X4','AWD','RWD'].map(a =>
+      '<option value="' + a + '"' + (v.drivetrain === a ? ' selected' : '') + '>' + a + '</option>'
+    ).join('');
+    const saveId = isNew ? '' : id;
+    return '<div class="adm-form-card" id="adm-y1-form">' +
+      '<div class="adm-form-head">' +
+        (isNew ? '+ הוספת רכב חדש' : 'עריכת — ' + this._esc(v.manufacturer) + ' ' + this._esc(v.model)) +
+        '<button class="adm-btn adm-btn-sm adm-btn-sec" onclick="AdminApp.showScreen(\'yad1\')" style="margin-right:auto">ביטול</button>' +
+      '</div>' +
+      '<div class="adm-form-grid">' +
+        '<div class="adm-field"><label>יצרן</label><input class="adm-input" id="af-y1-manufacturer" value="' + this._esc(v.manufacturer||'') + '"></div>' +
+        '<div class="adm-field"><label>דגם</label><input class="adm-input" id="af-y1-model" value="' + this._esc(v.model||'') + '"></div>' +
+        '<div class="adm-field"><label>שנה</label><input class="adm-input" id="af-y1-year" type="number" value="' + this._esc(v.year||2024) + '"></div>' +
+        '<div class="adm-field"><label>כוח סוס</label><input class="adm-input" id="af-y1-hp" type="number" value="' + this._esc(v.horsepower||0) + '"></div>' +
+        '<div class="adm-field"><label>סוג מנוע</label><select class="adm-select" id="af-y1-engine_type">' + etOpts + '</select></div>' +
+        '<div class="adm-field"><label>הנעה</label><select class="adm-select" id="af-y1-drivetrain">' + drOpts + '</select></div>' +
+        '<div class="adm-field"><label>טווח / צריכה</label><input class="adm-input" id="af-y1-range" value="' + this._esc(v.range_or_consumption||'') + '"></div>' +
+        '<div class="adm-field"><label>כושר גרירה (ק״ג)</label><input class="adm-input" id="af-y1-towing" type="number" value="' + this._esc(v.towing_capacity||0) + '"></div>' +
+        '<div class="adm-field"><label>מחיר (₪)</label><input class="adm-input" id="af-y1-price" type="number" value="' + this._esc(v.price||0) + '"></div>' +
+        '<div class="adm-field"><label>זמינות</label><select class="adm-select" id="af-y1-availability">' + avOpts + '</select></div>' +
+        '<div class="adm-field"><label>תמונה (URL)</label><input class="adm-input" id="af-y1-image_url" value="' + this._esc((v.images||[])[0]||'') + '"></div>' +
+        '<div class="adm-field" style="justify-content:flex-end;padding-top:20px">' +
+          '<label style="display:flex;align-items:center;gap:8px;cursor:pointer">' +
+            '<input type="checkbox" id="af-y1-featured" ' + (v.is_featured ? 'checked' : '') + '> מומלץ' +
+          '</label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="adm-form-actions">' +
+        '<button class="adm-btn adm-btn-primary" onclick="AdminApp.saveY1(\'' + saveId + '\')">' + (isNew ? 'הוסף' : 'שמור') + '</button>' +
+        (!isNew ? '<button class="adm-btn adm-btn-danger" onclick="AdminApp.deleteY1(\'' + id + '\')">מחק</button>' : '') +
+      '</div></div>';
+  },
+
+  editY1(id) {
+    this._y1EditId = id;
+    this._y1ShowForm = true;
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tYad1();
+  },
+
+  saveY1(id) {
+    const g = sid => { const el = document.getElementById(sid); return el ? el.value : ''; };
+    const manufacturer       = g('af-y1-manufacturer');
+    const model              = g('af-y1-model');
+    const year               = parseInt(g('af-y1-year')) || 2024;
+    const horsepower         = parseInt(g('af-y1-hp')) || 0;
+    const engine_type        = g('af-y1-engine_type') || 'PETROL';
+    const drivetrain         = g('af-y1-drivetrain') || 'FWD';
+    const range_or_consumption = g('af-y1-range');
+    const towing_capacity    = parseInt(g('af-y1-towing')) || 0;
+    const price              = parseInt(g('af-y1-price')) || 0;
+    const availability       = g('af-y1-availability') || 'order';
+    const image_url          = g('af-y1-image_url');
+    const is_featured        = (document.getElementById('af-y1-featured')||{}).checked || false;
+
+    if (!id) {
+      const newId = 'y1-' + String(Y1_Engine.vehicles.length + 1).padStart(3,'0');
+      Y1_Engine.vehicles.push({
+        id: newId, listing_type:'yad1', manufacturer, model, year,
+        drivetrain, gearbox:'אוטומטי', engine_type, horsepower,
+        range_or_consumption, towing_capacity, availability,
+        price, status:'ACTIVE', is_featured,
+        tagline:'', emoji:'🚗', images: image_url ? [image_url] : [],
+      });
+    } else {
+      const v = Y1_Engine.vehicles.find(x => x.id === id);
+      if (v) Object.assign(v, {
+        manufacturer, model, year, drivetrain, engine_type, horsepower,
+        range_or_consumption, towing_capacity, availability, price, is_featured,
+        images: image_url ? [image_url] : v.images,
+      });
+    }
+    this._y1ShowForm = false;
+    this.showScreen('yad1');
+  },
+
+  deleteY1(id) {
+    if (!confirm('למחוק רכב ' + id + '?')) return;
+    Y1_Engine.vehicles = Y1_Engine.vehicles.filter(v => v.id !== id);
+    this._y1ShowForm = false;
+    this.showScreen('yad1');
+  },
+
+  toggleY1Featured(id) {
+    const v = Y1_Engine.vehicles.find(x => x.id === id);
+    if (v) v.is_featured = !v.is_featured;
+    const wasShowing = this._y1ShowForm;
+    this._y1ShowForm = wasShowing;
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tYad1();
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     YAD2 MANAGEMENT
+  ══════════════════════════════════════════════════════════════ */
+  _tYad2(filterMfr, filterAd, filterMaxPrice) {
+    let veh = typeof Y2_Engine !== 'undefined'
+      ? Y2_Engine.vehicles.filter(v => v.listing_type === 'yad2') : [];
+    if (filterMfr)      veh = veh.filter(v => v.manufacturer.toLowerCase().includes(filterMfr.toLowerCase()));
+    if (filterAd)       veh = veh.filter(v => (v.ad_number||'').includes(filterAd));
+    if (filterMaxPrice) veh = veh.filter(v => v.price <= parseInt(filterMaxPrice));
+
+    const rows = veh.map(v =>
+      '<tr>' +
+      '<td>' + this._esc(v.ad_number||'') + '</td>' +
+      '<td>' + this._esc(v.manufacturer) + '</td>' +
+      '<td>' + this._esc(v.model) + ' ' + this._esc(v.sub_model||'') + '</td>' +
+      '<td>' + this._esc(v.year) + '</td>' +
+      '<td>' + (v.km ? Number(v.km).toLocaleString() : '—') + '</td>' +
+      '<td>' + (v.price ? '₪' + Number(v.price).toLocaleString() : '—') + '</td>' +
+      '<td>' + this._esc(v.hand||'') + '</td>' +
+      '<td><span class="adm-status ' + (v.status==='ACTIVE'?'adm-status-active':'adm-status-sold') + '">' + (v.status==='ACTIVE'?'פעיל':'נמכר') + '</span></td>' +
+      '<td style="white-space:nowrap">' +
+        '<button class="adm-btn adm-btn-sm adm-btn-sec" onclick="AdminApp.editY2(\'' + v.id + '\')">עריכה</button> ' +
+        '<button class="adm-btn adm-btn-sm adm-btn-danger" onclick="AdminApp.deleteY2(\'' + v.id + '\')">מחיקה</button>' +
+      '</td></tr>'
+    ).join('');
+
+    const mfrVal  = filterMfr       ? ' value="' + this._esc(filterMfr) + '"'       : '';
+    const adVal   = filterAd        ? ' value="' + this._esc(filterAd) + '"'         : '';
+    const mpVal   = filterMaxPrice  ? ' value="' + this._esc(filterMaxPrice) + '"'   : '';
+
+    return '<div class="adm-screen"><div class="adm-topbar">' +
+      '<h1 class="adm-title">יד 2 — ניהול מלאי</h1>' +
+      '<button class="adm-btn adm-btn-primary" onclick="AdminApp.editY2(null)">+ הוסף רכב</button>' +
+      '</div><div class="adm-content">' +
+      '<div class="adm-toolbar">' +
+        '<input class="adm-search-input" placeholder="מספר מודעה..." id="adm-y2-ad" oninput="AdminApp._applyY2Filter()"' + adVal + '>' +
+        '<input class="adm-search-input" placeholder="יצרן..." id="adm-y2-mfr" oninput="AdminApp._applyY2Filter()"' + mfrVal + '>' +
+        '<input class="adm-search-input" placeholder="מחיר מקסימום..." type="number" id="adm-y2-maxprice" oninput="AdminApp._applyY2Filter()"' + mpVal + '>' +
+        '<button class="adm-btn adm-btn-sec" onclick="AdminApp._clearY2Filter()">נקה</button>' +
+      '</div>' +
+      '<div class="adm-panel" style="overflow-x:auto">' +
+      '<div class="adm-panel-head">כלי רכב (' + veh.length + ')</div>' +
+      '<table class="adm-table"><thead><tr>' +
+        '<th>מ׳ מודעה</th><th>יצרן</th><th>דגם</th><th>שנה</th><th>ק״מ</th><th>מחיר</th><th>יד</th><th>סטטוס</th><th>פעולות</th>' +
+      '</tr></thead><tbody>' +
+        (rows || '<tr><td colspan="9" class="adm-empty">לא נמצאו רכבים</td></tr>') +
+      '</tbody></table></div>' +
+      (this._y2ShowForm ? this._tY2Form(this._y2EditId) : '') +
+      '</div></div>';
+  },
+
+  _applyY2Filter() {
+    const ad  = (document.getElementById('adm-y2-ad')||{}).value || '';
+    const mfr = (document.getElementById('adm-y2-mfr')||{}).value || '';
+    const mp  = (document.getElementById('adm-y2-maxprice')||{}).value || '';
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tYad2(mfr, ad, mp);
+  },
+
+  _clearY2Filter() {
+    this._y2ShowForm = false;
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tYad2();
+  },
+
+  _tY2Form(id) {
+    const isNew = (id === null || id === '');
+    const v = isNew ? {} : ((typeof Y2_Engine !== 'undefined' ? Y2_Engine.vehicles : []).find(x => x.id === id) || {});
+    const statusOpts = ['ACTIVE','SOLD'].map(a =>
+      '<option value="' + a + '"' + (v.status === a ? ' selected' : '') + '>' + (a==='ACTIVE'?'פעיל':'נמכר') + '</option>'
+    ).join('');
+    const gbOpts = ['אוטומטי','ידני','רובוטי'].map(a =>
+      '<option value="' + a + '"' + (v.gearbox === a ? ' selected' : '') + '>' + a + '</option>'
+    ).join('');
+    const etOpts = ['PETROL','DIESEL','HYBRID','ELECTRIC','PETROL_V8'].map(a =>
+      '<option value="' + a + '"' + (v.engine_type === a ? ' selected' : '') + '>' + a + '</option>'
+    ).join('');
+    const saveId = isNew ? '' : id;
+    return '<div class="adm-form-card" id="adm-y2-form">' +
+      '<div class="adm-form-head">' +
+        (isNew ? '+ הוספת רכב יד 2' : 'עריכת מודעה ' + this._esc(v.ad_number||'')) +
+        '<button class="adm-btn adm-btn-sm adm-btn-sec" onclick="AdminApp.showScreen(\'yad2\')" style="margin-right:auto">ביטול</button>' +
+      '</div>' +
+      '<div class="adm-form-grid-3">' +
+        '<div class="adm-field"><label>מ׳ מודעה</label><input class="adm-input" id="af-y2-ad_number" value="' + this._esc(v.ad_number||'') + '"></div>' +
+        '<div class="adm-field"><label>יצרן</label><input class="adm-input" id="af-y2-manufacturer" value="' + this._esc(v.manufacturer||'') + '"></div>' +
+        '<div class="adm-field"><label>דגם</label><input class="adm-input" id="af-y2-model" value="' + this._esc(v.model||'') + '"></div>' +
+        '<div class="adm-field"><label>תת-דגם</label><input class="adm-input" id="af-y2-sub_model" value="' + this._esc(v.sub_model||'') + '"></div>' +
+        '<div class="adm-field"><label>שנה</label><input class="adm-input" id="af-y2-year" type="number" value="' + this._esc(v.year||2023) + '"></div>' +
+        '<div class="adm-field"><label>מחיר (₪)</label><input class="adm-input" id="af-y2-price" type="number" value="' + this._esc(v.price||0) + '"></div>' +
+        '<div class="adm-field"><label>ק״מ</label><input class="adm-input" id="af-y2-km" type="number" value="' + this._esc(v.km||0) + '"></div>' +
+        '<div class="adm-field"><label>יד</label><input class="adm-input" id="af-y2-hand" type="number" value="' + this._esc(v.hand||1) + '"></div>' +
+        '<div class="adm-field"><label>תיבת הילוכים</label><select class="adm-select" id="af-y2-gearbox">' + gbOpts + '</select></div>' +
+        '<div class="adm-field"><label>סוג מנוע</label><select class="adm-select" id="af-y2-engine_type">' + etOpts + '</select></div>' +
+        '<div class="adm-field"><label>נפח מנוע (סמ״ק)</label><input class="adm-input" id="af-y2-engine_volume" type="number" value="' + this._esc(v.engine_volume||1600) + '"></div>' +
+        '<div class="adm-field"><label>מספר רישוי</label><input class="adm-input" id="af-y2-license" value="' + this._esc(v.license_number||'') + '"></div>' +
+        '<div class="adm-field"><label>צבע חוץ</label><input class="adm-input" id="af-y2-ext_color" value="' + this._esc(v.exterior_color||'') + '"></div>' +
+        '<div class="adm-field"><label>צבע פנים</label><input class="adm-input" id="af-y2-int_color" value="' + this._esc(v.interior_color||'') + '"></div>' +
+        '<div class="adm-field"><label>צבע כסאות</label><input class="adm-input" id="af-y2-seats_color" value="' + this._esc(v.seats_color||'') + '"></div>' +
+        '<div class="adm-field"><label>רמת גמר</label><input class="adm-input" id="af-y2-trim" value="' + this._esc(v.trim_level||'') + '"></div>' +
+        '<div class="adm-field"><label>סטטוס</label><select class="adm-select" id="af-y2-status">' + statusOpts + '</select></div>' +
+        '<div class="adm-field" style="justify-content:flex-end;padding-top:20px">' +
+          '<label style="display:flex;align-items:center;gap:8px;cursor:pointer">' +
+            '<input type="checkbox" id="af-y2-financed" ' + (v.is_financed ? 'checked' : '') + '> מימון זמין' +
+          '</label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="adm-field" style="margin-top:14px"><label>תמונה (URL)</label>' +
+        '<input class="adm-input" id="af-y2-image_url" value="' + this._esc((v.images||[])[0]||'') + '" dir="ltr"></div>' +
+      '<div class="adm-form-actions">' +
+        '<button class="adm-btn adm-btn-primary" onclick="AdminApp.saveY2(\'' + saveId + '\')">' + (isNew ? 'הוסף' : 'שמור') + '</button>' +
+        (!isNew ? '<button class="adm-btn adm-btn-danger" onclick="AdminApp.deleteY2(\'' + id + '\')">מחק</button>' : '') +
+      '</div></div>';
+  },
+
+  editY2(id) {
+    this._y2EditId = id;
+    this._y2ShowForm = true;
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tYad2();
+  },
+
+  saveY2(id) {
+    const g = sid => { const el = document.getElementById(sid); return el ? el.value : ''; };
+    const ad_number      = g('af-y2-ad_number');
+    const manufacturer   = g('af-y2-manufacturer');
+    const model          = g('af-y2-model');
+    const sub_model      = g('af-y2-sub_model');
+    const year           = parseInt(g('af-y2-year')) || 2023;
+    const price          = parseInt(g('af-y2-price')) || 0;
+    const km             = parseInt(g('af-y2-km')) || 0;
+    const hand           = parseInt(g('af-y2-hand')) || 1;
+    const gearbox        = g('af-y2-gearbox') || 'אוטומטי';
+    const engine_type    = g('af-y2-engine_type') || 'PETROL';
+    const engine_volume  = parseInt(g('af-y2-engine_volume')) || 0;
+    const license_number = g('af-y2-license');
+    const exterior_color = g('af-y2-ext_color');
+    const interior_color = g('af-y2-int_color');
+    const seats_color    = g('af-y2-seats_color');
+    const trim_level     = g('af-y2-trim');
+    const status         = g('af-y2-status') || 'ACTIVE';
+    const image_url      = g('af-y2-image_url');
+    const is_financed    = (document.getElementById('af-y2-financed')||{}).checked || false;
+
+    if (!id) {
+      Y2_Engine.vehicles.push({
+        listing_type:'yad2', id:'v' + Date.now(),
+        ad_number, manufacturer, model, sub_model, year, km, price,
+        gearbox, engine_type, engine_volume, hand,
+        license_number, exterior_color, interior_color, seats_color, trim_level,
+        status, is_financed, images: image_url ? [image_url] : [],
+        category:'פרטי', entry_date: new Date().toLocaleDateString('he-IL'), notes:'',
+      });
+    } else {
+      const v = Y2_Engine.vehicles.find(x => x.id === id);
+      if (v) Object.assign(v, {
+        ad_number, manufacturer, model, sub_model, year, km, price,
+        gearbox, engine_type, engine_volume, hand,
+        license_number, exterior_color, interior_color, seats_color, trim_level,
+        status, is_financed, images: image_url ? [image_url] : v.images,
+      });
+    }
+    this._y2ShowForm = false;
+    this.showScreen('yad2');
+  },
+
+  deleteY2(id) {
+    if (!confirm('למחוק רכב ' + id + '?')) return;
+    Y2_Engine.vehicles = Y2_Engine.vehicles.filter(v => v.id !== id);
+    this._y2ShowForm = false;
+    this.showScreen('yad2');
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     HOMEPAGE MANAGEMENT
+  ══════════════════════════════════════════════════════════════ */
+  _tHomepage(notice) {
+    const c = this.homepageContent;
+    return '<div class="adm-screen"><div class="adm-topbar"><h1 class="adm-title">ניהול עמוד הבית</h1></div>' +
+      '<div class="adm-content">' +
+      (notice ? '<div class="adm-notice-ok">' + notice + '</div>' : '') +
+      '<div class="adm-form-card">' +
+        '<div class="adm-form-head">Hero</div>' +
+        '<div class="adm-form-grid">' +
+          '<div class="adm-field"><label>כותרת ראשית</label><input class="adm-input" id="af-hp-hero_title" value="' + this._esc(c.hero_title) + '"></div>' +
+          '<div class="adm-field"><label>תת כותרת</label><input class="adm-input" id="af-hp-hero_subtitle" value="' + this._esc(c.hero_subtitle) + '"></div>' +
+          '<div class="adm-field" style="grid-column:1/-1"><label>תמונת Hero (URL)</label><input class="adm-input" id="af-hp-hero_image" value="' + this._esc(c.hero_image) + '" dir="ltr"></div>' +
+        '</div>' +
+        '<div class="adm-form-head" style="margin-top:20px">סקשן 1</div>' +
+        '<div class="adm-form-grid">' +
+          '<div class="adm-field"><label>כותרת</label><input class="adm-input" id="af-hp-sec1_title" value="' + this._esc(c.section_1_title) + '"></div>' +
+          '<div class="adm-field"><label>טקסט</label><input class="adm-input" id="af-hp-sec1_text" value="' + this._esc(c.section_1_text) + '"></div>' +
+        '</div>' +
+        '<div class="adm-form-head" style="margin-top:20px">סקשן 2</div>' +
+        '<div class="adm-form-grid">' +
+          '<div class="adm-field"><label>כותרת</label><input class="adm-input" id="af-hp-sec2_title" value="' + this._esc(c.section_2_title) + '"></div>' +
+          '<div class="adm-field"><label>טקסט</label><input class="adm-input" id="af-hp-sec2_text" value="' + this._esc(c.section_2_text) + '"></div>' +
+        '</div>' +
+        '<div class="adm-form-head" style="margin-top:20px">CTA</div>' +
+        '<div class="adm-form-grid">' +
+          '<div class="adm-field"><label>טקסט כפתור</label><input class="adm-input" id="af-hp-cta_text" value="' + this._esc(c.cta_text) + '"></div>' +
+          '<div class="adm-field"><label>קישור</label><input class="adm-input" id="af-hp-cta_link" value="' + this._esc(c.cta_link) + '" dir="ltr"></div>' +
+        '</div>' +
+        '<div class="adm-form-actions"><button class="adm-btn adm-btn-primary" onclick="AdminApp.saveHomepage()">שמור</button></div>' +
+      '</div></div></div>';
+  },
+
+  saveHomepage() {
+    const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    this.homepageContent.hero_title      = g('af-hp-hero_title');
+    this.homepageContent.hero_subtitle   = g('af-hp-hero_subtitle');
+    this.homepageContent.hero_image      = g('af-hp-hero_image');
+    this.homepageContent.section_1_title = g('af-hp-sec1_title');
+    this.homepageContent.section_1_text  = g('af-hp-sec1_text');
+    this.homepageContent.section_2_title = g('af-hp-sec2_title');
+    this.homepageContent.section_2_text  = g('af-hp-sec2_text');
+    this.homepageContent.cta_text        = g('af-hp-cta_text');
+    this.homepageContent.cta_link        = g('af-hp-cta_link');
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tHomepage('✓ נשמר בהצלחה (demo — לא מחובר ל-UI החי)');
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     SMART BUTTON MANAGEMENT
+  ══════════════════════════════════════════════════════════════ */
+  _tSmartBtn(notice) {
+    const sb = this.smartButton;
+    const typeOpts = ['whatsapp','link','phone','modal'].map(t =>
+      '<option value="' + t + '"' + (sb.action_type === t ? ' selected' : '') + '>' + t + '</option>'
+    ).join('');
+    return '<div class="adm-screen"><div class="adm-topbar"><h1 class="adm-title">כפתור חכם</h1></div>' +
+      '<div class="adm-content">' +
+      (notice ? '<div class="adm-notice-ok">' + notice + '</div>' : '') +
+      '<div class="adm-cards" style="grid-template-columns:repeat(2,1fr);margin-bottom:24px">' +
+        '<div class="adm-card ' + (sb.is_active ? 'adm-card-ok' : 'adm-card-off') + '">' +
+          '<div class="adm-card-num">' + (sb.is_active ? 'פעיל' : 'כבוי') + '</div>' +
+          '<div class="adm-card-label">סטטוס</div>' +
+        '</div>' +
+        '<div class="adm-card"><div class="adm-card-num" style="font-size:20px">' + this._esc(sb.button_text) + '</div><div class="adm-card-label">טקסט נוכחי</div></div>' +
+      '</div>' +
+      '<div class="adm-form-card">' +
+        '<div class="adm-form-head">הגדרות כפתור</div>' +
+        '<div class="adm-form-grid">' +
+          '<div class="adm-field"><label>טקסט כפתור</label><input class="adm-input" id="af-sb-text" value="' + this._esc(sb.button_text) + '"></div>' +
+          '<div class="adm-field"><label>צבע (hex)</label><input class="adm-input" id="af-sb-color" type="color" value="' + this._esc(sb.button_color) + '" style="height:42px;padding:4px 8px"></div>' +
+          '<div class="adm-field"><label>סוג פעולה</label><select class="adm-select" id="af-sb-type">' + typeOpts + '</select></div>' +
+          '<div class="adm-field"><label>ערך (מספר / URL)</label><input class="adm-input" id="af-sb-value" value="' + this._esc(sb.action_value) + '" dir="ltr"></div>' +
+        '</div>' +
+        '<div style="margin-top:20px;display:flex;align-items:center;gap:12px">' +
+          '<div class="adm-toggle" onclick="AdminApp.toggleSB()">' +
+            '<div class="adm-toggle-track ' + (sb.is_active ? 'on' : '') + '" id="adm-sb-track"><div class="adm-toggle-thumb"></div></div>' +
+          '</div>' +
+          '<span class="adm-toggle-label" id="adm-sb-label">' + (sb.is_active ? 'כפתור פעיל' : 'כפתור כבוי') + '</span>' +
+        '</div>' +
+        '<div class="adm-form-actions" style="margin-top:16px">' +
+          '<button class="adm-btn adm-btn-primary" onclick="AdminApp.saveSmartBtn()">שמור</button>' +
+        '</div>' +
+      '</div></div></div>';
+  },
+
+  toggleSB() {
+    this.smartButton.is_active = !this.smartButton.is_active;
+    const track = document.getElementById('adm-sb-track');
+    const label = document.getElementById('adm-sb-label');
+    if (track) track.classList.toggle('on', this.smartButton.is_active);
+    if (label) label.textContent = this.smartButton.is_active ? 'כפתור פעיל' : 'כפתור כבוי';
+    this._refreshBadge();
+  },
+
+  saveSmartBtn() {
+    const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    this.smartButton.button_text  = g('af-sb-text');
+    this.smartButton.button_color = g('af-sb-color') || '#c8a84b';
+    this.smartButton.action_type  = g('af-sb-type');
+    this.smartButton.action_value = g('af-sb-value');
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tSmartBtn('✓ נשמר בהצלחה (demo)');
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     LEADS
+  ══════════════════════════════════════════════════════════════ */
+  _tLeads(filter) {
+    const all = [...this.leads, ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads : [])];
+    const filtered = filter === 'all' ? all : all.filter(l => (l.source||'yad2') === filter);
+    const sources = ['all','yad1','yad2','homepage','smart_button'];
+
+    const tabs = sources.map(s =>
+      '<button class="adm-btn adm-btn-sm ' + (s === filter ? 'adm-btn-primary' : 'adm-btn-sec') + '" ' +
+      'onclick="AdminApp._filterLeads(\'' + s + '\')">' +
+        (s === 'all' ? 'הכל (' + all.length + ')' : s) +
+      '</button>'
+    ).join(' ');
+
+    const rows = filtered.map(l =>
+      '<tr>' +
+      '<td>' + this._esc(l.name) + '</td>' +
+      '<td dir="ltr">' + this._esc(l.phone) + '</td>' +
+      '<td style="max-width:220px">' + this._esc(l.message||'') + '</td>' +
+      '<td><span class="adm-badge-tag ' + this._esc(l.source||'yad2') + '">' + this._esc(l.source||'yad2') + '</span></td>' +
+      '<td>' + this._esc(l.created_at||'') + '</td>' +
+      '<td>' + (l.status ? '<span class="adm-status ' +
+        (l.status==='NEW'?'adm-status-order':l.status==='CLOSED'?'adm-status-sold':'adm-status-active') +
+        '">' + this._esc(l.status) + '</span>' : '—') + '</td>' +
+      '</tr>'
+    ).join('');
+
+    return '<div class="adm-screen"><div class="adm-topbar">' +
+      '<h1 class="adm-title">לידים</h1>' +
+      '<span style="font-size:13px;color:#9e9e9e">' + filtered.length + ' מתוך ' + all.length + '</span>' +
+      '</div><div class="adm-content">' +
+      '<div class="adm-toolbar">' + tabs + '</div>' +
+      '<div class="adm-panel" style="overflow-x:auto">' +
+      '<table class="adm-table"><thead><tr>' +
+        '<th>שם</th><th>טלפון</th><th>הודעה</th><th>מקור</th><th>תאריך</th><th>סטטוס</th>' +
+      '</tr></thead><tbody>' +
+        (rows || '<tr><td colspan="6" class="adm-empty">אין לידים</td></tr>') +
+      '</tbody></table></div></div></div>';
+  },
+
+  _filterLeads(filter) {
+    const main = document.getElementById('adm-main');
+    if (main) main.innerHTML = this._tLeads(filter);
+  },
+};
 
 // Intercept ShellRouter admin navigation
 const _origShellGo = ShellRouter.go.bind(ShellRouter);
