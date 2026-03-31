@@ -9494,30 +9494,43 @@ if (DRIVE_SMART_BTN_ENABLED) {
   /* ── BUSINESS HOURS (reads from SB.settings) ────────────── */
   // Parse "HH:MM" string → integer hour
   function parseHour(str){if(!str)return null;const p=str.split(':');return parseInt(p[0],10);}
-  // Returns {open, close} integer hours for a given Date, or null if closed
+  // Returns {open, close} integer hours for a given Date offset, or null if closed.
+  // Priority: Saturday → closed. Holiday (is_holiday_today, off===0) → holiday_mode.
+  //           Holiday eve (is_holiday_eve, off===0) → holiday_eve hours.
+  //           Friday → friday hours. Weekday → weekday hours.
   function hoursForDate(d){
     if(typeof SB==='undefined')return{open:8,close:20};
     const s=SB.settings;
-    const dow=d.getDay(); // 0=Sun,1=Mon…5=Fri,6=Sat
-    if(dow===6){return null;} // Saturday — always closed
-    if(dow===5){return{open:parseHour(s.friday_open),close:parseHour(s.friday_close)};}
-    // Simplified holiday-eve check: treated as same day type; full calendar requires backend
-    if(s.holiday_mode==='closed'){
-      // Holiday mode flag: if today is explicitly a holiday — checked externally
-      // For now, weekday/friday rules apply; admin can toggle closed via is_active on SB.settings
+    const dow=d.getDay(); // 0=Sun…5=Fri,6=Sat
+    // Saturday always closed
+    if(dow===6)return null;
+    // Check if this date is today for the special flags
+    const todayMs=new Date();todayMs.setHours(0,0,0,0);
+    const isToday=(d.getTime()===todayMs.getTime());
+    // Holiday (admin marks today as a holiday via is_holiday_today flag)
+    if(isToday&&s.is_holiday_today){
+      if(s.holiday_mode==='closed')return null;
+      return{open:parseHour(s.holiday_open)||9,close:parseHour(s.holiday_close)||15};
     }
+    // Holiday eve (admin marks today as holiday eve via is_holiday_eve flag)
+    if(isToday&&s.is_holiday_eve){
+      return{open:parseHour(s.holiday_eve_open)||8,close:parseHour(s.holiday_eve_close)||13};
+    }
+    // Friday
+    if(dow===5)return{open:parseHour(s.friday_open)||8,close:parseHour(s.friday_close)||14};
+    // Weekday (Sun–Thu)
     return{open:parseHour(s.weekday_open)||8,close:parseHour(s.weekday_close)||20};
   }
-  // Compute the first available pickup hour for a given day offset
-  // If today (off===0): use current clock, round up to next full hour
-  // If future day: use opening hour
+  // Compute the first available pickup hour for a given day offset.
+  // Today: always advance to the NEXT full hour (current hour +1, regardless of minutes).
+  // Future day: use opening hour.
   function firstAvailableHour(off){
     const h=hoursForDate(dateAt(off));
-    if(!h)return null; // day is closed
+    if(!h)return null;
     if(off===0){
       const now=new Date();
-      const curH=now.getHours()+(now.getMinutes()>0?1:0); // next full hour
-      if(curH>=h.close)return null; // no slots left today
+      const curH=now.getHours()+1; // always next full hour — 14:00 → 15:00, 14:20 → 15:00
+      if(curH>=h.close)return null;
       return Math.max(curH,h.open);
     }
     return h.open;
@@ -10754,6 +10767,8 @@ const SB = {
     holiday_mode:       'closed',
     holiday_open:       '09:00',
     holiday_close:      '15:00',
+    is_holiday_today:   false,   // admin toggles true on actual holidays
+    is_holiday_eve:     false,   // admin toggles true on erev chag
   },
 
   /* ─── PRICING — rental categories (independent of car-sales) */
@@ -10866,11 +10881,25 @@ const SB = {
           '<div class="adm-field"><label>חג סגירה</label><input class="adm-input" id="sbs-hol_close" type="time" value="' + this._esc(s.holiday_close) + '"></div>' +
         '</div>' +
       '</div>' +
-      /* Smart logic note */
+      /* Today's status overrides */
+      '<div class="adm-form-card">' +
+        '<div class="adm-form-head">סטטוס יום נוכחי</div>' +
+        '<div style="display:flex;flex-direction:column;gap:14px;">' +
+          '<label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--adm-text);">' +
+            '<input type="checkbox" id="sbs-is_holiday_today" ' + (s.is_holiday_today?'checked':'') + '>' +
+            '<span>היום הוא חג — השתמש בהגדרות חג</span>' +
+          '</label>' +
+          '<label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--adm-text);">' +
+            '<input type="checkbox" id="sbs-is_holiday_eve" ' + (s.is_holiday_eve?'checked':'') + '>' +
+            '<span>היום הוא ערב חג — השתמש בשעות ערב חג</span>' +
+          '</label>' +
+        '</div>' +
+      '</div>' +
+      /* Smart logic note — active */
       '<div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.18);border-radius:6px;padding:14px 18px;margin-top:4px;font-size:12px;color:#9e9e9e;line-height:1.7">' +
-        '<span style="color:#c8a84b;font-weight:700;">⏱ Smart Scheduling Rule</span><br>' +
-        'אם המשתמש בוחר היום והשעה הנוכחית היא 14:00, זמן האיסוף הקרוב הבא שיוצג יהיה 15:00.<br>' +
-        '<span style="color:#4a4a4a;">לוגיקה זו שייכת לשכבת המנוע של הכפתור החכם — תמומש בשלב הבא.</span>' +
+        '<span style="color:#c8a84b;font-weight:700;">⏱ Smart Scheduling Rule — פעיל</span><br>' +
+        'אם המשתמש בוחר היום והשעה הנוכחית היא 14:00 (או 14:20), זמן האיסוף הראשון שיוצג: 15:00.<br>' +
+        '<span style="color:#4a4a4a;">תמיד מתעגל קדימה לשעה המלאה הבאה — לא נשמר על השעה הנוכחית.</span>' +
       '</div>' +
       '<div class="adm-form-actions" style="margin-top:20px">' +
         '<button class="adm-btn adm-btn-primary" onclick="SB.saveSettings()">שמור הגדרות</button>' +
@@ -10902,6 +10931,8 @@ const SB = {
     s.holiday_mode       = g('sbs-hol_mode');
     s.holiday_open       = g('sbs-hol_open');
     s.holiday_close      = g('sbs-hol_close');
+    s.is_holiday_today   = !!(document.getElementById('sbs-is_holiday_today')||{}).checked;
+    s.is_holiday_eve     = !!(document.getElementById('sbs-is_holiday_eve')||{}).checked;
     const el = document.getElementById('sb-sub-content');
     if (el) el.innerHTML = this._tSettings('✓ נשמר בהצלחה');
   },
