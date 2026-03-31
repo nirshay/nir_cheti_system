@@ -6873,6 +6873,11 @@ body {
 /* Notice */
 .adm-notice-ok { background:rgba(61,203,122,0.13); border:1px solid rgba(61,203,122,0.28); color:var(--adm-green); padding:10px 16px; border-radius:5px; margin-bottom:16px; font-size:13px; }
 
+/* Smart Button sub-tabs */
+.sb-sub-tab { background:none; border:none; border-bottom:2px solid transparent; color:var(--adm-text3); font-family:'Heebo',sans-serif; font-size:13px; font-weight:600; padding:12px 20px; cursor:pointer; transition:150ms; }
+.sb-sub-tab:hover { color:var(--adm-text); }
+.sb-sub-tab.active { color:var(--adm-gold); border-bottom-color:var(--adm-gold); }
+
 /* Responsive */
 @media(max-width:900px){
   [data-theme="adm"]{ --adm-sw:56px; }
@@ -10049,15 +10054,6 @@ const AdminApp = {
     cta_link:        '#contact',
   },
 
-  /* ── Smart button config (demo) */
-  smartButton: {
-    button_text:  'השכרת רכב',
-    button_color: '#c8a84b',
-    action_type:  'whatsapp',
-    action_value: '972501234567',
-    is_active:    true,
-  },
-
   /* ── Navigation */
   showScreen(name) {
     this.currentScreen = name;
@@ -10070,7 +10066,7 @@ const AdminApp = {
     else if (name === 'yad1')      { this._y1ShowForm = false; this._y1EditId = null; main.innerHTML = this._tYad1(); }
     else if (name === 'yad2')      { this._y2ShowForm = false; this._y2EditId = null; main.innerHTML = this._tYad2(); this._applyY2Filter(); }
     else if (name === 'homepage')  main.innerHTML = this._tHomepage();
-    else if (name === 'smartbtn')  main.innerHTML = this._tSmartBtn();
+    else if (name === 'smartbtn')  { main.innerHTML = SB._tShell(); SB._renderSubScreen(); }
     else if (name === 'leads')     main.innerHTML = this._tLeads('all');
   },
 
@@ -10105,7 +10101,7 @@ const AdminApp = {
       ? Y2_Engine.vehicles.filter(v => v.status !== 'SOLD' && v.status !== 'SOLD_HIDDEN').length : 0;
     const all = [...this.leads, ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads : [])];
     const newCount = all.filter(l => l.status === 'NEW' || !l.status).length;
-    const sbOn = this.smartButton.is_active;
+    const sbOn = typeof SB !== 'undefined' ? SB.settings.is_active : false;
 
     const recentRows = all.slice(0,5).map(l =>
       '<tr><td>' + this._esc(l.name) + '</td>' +
@@ -10514,60 +10510,6 @@ const AdminApp = {
   /* ══════════════════════════════════════════════════════════════
      SMART BUTTON MANAGEMENT
   ══════════════════════════════════════════════════════════════ */
-  _tSmartBtn(notice) {
-    const sb = this.smartButton;
-    const typeOpts = ['whatsapp','link','phone','modal'].map(t =>
-      '<option value="' + t + '"' + (sb.action_type === t ? ' selected' : '') + '>' + t + '</option>'
-    ).join('');
-    return '<div class="adm-screen"><div class="adm-topbar"><h1 class="adm-title">כפתור חכם</h1></div>' +
-      '<div class="adm-content">' +
-      (notice ? '<div class="adm-notice-ok">' + notice + '</div>' : '') +
-      '<div class="adm-cards" style="grid-template-columns:repeat(2,1fr);margin-bottom:24px">' +
-        '<div class="adm-card ' + (sb.is_active ? 'adm-card-ok' : 'adm-card-off') + '">' +
-          '<div class="adm-card-num">' + (sb.is_active ? 'פעיל' : 'כבוי') + '</div>' +
-          '<div class="adm-card-label">סטטוס</div>' +
-        '</div>' +
-        '<div class="adm-card"><div class="adm-card-num" style="font-size:20px">' + this._esc(sb.button_text) + '</div><div class="adm-card-label">טקסט נוכחי</div></div>' +
-      '</div>' +
-      '<div class="adm-form-card">' +
-        '<div class="adm-form-head">הגדרות כפתור</div>' +
-        '<div class="adm-form-grid">' +
-          '<div class="adm-field"><label>טקסט כפתור</label><input class="adm-input" id="af-sb-text" value="' + this._esc(sb.button_text) + '"></div>' +
-          '<div class="adm-field"><label>צבע (hex)</label><input class="adm-input" id="af-sb-color" type="color" value="' + this._esc(sb.button_color) + '" style="height:42px;padding:4px 8px"></div>' +
-          '<div class="adm-field"><label>סוג פעולה</label><select class="adm-select" id="af-sb-type">' + typeOpts + '</select></div>' +
-          '<div class="adm-field"><label>ערך (מספר / URL)</label><input class="adm-input" id="af-sb-value" value="' + this._esc(sb.action_value) + '" dir="ltr"></div>' +
-        '</div>' +
-        '<div style="margin-top:20px;display:flex;align-items:center;gap:12px">' +
-          '<div class="adm-toggle" onclick="AdminApp.toggleSB()">' +
-            '<div class="adm-toggle-track ' + (sb.is_active ? 'on' : '') + '" id="adm-sb-track"><div class="adm-toggle-thumb"></div></div>' +
-          '</div>' +
-          '<span class="adm-toggle-label" id="adm-sb-label">' + (sb.is_active ? 'כפתור פעיל' : 'כפתור כבוי') + '</span>' +
-        '</div>' +
-        '<div class="adm-form-actions" style="margin-top:16px">' +
-          '<button class="adm-btn adm-btn-primary" onclick="AdminApp.saveSmartBtn()">שמור</button>' +
-        '</div>' +
-      '</div></div></div>';
-  },
-
-  toggleSB() {
-    this.smartButton.is_active = !this.smartButton.is_active;
-    const track = document.getElementById('adm-sb-track');
-    const label = document.getElementById('adm-sb-label');
-    if (track) track.classList.toggle('on', this.smartButton.is_active);
-    if (label) label.textContent = this.smartButton.is_active ? 'כפתור פעיל' : 'כפתור כבוי';
-    this._refreshBadge();
-  },
-
-  saveSmartBtn() {
-    const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
-    this.smartButton.button_text  = g('af-sb-text');
-    this.smartButton.button_color = g('af-sb-color') || '#c8a84b';
-    this.smartButton.action_type  = g('af-sb-type');
-    this.smartButton.action_value = g('af-sb-value');
-    const main = document.getElementById('adm-main');
-    if (main) main.innerHTML = this._tSmartBtn('✓ נשמר בהצלחה (demo)');
-  },
-
   /* ══════════════════════════════════════════════════════════════
      LEADS
   ══════════════════════════════════════════════════════════════ */
@@ -10701,6 +10643,331 @@ const AdminApp = {
         if (btn) { btn.disabled = false; btn.textContent = 'נסה שוב'; }
         if (msg) { msg.textContent = '✗ שגיאת רשת: ' + err.message; msg.style.color = '#e05050'; msg.style.display = 'block'; }
       });
+  },
+};
+
+/* ============================================================
+   SMART BUTTON — Independent Hosted Engine Admin
+   ============================================================
+   Architecture note:
+     The Drive site HOSTS the smart button.
+     The smart button is NOT part of the car-sales engine.
+     Its state, pricing, and leads are fully separate from
+     Yad1 / Yad2 / Homepage.
+   ============================================================ */
+const SB = {
+
+  _subScreen: 'settings',
+  _pricingShowForm: false,
+  _pricingEditIdx:  null,
+
+  /* ─── SETTINGS — button config + business hours ─────────── */
+  settings: {
+    button_text:        'השכרת רכב',
+    button_color:       '#c8a84b',
+    action_type:        'whatsapp',
+    action_value:       '972501234567',
+    is_active:          true,
+    weekday_open:       '08:00',
+    weekday_close:      '20:00',
+    friday_open:        '08:00',
+    friday_close:       '14:00',
+    holiday_eve_open:   '08:00',
+    holiday_eve_close:  '13:00',
+    holiday_mode:       'closed',
+    holiday_open:       '09:00',
+    holiday_close:      '15:00',
+  },
+
+  /* ─── PRICING — rental categories (independent of car-sales) */
+  pricing: [
+    { id:'sbp1', category_name:'קטן',    price_daily:150, price_weekly:900,  price_monthly:3200, is_active:true  },
+    { id:'sbp2', category_name:'משפחתי', price_daily:220, price_weekly:1300, price_monthly:4500, is_active:true  },
+    { id:'sbp3', category_name:'מנהלים', price_daily:350, price_weekly:2100, price_monthly:7000, is_active:true  },
+    { id:'sbp4', category_name:'מסחרי',  price_daily:280, price_weekly:1700, price_monthly:5800, is_active:false },
+  ],
+
+  /* ─── LEADS — rental inquiries only (separate from car-sales) */
+  leads: [
+    { id:'sbl001', name:'דני כהן',   phone:'052-100-2000', category_name:'משפחתי', pickup_date:'2026-04-01', pickup_time:'09:00', return_date:'2026-04-05', return_time:'18:00', message:'',              created_at:'2026-03-31 10:00' },
+    { id:'sbl002', name:'מיכל לוי',  phone:'054-300-4000', category_name:'קטן',    pickup_date:'2026-04-03', pickup_time:'08:00', return_date:'2026-04-04', return_time:'20:00', message:'חנייה כלולה?', created_at:'2026-03-30 14:20' },
+    { id:'sbl003', name:'אלון פרץ',  phone:'050-500-6000', category_name:'מנהלים', pickup_date:'2026-04-07', pickup_time:'10:00', return_date:'2026-04-10', return_time:'16:00', message:'',              created_at:'2026-03-29 09:45' },
+  ],
+
+  _esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  },
+
+  /* ── Outer shell: sub-tab bar + content container */
+  _tShell() {
+    return '<div class="adm-screen">' +
+      '<div class="adm-topbar">' +
+        '<h1 class="adm-title">כפתור חכם</h1>' +
+        '<span style="font-size:11px;color:#4a4a4a;letter-spacing:0.5px;">HOSTED INDEPENDENT ENGINE</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,0.07);padding:0 32px;background:var(--adm-surface);">' +
+        '<button class="sb-sub-tab" id="sbtab-settings" onclick="SB.showSubScreen(\'settings\')">הגדרות</button>' +
+        '<button class="sb-sub-tab" id="sbtab-pricing"  onclick="SB.showSubScreen(\'pricing\')">תמחור</button>' +
+        '<button class="sb-sub-tab" id="sbtab-leads"    onclick="SB.showSubScreen(\'leads\')">לידים <span id="sb-leads-count" style="font-size:10px;background:rgba(224,80,80,0.2);color:#e05050;border-radius:8px;padding:1px 6px;margin-right:4px;">' + this.leads.length + '</span></button>' +
+      '</div>' +
+      '<div id="sb-sub-content" style="flex:1;"></div>' +
+    '</div>';
+  },
+
+  _renderSubScreen() {
+    const el = document.getElementById('sb-sub-content');
+    if (!el) return;
+    // Highlight active tab
+    ['settings','pricing','leads'].forEach(t => {
+      const tab = document.getElementById('sbtab-' + t);
+      if (tab) tab.classList.toggle('active', t === this._subScreen);
+    });
+    if      (this._subScreen === 'settings') el.innerHTML = this._tSettings();
+    else if (this._subScreen === 'pricing')  el.innerHTML = this._tPricing();
+    else if (this._subScreen === 'leads')    el.innerHTML = this._tLeads('all');
+  },
+
+  showSubScreen(name) {
+    this._subScreen = name;
+    this._renderSubScreen();
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     A. SETTINGS
+  ══════════════════════════════════════════════════════════════ */
+  _tSettings(notice) {
+    const s = this.settings;
+    const typeOpts = ['whatsapp','link','phone','modal'].map(t =>
+      '<option value="' + t + '"' + (s.action_type === t ? ' selected' : '') + '>' + t + '</option>'
+    ).join('');
+    const holOpts = ['closed','open'].map(v =>
+      '<option value="' + v + '"' + (s.holiday_mode === v ? ' selected' : '') + '>' + (v === 'closed' ? 'סגור' : 'פתוח') + '</option>'
+    ).join('');
+    return '<div style="padding:28px 32px;">' +
+      (notice ? '<div class="adm-notice-ok">' + notice + '</div>' : '') +
+      /* Status cards */
+      '<div class="adm-cards" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">' +
+        '<div class="adm-card ' + (s.is_active ? 'adm-card-ok' : 'adm-card-off') + '">' +
+          '<div class="adm-card-num">' + (s.is_active ? 'פעיל' : 'כבוי') + '</div>' +
+          '<div class="adm-card-label">סטטוס</div>' +
+        '</div>' +
+        '<div class="adm-card"><div class="adm-card-num" style="font-size:18px">' + this._esc(s.button_text) + '</div><div class="adm-card-label">טקסט נוכחי</div></div>' +
+        '<div class="adm-card"><div class="adm-card-num" style="font-size:18px">' + this._esc(s.action_type) + '</div><div class="adm-card-label">סוג פעולה</div></div>' +
+      '</div>' +
+      /* Button config */
+      '<div class="adm-form-card">' +
+        '<div class="adm-form-head">הגדרות כפתור</div>' +
+        '<div class="adm-form-grid">' +
+          '<div class="adm-field"><label>טקסט כפתור</label><input class="adm-input" id="sbs-text" value="' + this._esc(s.button_text) + '"></div>' +
+          '<div class="adm-field"><label>צבע</label><input class="adm-input" id="sbs-color" type="color" value="' + this._esc(s.button_color) + '" style="height:42px;padding:4px 8px"></div>' +
+          '<div class="adm-field"><label>סוג פעולה</label><select class="adm-select" id="sbs-action_type">' + typeOpts + '</select></div>' +
+          '<div class="adm-field"><label>ערך (מספר / URL)</label><input class="adm-input" id="sbs-action_value" value="' + this._esc(s.action_value) + '" dir="ltr"></div>' +
+        '</div>' +
+        '<div style="margin-top:18px;display:flex;align-items:center;gap:12px">' +
+          '<div class="adm-toggle" onclick="SB.toggleActive()">' +
+            '<div class="adm-toggle-track ' + (s.is_active ? 'on' : '') + '" id="sbs-track"><div class="adm-toggle-thumb"></div></div>' +
+          '</div>' +
+          '<span class="adm-toggle-label" id="sbs-label">' + (s.is_active ? 'כפתור פעיל' : 'כפתור כבוי') + '</span>' +
+        '</div>' +
+      '</div>' +
+      /* Business hours */
+      '<div class="adm-form-card">' +
+        '<div class="adm-form-head">שעות פעילות</div>' +
+        '<div class="adm-form-grid-3">' +
+          '<div class="adm-field"><label>ראשון–חמישי פתיחה</label><input class="adm-input" id="sbs-wd_open"  type="time" value="' + this._esc(s.weekday_open)      + '"></div>' +
+          '<div class="adm-field"><label>ראשון–חמישי סגירה</label><input class="adm-input" id="sbs-wd_close" type="time" value="' + this._esc(s.weekday_close)     + '"></div>' +
+          '<div class="adm-field" style="visibility:hidden"></div>' +
+          '<div class="adm-field"><label>שישי פתיחה</label><input class="adm-input" id="sbs-fri_open"  type="time" value="' + this._esc(s.friday_open)       + '"></div>' +
+          '<div class="adm-field"><label>שישי סגירה</label><input class="adm-input" id="sbs-fri_close" type="time" value="' + this._esc(s.friday_close)      + '"></div>' +
+          '<div class="adm-field" style="visibility:hidden"></div>' +
+          '<div class="adm-field"><label>ערב חג פתיחה</label><input class="adm-input" id="sbs-heve_open"  type="time" value="' + this._esc(s.holiday_eve_open)  + '"></div>' +
+          '<div class="adm-field"><label>ערב חג סגירה</label><input class="adm-input" id="sbs-heve_close" type="time" value="' + this._esc(s.holiday_eve_close) + '"></div>' +
+          '<div class="adm-field" style="visibility:hidden"></div>' +
+          '<div class="adm-field"><label>מצב חג</label><select class="adm-select" id="sbs-hol_mode">' + holOpts + '</select></div>' +
+          '<div class="adm-field"><label>חג פתיחה</label><input class="adm-input" id="sbs-hol_open"  type="time" value="' + this._esc(s.holiday_open)  + '"></div>' +
+          '<div class="adm-field"><label>חג סגירה</label><input class="adm-input" id="sbs-hol_close" type="time" value="' + this._esc(s.holiday_close) + '"></div>' +
+        '</div>' +
+      '</div>' +
+      /* Smart logic note */
+      '<div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.18);border-radius:6px;padding:14px 18px;margin-top:4px;font-size:12px;color:#9e9e9e;line-height:1.7">' +
+        '<span style="color:#c8a84b;font-weight:700;">⏱ Smart Scheduling Rule</span><br>' +
+        'אם המשתמש בוחר היום והשעה הנוכחית היא 14:00, זמן האיסוף הקרוב הבא שיוצג יהיה 15:00.<br>' +
+        '<span style="color:#4a4a4a;">לוגיקה זו שייכת לשכבת המנוע של הכפתור החכם — תמומש בשלב הבא.</span>' +
+      '</div>' +
+      '<div class="adm-form-actions" style="margin-top:20px">' +
+        '<button class="adm-btn adm-btn-primary" onclick="SB.saveSettings()">שמור הגדרות</button>' +
+      '</div>' +
+    '</div>';
+  },
+
+  toggleActive() {
+    this.settings.is_active = !this.settings.is_active;
+    const track = document.getElementById('sbs-track');
+    const label = document.getElementById('sbs-label');
+    if (track) track.classList.toggle('on', this.settings.is_active);
+    if (label) label.textContent = this.settings.is_active ? 'כפתור פעיל' : 'כפתור כבוי';
+  },
+
+  saveSettings() {
+    const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    const s = this.settings;
+    s.button_text        = g('sbs-text');
+    s.button_color       = g('sbs-color') || '#c8a84b';
+    s.action_type        = g('sbs-action_type');
+    s.action_value       = g('sbs-action_value');
+    s.weekday_open       = g('sbs-wd_open');
+    s.weekday_close      = g('sbs-wd_close');
+    s.friday_open        = g('sbs-fri_open');
+    s.friday_close       = g('sbs-fri_close');
+    s.holiday_eve_open   = g('sbs-heve_open');
+    s.holiday_eve_close  = g('sbs-heve_close');
+    s.holiday_mode       = g('sbs-hol_mode');
+    s.holiday_open       = g('sbs-hol_open');
+    s.holiday_close      = g('sbs-hol_close');
+    const el = document.getElementById('sb-sub-content');
+    if (el) el.innerHTML = this._tSettings('✓ נשמר בהצלחה');
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     B. PRICING
+  ══════════════════════════════════════════════════════════════ */
+  _tPricing() {
+    const rows = this.pricing.map((p, i) =>
+      '<tr style="' + (!p.is_active ? 'opacity:0.45' : '') + '">' +
+      '<td>' + this._esc(p.category_name) + '</td>' +
+      '<td>₪' + Number(p.price_daily).toLocaleString() + '</td>' +
+      '<td>₪' + Number(p.price_weekly).toLocaleString() + '</td>' +
+      '<td>₪' + Number(p.price_monthly).toLocaleString() + '</td>' +
+      '<td>' +
+        '<div class="adm-toggle" onclick="SB.togglePricingRow(\'' + p.id + '\')" style="display:inline-flex">' +
+          '<div class="adm-toggle-track ' + (p.is_active ? 'on' : '') + '"><div class="adm-toggle-thumb"></div></div>' +
+        '</div>' +
+      '</td>' +
+      '<td style="white-space:nowrap">' +
+        '<button class="adm-btn adm-btn-sm adm-btn-sec" onclick="SB.editPricing(\'' + p.id + '\')">עריכה</button> ' +
+        '<button class="adm-btn adm-btn-sm adm-btn-danger" onclick="SB.deletePricing(\'' + p.id + '\')">מחיקה</button>' +
+      '</td></tr>'
+    ).join('');
+    return '<div style="padding:28px 32px;">' +
+      '<div class="adm-toolbar">' +
+        '<button class="adm-btn" style="background:#1a4731;color:#a8d5b5;border:1px solid #2a6344;" onclick="SB.editPricing(null)">+ הוסף קטגוריה</button>' +
+      '</div>' +
+      '<div class="adm-panel" style="overflow-x:auto">' +
+        '<div class="adm-panel-head">קטגוריות השכרה (' + this.pricing.length + ')</div>' +
+        '<table class="adm-table"><thead><tr>' +
+          '<th>קטגוריה</th><th>יומי</th><th>שבועי</th><th>חודשי</th><th>פעיל</th><th>פעולות</th>' +
+        '</tr></thead><tbody>' + (rows || '<tr><td colspan="6" class="adm-empty">אין קטגוריות</td></tr>') + '</tbody></table>' +
+      '</div>' +
+      (this._pricingShowForm ? this._tPricingForm(this._pricingEditIdx) : '') +
+    '</div>';
+  },
+
+  _tPricingForm(id) {
+    const isNew = (id === null || id === '');
+    const p = isNew ? {} : (this.pricing.find(x => x.id === id) || {});
+    const saveId = isNew ? '' : id;
+    return '<div class="adm-form-card" id="sb-pricing-form">' +
+      '<div class="adm-form-head">' +
+        (isNew ? '+ קטגוריה חדשה' : 'עריכת ' + this._esc(p.category_name||'')) +
+        '<button class="adm-btn adm-btn-sm adm-btn-sec" onclick="SB.showSubScreen(\'pricing\')" style="margin-right:auto">ביטול</button>' +
+      '</div>' +
+      '<div class="adm-form-grid">' +
+        '<div class="adm-field"><label>שם קטגוריה</label><input class="adm-input" id="sbpf-name" value="' + this._esc(p.category_name||'') + '"></div>' +
+        '<div class="adm-field"><label>מחיר יומי (₪)</label><input class="adm-input" id="sbpf-daily" type="text" inputmode="numeric" value="' + this._esc(p.price_daily||'') + '"></div>' +
+        '<div class="adm-field"><label>מחיר שבועי (₪)</label><input class="adm-input" id="sbpf-weekly" type="text" inputmode="numeric" value="' + this._esc(p.price_weekly||'') + '"></div>' +
+        '<div class="adm-field"><label>מחיר חודשי (₪)</label><input class="adm-input" id="sbpf-monthly" type="text" inputmode="numeric" value="' + this._esc(p.price_monthly||'') + '"></div>' +
+      '</div>' +
+      '<div class="adm-form-actions">' +
+        '<button class="adm-btn adm-btn-primary" onclick="SB.savePricing(\'' + saveId + '\')">' + (isNew ? 'הוסף' : 'שמור') + '</button>' +
+        (!isNew ? '<button class="adm-btn adm-btn-danger" onclick="SB.deletePricing(\'' + id + '\')">מחק</button>' : '') +
+      '</div>' +
+    '</div>';
+  },
+
+  editPricing(id) {
+    this._pricingEditIdx  = id;
+    this._pricingShowForm = true;
+    const el = document.getElementById('sb-sub-content');
+    if (el) {
+      el.innerHTML = this._tPricing();
+      requestAnimationFrame(() => {
+        const form = document.getElementById('sb-pricing-form');
+        if (form) form.scrollIntoView({ behavior:'smooth', block:'start' });
+      });
+    }
+  },
+
+  savePricing(id) {
+    const g = sid => { const el = document.getElementById(sid); return el ? el.value : ''; };
+    const category_name  = g('sbpf-name');
+    const price_daily    = parseInt(g('sbpf-daily'))   || 0;
+    const price_weekly   = parseInt(g('sbpf-weekly'))  || 0;
+    const price_monthly  = parseInt(g('sbpf-monthly')) || 0;
+    if (!id) {
+      this.pricing.push({ id:'sbp'+Date.now(), category_name, price_daily, price_weekly, price_monthly, is_active:true });
+    } else {
+      const p = this.pricing.find(x => x.id === id);
+      if (p) Object.assign(p, { category_name, price_daily, price_weekly, price_monthly });
+    }
+    this._pricingShowForm = false;
+    this.showSubScreen('pricing');
+  },
+
+  deletePricing(id) {
+    if (!confirm('למחוק קטגוריה?')) return;
+    this.pricing = this.pricing.filter(x => x.id !== id);
+    this._pricingShowForm = false;
+    this.showSubScreen('pricing');
+  },
+
+  togglePricingRow(id) {
+    const p = this.pricing.find(x => x.id === id);
+    if (p) p.is_active = !p.is_active;
+    const el = document.getElementById('sb-sub-content');
+    if (el) el.innerHTML = this._tPricing();
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     C. LEADS — rental inquiries (separate from car-sales leads)
+  ══════════════════════════════════════════════════════════════ */
+  _tLeads(filter) {
+    const cats = ['all', ...new Set(this.leads.map(l => l.category_name))];
+    const list = filter === 'all' ? this.leads : this.leads.filter(l => l.category_name === filter);
+
+    const tabs = cats.map(c =>
+      '<button class="adm-btn adm-btn-sm ' + (c === filter ? 'adm-btn-primary' : 'adm-btn-sec') + '" ' +
+      'onclick="SB._filterLeads(\'' + c + '\')">' + (c === 'all' ? 'הכל (' + this.leads.length + ')' : c) + '</button>'
+    ).join(' ');
+
+    const rows = list.map(l =>
+      '<tr>' +
+      '<td>' + this._esc(l.name) + '</td>' +
+      '<td dir="ltr">' + this._esc(l.phone) + '</td>' +
+      '<td>' + this._esc(l.category_name) + '</td>' +
+      '<td>' + this._esc(l.pickup_date) + ' ' + this._esc(l.pickup_time) + '</td>' +
+      '<td>' + this._esc(l.return_date) + ' ' + this._esc(l.return_time) + '</td>' +
+      '<td style="max-width:180px">' + this._esc(l.message||'') + '</td>' +
+      '<td>' + this._esc(l.created_at) + '</td>' +
+      '</tr>'
+    ).join('');
+
+    return '<div style="padding:28px 32px;">' +
+      '<div class="adm-toolbar">' + tabs + '</div>' +
+      '<div class="adm-panel" style="overflow-x:auto">' +
+        '<div class="adm-panel-head">לידי השכרה (' + list.length + ')</div>' +
+        '<table class="adm-table"><thead><tr>' +
+          '<th>שם</th><th>טלפון</th><th>קטגוריה</th><th>איסוף</th><th>החזרה</th><th>הודעה</th><th>נוצר</th>' +
+        '</tr></thead><tbody>' +
+          (rows || '<tr><td colspan="7" class="adm-empty">אין לידים</td></tr>') +
+        '</tbody></table>' +
+      '</div>' +
+    '</div>';
+  },
+
+  _filterLeads(filter) {
+    const el = document.getElementById('sb-sub-content');
+    if (el) el.innerHTML = this._tLeads(filter);
   },
 };
 
