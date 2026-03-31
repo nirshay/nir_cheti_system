@@ -9445,13 +9445,21 @@ if (DRIVE_SMART_BTN_ENABLED) {
     4:'<svg width="68" height="30" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="13" width="66" height="15" rx="3" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/><path d="M9 13 C11 7,16 4,24 4 L48 4 C56 4,61 7,63 13" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/><circle cx="15" cy="28" r="4" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/><circle cx="57" cy="28" r="4" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/><line x1="24" y1="4" x2="24" y2="13" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/><line x1="48" y1="4" x2="48" y2="13" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/></svg>',
     5:'<svg width="74" height="32" viewBox="0 0 80 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="72" height="24" rx="3" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/><line x1="4" y1="17" x2="76" y2="17" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/><circle cx="16" cy="32" r="4" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/><circle cx="64" cy="32" r="4" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/></svg>'
   };
-  const CATS = [
-    {id:1,name:'קטן ידני',   code:'A',daily:149,weekly:890, monthly:2890,deposit:1500},
-    {id:2,name:'קטן אוטומט', code:'B',daily:179,weekly:1090,monthly:3490,deposit:2000},
-    {id:3,name:'משפחתי',     code:'C',daily:239,weekly:1490,monthly:4790,deposit:2500},
-    {id:4,name:'מנהלים',     code:'D',daily:349,weekly:2190,monthly:6990,deposit:4000},
-    {id:5,name:'מסחרי',      code:'V',daily:399,weekly:2490,monthly:7990,deposit:5000}
-  ];
+  // CATS is a live getter — reads only active rows from SB.pricing (admin data source)
+  function getCats(){
+    if(typeof SB==='undefined'||!Array.isArray(SB.pricing))return[];
+    return SB.pricing
+      .filter(p=>p.is_active)
+      .map((p,i)=>({
+        id:   p.id,
+        name: p.category_name,
+        code: String.fromCharCode(65+i),       // A, B, C… positional
+        daily:   p.price_daily,
+        weekly:  p.price_weekly,
+        monthly: p.price_monthly,
+        deposit: 0,
+      }));
+  }
   const COLORS = {
     idle:{bg:'radial-gradient(circle at 50% 35%,#2dd4bf 0%,#0d9488 55%,#0f766e 100%)',gl:'rgba(45,212,191,.45)',pu:'rgba(45,212,191,.3)',dot:'#0d9488'},
     g:  {bg:'radial-gradient(circle at 50% 30%,#4ade80 0%,#16a34a 50%,#14532d 100%)',gl:'rgba(74,222,128,.5)', pu:'rgba(74,222,128,.35)', dot:'#16a34a'},
@@ -9483,24 +9491,76 @@ if (DRIVE_SMART_BTN_ENABLED) {
     {id:'confirm',        type:'confirm',key:null,    color:'g3', label:''}
   ];
 
+  /* ── BUSINESS HOURS (reads from SB.settings) ────────────── */
+  // Parse "HH:MM" string → integer hour
+  function parseHour(str){if(!str)return null;const p=str.split(':');return parseInt(p[0],10);}
+  // Returns {open, close} integer hours for a given Date, or null if closed
+  function hoursForDate(d){
+    if(typeof SB==='undefined')return{open:8,close:20};
+    const s=SB.settings;
+    const dow=d.getDay(); // 0=Sun,1=Mon…5=Fri,6=Sat
+    if(dow===6){return null;} // Saturday — always closed
+    if(dow===5){return{open:parseHour(s.friday_open),close:parseHour(s.friday_close)};}
+    // Simplified holiday-eve check: treated as same day type; full calendar requires backend
+    if(s.holiday_mode==='closed'){
+      // Holiday mode flag: if today is explicitly a holiday — checked externally
+      // For now, weekday/friday rules apply; admin can toggle closed via is_active on SB.settings
+    }
+    return{open:parseHour(s.weekday_open)||8,close:parseHour(s.weekday_close)||20};
+  }
+  // Compute the first available pickup hour for a given day offset
+  // If today (off===0): use current clock, round up to next full hour
+  // If future day: use opening hour
+  function firstAvailableHour(off){
+    const h=hoursForDate(dateAt(off));
+    if(!h)return null; // day is closed
+    if(off===0){
+      const now=new Date();
+      const curH=now.getHours()+(now.getMinutes()>0?1:0); // next full hour
+      if(curH>=h.close)return null; // no slots left today
+      return Math.max(curH,h.open);
+    }
+    return h.open;
+  }
+  // Clamp an hour within the business window for a given day offset
+  function clampHour(h,off){
+    const hrs=hoursForDate(dateAt(off));
+    if(!hrs)return null;
+    return Math.max(hrs.open,Math.min(h,hrs.close-1));
+  }
+
   /* ── BOOKING STATE ───────────────────────────────────────── */
   const DAY=86400000, today=new Date();
   today.setHours(0,0,0,0);
   const HM=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
-  const st={startOff:0,endOff:1,pickupH:10,returnH:10,catIdx:0,name:'',phone:''};
+  const st={startOff:0,endOff:1,pickupH:null,returnH:null,catIdx:0,name:'',phone:''};
   const dateAt=off=>new Date(today.getTime()+off*DAY);
   const pad2=n=>String(n).padStart(2,'0');
   const dayCount=()=>Math.max(1,st.endOff-st.startOff);
   const mainLabel=off=>off===0?'היום':off===1?'מחר':String(dateAt(off).getDate());
   const monthLabel=off=>HM[dateAt(off).getMonth()];
   const shortDate=off=>dateAt(off).toLocaleDateString('he-IL',{day:'numeric',month:'numeric'});
-  const timeLabel=h=>`${pad2(h)}:00`;
-  const currentCat=()=>CATS[st.catIdx];
-  function calcPrice(){const c=currentCat();if(!c)return{total:0,deposit:0,plan:'daily'};let r=dayCount(),t=0;const mo=Math.floor(r/30);r-=mo*30;const wk=Math.floor(r/7);r-=wk*7;t=(mo*c.monthly)+(wk*c.weekly)+(r*c.daily);return{total:t,deposit:c.deposit,plan:mo>0?'monthly':wk>0?'weekly':'daily'};}
-  function stepDate(dir,key){if(key==='start'){const n=st.startOff+dir;if(n<0)return;st.startOff=n;if(st.endOff<=st.startOff)st.endOff=st.startOff+1;}else{const n=st.endOff+dir;if(n<=st.startOff)return;st.endOff=n;}}
-  function stepHour(dir,key){if(key==='pickup')st.pickupH=(st.pickupH+dir+24)%24;else st.returnH=(st.returnH+dir+24)%24;}
-  function stepCat(dir){st.catIdx=(st.catIdx+dir+CATS.length)%CATS.length;}
-  function resetState(){st.startOff=0;st.endOff=1;st.pickupH=10;st.returnH=10;st.catIdx=0;st.name='';st.phone='';}
+  const timeLabel=h=>h===null?'—':pad2(h)+':00';
+  const currentCat=()=>getCats()[st.catIdx]||null;
+  function calcPrice(){const c=currentCat();if(!c)return{total:0,deposit:0,plan:'daily'};let r=dayCount(),t=0;const mo=Math.floor(r/30);r-=mo*30;const wk=Math.floor(r/7);r-=wk*7;t=(mo*c.monthly)+(wk*c.weekly)+(r*c.daily);return{total:t,deposit:0,plan:mo>0?'monthly':wk>0?'weekly':'daily'};}
+  function stepDate(dir,key){if(key==='start'){const n=st.startOff+dir;if(n<0)return;st.startOff=n;if(st.endOff<=st.startOff)st.endOff=st.startOff+1;st.pickupH=firstAvailableHour(st.startOff);}else{const n=st.endOff+dir;if(n<=st.startOff)return;st.endOff=n;st.returnH=firstAvailableHour(st.endOff);}}
+  function stepHour(dir,key){
+    const off=key==='pickup'?st.startOff:st.endOff;
+    const hrs=hoursForDate(dateAt(off));
+    if(!hrs)return;
+    if(key==='pickup'){
+      const min=key==='pickup'&&off===0?firstAvailableHour(0)||hrs.open:hrs.open;
+      st.pickupH=Math.max(min,Math.min((st.pickupH===null?hrs.open:st.pickupH)+dir,hrs.close-1));
+    }else{
+      st.returnH=Math.max(hrs.open,Math.min((st.returnH===null?hrs.open:st.returnH)+dir,hrs.close-1));
+    }
+  }
+  function stepCat(dir){const cats=getCats();if(!cats.length)return;st.catIdx=(st.catIdx+dir+cats.length)%cats.length;}
+  function resetState(){
+    st.startOff=0;st.endOff=1;st.catIdx=0;st.name='';st.phone='';
+    st.pickupH=firstAvailableHour(0);
+    st.returnH=firstAvailableHour(1);
+  }
   function buildReservation(ref){const p=calcPrice(),c=currentCat();return{reservation_id:String(ref),pickup_date:dateAt(st.startOff).toISOString().split('T')[0],pickup_time:timeLabel(st.pickupH),return_date:dateAt(st.endOff).toISOString().split('T')[0],return_time:timeLabel(st.returnH),car_category_id:c?c.id:null,price_plan:p.plan,total_price:p.total,customer_name:st.name,customer_phone:st.phone,status:'pending'};}
 
   /* ── DOM REFS ────────────────────────────────────────────── */
@@ -9561,15 +9621,32 @@ if (DRIVE_SMART_BTN_ENABLED) {
         if(step.key==='end')setExtras('מ-'+shortDate(st.startOff),'','');
         break;}
       case 'hour':{
+        const off=step.key==='pickup'?st.startOff:st.endOff;
         const h=step.key==='pickup'?st.pickupH:st.returnH;
-        setMain(timeLabel(h),step.key==='pickup'?'שעת איסוף':'שעת החזרה',true,anim);showArrows(true);
-        if(step.key==='return')setExtras('איסוף: '+timeLabel(st.pickupH),'','');
+        const hrs=hoursForDate(dateAt(off));
+        if(h===null||!hrs){
+          setMain('—',step.key==='pickup'?'לא ניתן לאיסוף היום':'אין שעות פנויות',true,anim);
+          setExtras('הסלון סגור לתאריך זה','','');
+          showArrows(false);
+        }else{
+          setMain(timeLabel(h),step.key==='pickup'?'שעת איסוף':'שעת החזרה',true,anim);
+          showArrows(true);
+          if(step.key==='return')setExtras('איסוף: '+timeLabel(st.pickupH),'','');
+        }
         break;}
       case 'cat':{
+        const cats=getCats();
         const cat=currentCat();
+        if(!cat||!cats.length){
+          setLabel('קטגוריה');
+          setMain('—','אין קטגוריות זמינות',true,anim);
+          setExtras('הגדר קטגוריות בניהול','','');
+          showArrows(false);
+          break;
+        }
         // Carousel: big icon on top, name as main, code+price as sub,
         // counter as step-label, scroll hint in extra3
-        setLabel(`${st.catIdx+1} / ${CATS.length}`);
+        setLabel(`${st.catIdx+1} / ${cats.length}`);
         setMain(cat.name, cat.code + ' · ₪' + cat.daily + '/יום', true, anim);
         setExtras('גלול לבחירה','','לחץ לאישור');
         showArrows(true);
@@ -9632,7 +9709,7 @@ if (DRIVE_SMART_BTN_ENABLED) {
         break;}
       case 'date':{const off=step.key==='start'?st.startOff:st.endOff;$('sb-main').textContent=mainLabel(off);$('sb-sub').textContent=monthLabel(off);if(step.key==='end')$('sb-extra1').textContent='מ-'+shortDate(st.startOff);break;}
       case 'hour':{const h=step.key==='pickup'?st.pickupH:st.returnH;$('sb-main').textContent=timeLabel(h);if(step.key==='return')$('sb-extra1').textContent='איסוף: '+timeLabel(st.pickupH);break;}
-      case 'cat':{const cat=currentCat();$('sb-step-label').textContent=`${st.catIdx+1} / ${CATS.length}`;$('sb-main').textContent=cat.name;$('sb-sub').textContent=cat.code+' · ₪'+cat.daily+'/יום';showCat(CAT_SVGS[cat.id]||'');break;}
+      case 'cat':{const cats=getCats();const cat=currentCat();if(cat){$('sb-step-label').textContent=`${st.catIdx+1} / ${cats.length}`;$('sb-main').textContent=cat.name;$('sb-sub').textContent=cat.code+' · ₪'+cat.daily+'/יום';showCat(CAT_SVGS[cat.id]||'');}else{$('sb-main').textContent='—';$('sb-sub').textContent='אין קטגוריות זמינות';}break;}
     }
   }
 
