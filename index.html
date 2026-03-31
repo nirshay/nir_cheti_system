@@ -277,6 +277,27 @@ body {
   transition: all 180ms ease;
 }
 .hp-header-admin:hover { color: var(--hp-warm-white); border-color: rgba(255,255,255,0.22); }
+/* ── HEADER SOCIAL ICONS ─────────────────────────────────── */
+.hp-social-icon {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; line-height: 1;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.60);
+  cursor: pointer; text-decoration: none;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  flex-shrink: 0; font-family: 'Heebo', sans-serif;
+}
+.hp-social-icon:hover {
+  background: rgba(255,255,255,0.11);
+  border-color: rgba(255,255,255,0.28);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+}
+.hp-social-icon-wa { border-color: rgba(37,211,102,0.32); color: #25d366; }
+.hp-social-icon-wa:hover { background: rgba(37,211,102,0.13); border-color: rgba(37,211,102,0.55); box-shadow: 0 4px 14px rgba(37,211,102,0.22); color: #25d366; }
 
 /* ── STAGE HERO ──────────────────────────────────────────── */
 
@@ -5305,7 +5326,11 @@ body {
     <span class="hp-nav-link" onclick="console.log('[DEBUG] צור קשר clicked, typeof window.hp_scrollToSection=', typeof window.hp_scrollToSection); window.hp_scrollToSection('contact-section')">צרו קשר</span>
   </nav>
   <div class="hp-header-right">
-    <button class="hp-header-wa" onclick="window.logContact('whatsapp')">💬 וואטסאפ</button>
+    <button class="hp-social-icon hp-social-icon-wa" onclick="window.logContact('whatsapp')" title="WhatsApp">💬</button>
+    <a class="hp-social-icon" href="https://waze.com/ul?q=%D7%94%D7%AA%D7%A7%D7%A9%D7%95%D7%A8%D7%AA%209%20%D7%90%D7%A9%D7%93%D7%95%D7%93" target="_blank" rel="noopener" title="Waze">🗺</a>
+    <a class="hp-social-icon" href="#" title="TikTok">♪</a>
+    <a class="hp-social-icon" href="#" title="Instagram">📷</a>
+    <a class="hp-social-icon" style="font-size:13px;font-weight:800;" href="#" title="Facebook">f</a>
     <button class="hp-header-admin" onclick="ShellRouter.go('admin')">ניהול ←</button>
   </div>
 </header>
