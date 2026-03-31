@@ -3430,7 +3430,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  overflow: hidden;
+  overflow: clip;
   position: sticky; top: 78px;
 }
 .filter-panel-header {
@@ -3447,14 +3447,14 @@ body {
   transition: opacity var(--transition-fast);
 }
 .filter-clear-btn:hover { opacity: 0.7; }
-.filter-section { padding: 12px 16px; border-bottom: 1px solid var(--color-border-subtle); }
+.filter-section { padding: 12px 16px; border-bottom: 1px solid var(--color-border-subtle); position: relative; }
 .filter-section-title {
   font-size: 10.5px; font-weight: 700;
   color: var(--color-text-muted); text-transform: uppercase;
   letter-spacing: 0.06em; margin-bottom: 8px;
 }
 .filter-select {
-  width: 100%; height: 34px; padding: 0 10px;
+  width: 100%; max-width: 100%; height: 34px; padding: 0 10px;
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-input);
   font-size: var(--font-size-small, 13px);
@@ -4083,6 +4083,45 @@ body {
   transition: opacity 180ms ease;
 }
 .yad2-logo-wrap:hover .y2-logo-img { opacity: 0.82; }
+
+/* ── YAD2 LIGHT SOCIAL ICONS (scoped — does not affect Home or Yad1) ── */
+.y2-social-row { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.y2-social-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  cursor: pointer; text-decoration: none; flex-shrink: 0;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+.y2-social-icon svg { width: 18px; height: 18px; display: block; fill: currentColor; }
+.y2-social-icon:hover { transform: scale(1.05); box-shadow: 0 3px 8px rgba(0,0,0,0.13); }
+/* WhatsApp — dominant: filled green circle */
+.y2-social-wa {
+  width: 40px; height: 40px;
+  background: #25D366; border-color: #25D366; color: #fff;
+  box-shadow: 0 2px 6px rgba(37,211,102,0.28);
+}
+.y2-social-wa svg { width: 20px; height: 20px; fill: #fff; }
+.y2-social-wa:hover { box-shadow: 0 4px 12px rgba(37,211,102,0.40); border-color: #1ebe5d; }
+/* Phone */
+.y2-social-phone { color: #3B82F6; }
+.y2-social-phone svg { fill: #3B82F6; }
+.y2-social-phone:hover { border-color: #3B82F6; }
+/* TikTok */
+.y2-social-tiktok { color: #111; }
+.y2-social-tiktok svg { fill: #111; }
+.y2-social-tiktok:hover { border-color: #bbb; }
+/* Instagram */
+.y2-social-instagram { color: #C13584; }
+.y2-social-instagram svg { fill: #C13584; }
+.y2-social-instagram:hover { border-color: #C13584; }
+/* Facebook */
+.y2-social-facebook { color: #1877F2; }
+.y2-social-facebook svg { fill: #1877F2; }
+.y2-social-facebook:hover { border-color: #1877F2; }
+
 .yad2-logo-sub {
   font-size: 10px;
   color: var(--color-text-muted);
@@ -4469,7 +4508,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  overflow: hidden;
+  overflow: clip;
 }
 .filter-panel-header {
   padding: 12px 16px;
@@ -4487,7 +4526,7 @@ body {
   border: none;
   font-family: var(--font-body);
 }
-.filter-section { padding: 12px 16px; border-bottom: 1px solid var(--color-border-subtle); }
+.filter-section { padding: 12px 16px; border-bottom: 1px solid var(--color-border-subtle); position: relative; }
 .filter-section-title {
   font-size: 12px;
   font-weight: 600;
@@ -4562,7 +4601,7 @@ body {
 }
 .vehicle-card-img {
   width: 100%;
-  height: 150px;
+  height: 170px;
   background: linear-gradient(135deg, #e4e7ec 0%, #d0d5dd 100%);
   position: relative;
   display: flex;
@@ -4576,22 +4615,26 @@ body {
   top: 8px;
   right: 8px;
 }
-.vehicle-card-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+.vehicle-card-badge .badge { font-weight: 700; font-size: 11.5px; letter-spacing: 0.2px; }
+.vehicle-card-badge .badge-active { background: #d1fae5; color: #065f46; }
+.vehicle-card-badge .badge-sold   { background: #fee2e2; color: #b91c1c; }
+.vehicle-card-body { padding: 14px 14px 12px; flex: 1; display: flex; flex-direction: column; gap: 0; }
 .vehicle-card-title {
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 13.5px;
+  font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: 2px;
 }
 .vehicle-card-sub {
-  font-size: 12.5px;
+  font-size: 11.5px;
   color: var(--color-text-secondary);
+  opacity: 0.7;
   margin-bottom: 10px;
 }
 .vehicle-card-specs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 12px;
 }
 .spec-chip {
@@ -4601,8 +4644,10 @@ body {
   font-size: 12px;
   color: var(--color-text-secondary);
   background: var(--color-surface-sunken);
-  padding: 2px 7px;
-  border-radius: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--color-border-subtle);
+  white-space: nowrap;
 }
 .vehicle-card-footer {
   margin-top: auto;
@@ -4613,14 +4658,16 @@ body {
   border-top: 1px solid var(--color-border-subtle);
 }
 .vehicle-price {
-  font-size: 17px;
+  font-size: 22px;
   font-weight: 800;
-  color: var(--color-text-primary);
+  color: #111;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
-.vehicle-price-sub { font-size: 11px; color: var(--color-text-muted); }
-.card-cta-row { display: flex; gap: 6px; }
+.vehicle-price-sub { font-size: 11px; color: var(--color-text-muted); margin-top: 1px; }
+.card-cta-row { display: flex; gap: 6px; align-items: center; }
 .card-wa-btn {
-  width: 32px; height: 32px;
+  width: 38px; height: 38px;
   background: #25d366;
   color: #fff;
   border: none;
@@ -4629,24 +4676,25 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 17px;
   transition: all var(--transition);
+  box-shadow: 0 2px 6px rgba(37,211,102,0.30);
 }
-.card-wa-btn:hover { background: #1ebe5d; }
+.card-wa-btn:hover { background: #1ebe5d; transform: scale(1.07); box-shadow: 0 4px 12px rgba(37,211,102,0.40); }
 .card-view-btn {
-  height: 32px;
-  padding: 0 12px;
-  background: var(--color-accent-muted);
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
+  height: 38px;
+  padding: 0 13px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-strong);
   border-radius: 8px;
   cursor: pointer;
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   font-family: var(--font-body);
   transition: all var(--transition);
 }
-.card-view-btn:hover { background: var(--color-accent); color: var(--color-cta-text); }
+.card-view-btn:hover { background: var(--color-surface-sunken); color: var(--color-text-primary); }
 
 /* Sold overlay */
 .sold-overlay {
@@ -6076,12 +6124,12 @@ body {
             <span class="header-nav-link" onclick="console.log('[Nav] יד 1 clicked'); ShellRouter.go('yad1')">יד 1</span>
             <span class="header-nav-link" onclick="console.log('[Nav] אודות clicked'); ShellRouter.go('home')">אודות</span>
           </nav>
-          <div class="hp-header-right" style="gap:8px;">
-            <button class="hp-social-icon hp-social-icon-wa" onclick="window.logContact('whatsapp')" title="WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
-            <a class="hp-social-icon hp-social-icon-waze" href="https://waze.com/ul?q=%D7%94%D7%AA%D7%A7%D7%A9%D7%95%D7%A8%D7%AA%209%20%D7%90%D7%A9%D7%93%D7%95%D7%93" target="_blank" rel="noopener" title="Waze"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.54 7.27C19.76 3.14 16.18.12 11.95.01 7.44-.1 3.53 2.9 2.55 7.27c-.63 2.82.17 5.52 1.98 7.44L4.53 17a2.01 2.01 0 002.01 2h.14a2 2 0 001.98-1.74l.05-.46c.64.15 1.3.23 1.97.23 5.52 0 10-4.48 10-10 0-.59-.05-1.17-.14-1.76zM9.07 17.48l-.1.92a.5.5 0 01-.5.43h-.14a.5.5 0 01-.5-.5v-2.16l.1-.1c-.6-.48-1.14-1.03-1.6-1.63l-.55 5.1A2 2 0 014 17.62v-.33A9.43 9.43 0 013.97 8c.85-3.76 4.13-6.35 7.98-6.46 3.79-.1 7.05 2.41 7.72 5.97.09.52.14 1.05.14 1.57 0 4.42-3.58 8-8 8a8.27 8.27 0 01-2.74-.6zm1.57-9.3a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zm4.5 0a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zm-5.5 4.75h5.5a.5.5 0 010 1h-5.5a.5.5 0 010-1z"/></svg></a>
-            <a class="hp-social-icon hp-social-icon-tiktok" href="#" title="TikTok"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg></a>
-            <a class="hp-social-icon hp-social-icon-instagram" href="#" title="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-            <a class="hp-social-icon hp-social-icon-facebook" href="https://www.facebook.com/driverent.co.il" target="_blank" rel="noopener" title="Facebook"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <div class="y2-social-row">
+            <button class="y2-social-icon y2-social-wa" onclick="window.logContact('whatsapp')" title="WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
+            <a class="y2-social-icon y2-social-phone" href="tel:0866050010" title="Phone"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></a>
+            <a class="y2-social-icon y2-social-tiktok" href="#" title="TikTok"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg></a>
+            <a class="y2-social-icon y2-social-instagram" href="#" title="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+            <a class="y2-social-icon y2-social-facebook" href="https://www.facebook.com/driverent.co.il" target="_blank" rel="noopener" title="Facebook"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
           </div>
         </div>
       </header>
@@ -6199,12 +6247,12 @@ body {
               <input type="text" class="search-input" placeholder="חפש...">
             </div>
           </div>
-          <div class="hp-header-right" style="gap:8px;">
-            <button class="hp-social-icon hp-social-icon-wa" onclick="window.logContact('whatsapp')" title="WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
-            <a class="hp-social-icon hp-social-icon-waze" href="https://waze.com/ul?q=%D7%94%D7%AA%D7%A7%D7%A9%D7%95%D7%A8%D7%AA%209%20%D7%90%D7%A9%D7%93%D7%95%D7%93" target="_blank" rel="noopener" title="Waze"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.54 7.27C19.76 3.14 16.18.12 11.95.01 7.44-.1 3.53 2.9 2.55 7.27c-.63 2.82.17 5.52 1.98 7.44L4.53 17a2.01 2.01 0 002.01 2h.14a2 2 0 001.98-1.74l.05-.46c.64.15 1.3.23 1.97.23 5.52 0 10-4.48 10-10 0-.59-.05-1.17-.14-1.76zM9.07 17.48l-.1.92a.5.5 0 01-.5.43h-.14a.5.5 0 01-.5-.5v-2.16l.1-.1c-.6-.48-1.14-1.03-1.6-1.63l-.55 5.1A2 2 0 014 17.62v-.33A9.43 9.43 0 013.97 8c.85-3.76 4.13-6.35 7.98-6.46 3.79-.1 7.05 2.41 7.72 5.97.09.52.14 1.05.14 1.57 0 4.42-3.58 8-8 8a8.27 8.27 0 01-2.74-.6zm1.57-9.3a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zm4.5 0a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zm-5.5 4.75h5.5a.5.5 0 010 1h-5.5a.5.5 0 010-1z"/></svg></a>
-            <a class="hp-social-icon hp-social-icon-tiktok" href="#" title="TikTok"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg></a>
-            <a class="hp-social-icon hp-social-icon-instagram" href="#" title="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-            <a class="hp-social-icon hp-social-icon-facebook" href="https://www.facebook.com/driverent.co.il" target="_blank" rel="noopener" title="Facebook"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <div class="y2-social-row">
+            <button class="y2-social-icon y2-social-wa" onclick="window.logContact('whatsapp')" title="WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
+            <a class="y2-social-icon y2-social-phone" href="tel:0866050010" title="Phone"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></a>
+            <a class="y2-social-icon y2-social-tiktok" href="#" title="TikTok"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg></a>
+            <a class="y2-social-icon y2-social-instagram" href="#" title="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+            <a class="y2-social-icon y2-social-facebook" href="https://www.facebook.com/driverent.co.il" target="_blank" rel="noopener" title="Facebook"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
           </div>
         </div>
       </header>
