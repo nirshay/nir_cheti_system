@@ -9709,31 +9709,9 @@ if (DRIVE_SMART_BTN_ENABLED) {
         showInputs();
         break;}
       case 'confirm':{
-        const pd=getData();st.name=pd.name;st.phone=pd.phone;
+        const pd=getData();
         const ref=Math.floor(Math.random()*90000+10000);
         console.log('[SmartButton] reservation:',JSON.stringify(buildReservation(ref),null,2));
-        // --- Create lead in SB.leads ---
-        const _cat=currentCat();
-        const _lead={
-          id: ref,
-          name: st.name,
-          phone: st.phone,
-          category_name: _cat?_cat.name:'',
-          pickup_date: dateAt(st.startOff).toISOString().split('T')[0],
-          pickup_time: timeLabel(st.pickupH),
-          return_date: dateAt(st.endOff).toISOString().split('T')[0],
-          return_time: timeLabel(st.returnH),
-          message: '',
-          created_at: new Date().toISOString(),
-          status: 'new',
-        };
-        if(typeof SB!=='undefined'&&Array.isArray(SB.leads)) SB.leads.unshift(_lead);
-        // --- WhatsApp ---
-        const _waNum=(typeof SB!=='undefined'&&SB.settings&&SB.settings.action_value)?SB.settings.action_value.replace(/\D/g,''):'';
-        if(_waNum){
-          const _waText=`שלום, אני רוצה להשכיר רכב\nקטגוריה: ${_lead.category_name}\nאיסוף: ${_lead.pickup_date} ${_lead.pickup_time}\nהחזרה: ${_lead.return_date} ${_lead.return_time}\nשם: ${_lead.name}\nטלפון: ${_lead.phone}`;
-          setTimeout(()=>{ window.open('https://wa.me/'+_waNum+'?text='+encodeURIComponent(_waText),'_blank'); },400);
-        }
         const all=['sb-main','sb-div','sb-sub','sb-extra1','sb-extra2','sb-extra3'];
         all.forEach(id=>{const e=$(id);if(e)e.style.opacity='0';});
         setTimeout(()=>{
@@ -9801,7 +9779,35 @@ if (DRIVE_SMART_BTN_ENABLED) {
 
   function advance(){
     const step=STEPS[stepIdx];
-    if(step.type==='static'){const d=getData();if(!d.name){showTooltip('נא להזין שם מלא');return;}if(!d.phone){showTooltip('נא להזין מספר נייד');return;}st.name=d.name;st.phone=d.phone;hideInputs();}
+    if(step.type==='static'){
+      const d=getData();
+      if(!d.name){showTooltip('נא להזין שם מלא');return;}
+      if(!d.phone){showTooltip('נא להזין מספר נייד');return;}
+      st.name=d.name;st.phone=d.phone;
+      // --- Create lead when user completes details step ---
+      const _cat=currentCat();
+      const _lead={
+        id: Math.floor(Math.random()*90000+10000),
+        name: st.name,
+        phone: st.phone,
+        category_name: _cat?_cat.name:'',
+        pickup_date: dateAt(st.startOff).toISOString().split('T')[0],
+        pickup_time: timeLabel(st.pickupH),
+        return_date: dateAt(st.endOff).toISOString().split('T')[0],
+        return_time: timeLabel(st.returnH),
+        message: '',
+        created_at: new Date().toISOString(),
+        status: 'new',
+      };
+      if(typeof SB!=='undefined'&&Array.isArray(SB.leads)) SB.leads.unshift(_lead);
+      // --- WhatsApp ---
+      const _waNum=(typeof SB!=='undefined'&&SB.settings&&SB.settings.action_value)?SB.settings.action_value.replace(/\D/g,''):'';
+      if(_waNum){
+        const _waText=`שלום, אני רוצה להשכיר רכב\nקטגוריה: ${_lead.category_name}\nאיסוף: ${_lead.pickup_date} ${_lead.pickup_time}\nהחזרה: ${_lead.return_date} ${_lead.return_time}\nשם: ${_lead.name}\nטלפון: ${_lead.phone}`;
+        setTimeout(()=>{ window.open('https://wa.me/'+_waNum+'?text='+encodeURIComponent(_waText),'_blank'); },400);
+      }
+      hideInputs();
+    }
     if(stepIdx<STEPS.length-1){stepIdx++;render(true);}
   }
 
