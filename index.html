@@ -10196,7 +10196,7 @@ const AdminApp = {
         '<div class="adm-field"><label>כושר גרירה (ק״ג)</label><input class="adm-input" id="af-y1-towing" type="text" inputmode="numeric" pattern="[0-9]*" value="' + this._esc(v.towing_capacity || '') + '"></div>' +
         '<div class="adm-field"><label>מחיר (₪)</label><input class="adm-input" id="af-y1-price" type="text" inputmode="numeric" pattern="[0-9]*" value="' + this._esc(v.price || '') + '"></div>' +
         '<div class="adm-field"><label>זמינות</label><select class="adm-select" id="af-y1-availability">' + avOpts + '</select></div>' +
-        '<div class="adm-field"><label>תמונה (URL)</label><input class="adm-input" id="af-y1-image_url" value="' + this._esc((v.images||[])[0]||'') + '"></div>' +
+        '<div class="adm-field" style="grid-column:1/-1">' + AdminApp._tImageUpload('y1', (v.images||[])[0]||'') + '</div>' +
         '<div class="adm-field" style="justify-content:flex-end;padding-top:20px">' +
           '<label style="display:flex;align-items:center;gap:8px;cursor:pointer">' +
             '<input type="checkbox" id="af-y1-featured" ' + (v.is_featured ? 'checked' : '') + '> מומלץ' +
@@ -10386,8 +10386,7 @@ const AdminApp = {
           '</label>' +
         '</div>' +
       '</div>' +
-      '<div class="adm-field" style="margin-top:14px"><label>תמונה (URL)</label>' +
-        '<input class="adm-input" id="af-y2-image_url" value="' + this._esc((v.images||[])[0]||'') + '" dir="ltr"></div>' +
+      '<div class="adm-field" style="margin-top:14px">' + AdminApp._tImageUpload('y2', (v.images||[])[0]||'') + '</div>' +
       '<div class="adm-form-actions">' +
         '<button class="adm-btn adm-btn-primary" onclick="AdminApp.saveY2(\'' + saveId + '\')">' + (isNew ? 'הוסף' : 'שמור') + '</button>' +
         (!isNew ? '<button class="adm-btn adm-btn-danger" onclick="AdminApp.deleteY2(\'' + id + '\')">מחק</button>' : '') +
@@ -10609,6 +10608,95 @@ const AdminApp = {
   _filterLeads(filter) {
     const main = document.getElementById('adm-main');
     if (main) main.innerHTML = this._tLeads(filter);
+  },
+
+  /* ══════════════════════════════════════════════════════════════
+     IMAGE UPLOAD — shared by Yad1 and Yad2 forms
+     namespace: af-{ns}-image_url, adm-{ns}-upload-*, adm-{ns}-preview
+  ══════════════════════════════════════════════════════════════ */
+  _tImageUpload(ns, existingUrl) {
+    const previewHtml = existingUrl
+      ? '<img id="adm-' + ns + '-preview" src="' + this._esc(existingUrl) + '" style="max-width:180px;max-height:120px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);display:block;margin-top:8px;" onerror="this.style.display=\'none\'">'
+      : '<img id="adm-' + ns + '-preview" style="display:none;max-width:180px;max-height:120px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);margin-top:8px;">';
+    return '<label style="font-size:12px;font-weight:600;color:#9e9e9e;">תמונה</label>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">' +
+        '<input class="adm-input" id="af-' + ns + '-image_url" value="' + this._esc(existingUrl) + '" dir="ltr" placeholder="./Pictures/filename.jpg" oninput="AdminApp._onImageUrlTyped(\'' + ns + '\')">' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<label style="font-size:11px;color:#4a4a4a;cursor:pointer;display:flex;align-items:center;gap:6px;">' +
+            '<input type="file" id="adm-' + ns + '-file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="AdminApp._onFileSelected(\'' + ns + '\')">' +
+            '<span style="font-size:11px;color:#9e9e9e;">Upload image to Pictures folder</span>' +
+            '<button type="button" class="adm-btn adm-btn-sm adm-btn-sec" onclick="document.getElementById(\'adm-' + ns + '-file\').click()">בחר קובץ</button>' +
+          '</label>' +
+          '<button type="button" class="adm-btn adm-btn-sm adm-btn-sec" id="adm-' + ns + '-upload-btn" onclick="AdminApp.uploadImage(\'' + ns + '\')" style="display:none">העלה</button>' +
+        '</div>' +
+        '<span id="adm-' + ns + '-upload-msg" style="font-size:12px;display:none;"></span>' +
+        previewHtml +
+      '</div>';
+  },
+
+  _onFileSelected(ns) {
+    const fileInput = document.getElementById('adm-' + ns + '-file');
+    const btn       = document.getElementById('adm-' + ns + '-upload-btn');
+    const msg       = document.getElementById('adm-' + ns + '-upload-msg');
+    if (!fileInput || !fileInput.files.length) return;
+    const file = fileInput.files[0];
+    if (btn) { btn.style.display = 'inline-block'; btn.textContent = 'העלה — ' + file.name; }
+    if (msg) { msg.style.display = 'none'; }
+  },
+
+  _onImageUrlTyped(ns) {
+    const urlEl   = document.getElementById('af-' + ns + '-image_url');
+    const preview = document.getElementById('adm-' + ns + '-preview');
+    if (!urlEl || !preview) return;
+    const val = urlEl.value.trim();
+    if (val) {
+      preview.src = val;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+  },
+
+  uploadImage(ns) {
+    const fileInput = document.getElementById('adm-' + ns + '-file');
+    const urlEl     = document.getElementById('af-' + ns + '-image_url');
+    const msg       = document.getElementById('adm-' + ns + '-upload-msg');
+    const preview   = document.getElementById('adm-' + ns + '-preview');
+    const btn       = document.getElementById('adm-' + ns + '-upload-btn');
+
+    if (!fileInput || !fileInput.files.length) return;
+
+    const file = fileInput.files[0];
+
+    // Client-side type check before sending
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      if (msg) { msg.textContent = '✗ סוג קובץ לא מורשה (jpg, png, webp בלבד)'; msg.style.color = '#e05050'; msg.style.display = 'block'; }
+      return;
+    }
+
+    if (msg) { msg.textContent = 'מעלה...'; msg.style.color = '#9e9e9e'; msg.style.display = 'block'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'מעלה...'; }
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    fetch('./upload-image.php', { method: 'POST', body: formData })
+      .then(res => res.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.textContent = 'העלה שוב'; }
+        if (data.success) {
+          if (urlEl)   { urlEl.value = data.path; }
+          if (preview) { preview.src = data.path; preview.style.display = 'block'; }
+          if (msg)     { msg.textContent = '✓ הועלה: ' + data.path; msg.style.color = '#3dcb7a'; msg.style.display = 'block'; }
+        } else {
+          if (msg) { msg.textContent = '✗ שגיאה: ' + (data.error || 'העלאה נכשלה'); msg.style.color = '#e05050'; msg.style.display = 'block'; }
+        }
+      })
+      .catch(err => {
+        if (btn) { btn.disabled = false; btn.textContent = 'נסה שוב'; }
+        if (msg) { msg.textContent = '✗ שגיאת רשת: ' + err.message; msg.style.color = '#e05050'; msg.style.display = 'block'; }
+      });
   },
 };
 
