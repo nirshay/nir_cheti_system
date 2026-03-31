@@ -9546,7 +9546,7 @@ if (DRIVE_SMART_BTN_ENABLED) {
   const DAY=86400000, today=new Date();
   today.setHours(0,0,0,0);
   const HM=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
-  const st={startOff:0,endOff:1,pickupH:null,returnH:null,catIdx:0,name:'',phone:''};
+  const st={startOff:0,endOff:1,pickupH:null,returnH:null,catIdx:0,name:'',phone:'',_returnManual:false};
   const dateAt=off=>new Date(today.getTime()+off*DAY);
   const pad2=n=>String(n).padStart(2,'0');
   const dayCount=()=>Math.max(1,st.endOff-st.startOff);
@@ -9556,23 +9556,42 @@ if (DRIVE_SMART_BTN_ENABLED) {
   const timeLabel=h=>h===null?'—':pad2(h)+':00';
   const currentCat=()=>getCats()[st.catIdx]||null;
   function calcPrice(){const c=currentCat();if(!c)return{total:0,deposit:0,plan:'daily'};let r=dayCount(),t=0;const mo=Math.floor(r/30);r-=mo*30;const wk=Math.floor(r/7);r-=wk*7;t=(mo*c.monthly)+(wk*c.weekly)+(r*c.daily);return{total:t,deposit:0,plan:mo>0?'monthly':wk>0?'weekly':'daily'};}
-  function stepDate(dir,key){if(key==='start'){const n=st.startOff+dir;if(n<0)return;st.startOff=n;if(st.endOff<=st.startOff)st.endOff=st.startOff+1;st.pickupH=firstAvailableHour(st.startOff);}else{const n=st.endOff+dir;if(n<=st.startOff)return;st.endOff=n;st.returnH=firstAvailableHour(st.endOff);}}
+  // Mirror pickup hour to return hour if user has not manually changed return hour yet
+  function _syncReturnHour(){
+    if(!st._returnManual&&st.pickupH!==null){
+      st.returnH=clampHour(st.pickupH,st.endOff)??st.pickupH;
+    }
+  }
+  function stepDate(dir,key){
+    if(key==='start'){
+      const n=st.startOff+dir;if(n<0)return;
+      st.startOff=n;if(st.endOff<=st.startOff)st.endOff=st.startOff+1;
+      st.pickupH=firstAvailableHour(st.startOff);
+      _syncReturnHour();
+    }else{
+      const n=st.endOff+dir;if(n<=st.startOff)return;
+      st.endOff=n;
+      if(!st._returnManual){st.returnH=clampHour(st.pickupH,st.endOff)??firstAvailableHour(st.endOff);}
+    }
+  }
   function stepHour(dir,key){
     const off=key==='pickup'?st.startOff:st.endOff;
     const hrs=hoursForDate(dateAt(off));
     if(!hrs)return;
     if(key==='pickup'){
-      const min=key==='pickup'&&off===0?firstAvailableHour(0)||hrs.open:hrs.open;
+      const min=off===0?firstAvailableHour(0)||hrs.open:hrs.open;
       st.pickupH=Math.max(min,Math.min((st.pickupH===null?hrs.open:st.pickupH)+dir,hrs.close-1));
+      _syncReturnHour(); // auto-mirror unless user already manually set return hour
     }else{
+      st._returnManual=true; // user is explicitly changing return hour
       st.returnH=Math.max(hrs.open,Math.min((st.returnH===null?hrs.open:st.returnH)+dir,hrs.close-1));
     }
   }
   function stepCat(dir){const cats=getCats();if(!cats.length)return;st.catIdx=(st.catIdx+dir+cats.length)%cats.length;}
   function resetState(){
-    st.startOff=0;st.endOff=1;st.catIdx=0;st.name='';st.phone='';
+    st.startOff=0;st.endOff=1;st.catIdx=0;st.name='';st.phone='';st._returnManual=false;
     st.pickupH=firstAvailableHour(0);
-    st.returnH=firstAvailableHour(1);
+    st.returnH=st.pickupH; // default return hour mirrors pickup hour
   }
   function buildReservation(ref){const p=calcPrice(),c=currentCat();return{reservation_id:String(ref),pickup_date:dateAt(st.startOff).toISOString().split('T')[0],pickup_time:timeLabel(st.pickupH),return_date:dateAt(st.endOff).toISOString().split('T')[0],return_time:timeLabel(st.returnH),car_category_id:c?c.id:null,price_plan:p.plan,total_price:p.total,customer_name:st.name,customer_phone:st.phone,status:'pending'};}
 
