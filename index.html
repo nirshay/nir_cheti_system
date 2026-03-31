@@ -10064,7 +10064,7 @@ const AdminApp = {
     if (!main) return;
     if      (name === 'dashboard') main.innerHTML = this._tDashboard();
     else if (name === 'yad1')      { this._y1ShowForm = false; this._y1EditId = null; main.innerHTML = this._tYad1(); }
-    else if (name === 'yad2')      { this._y2ShowForm = false; this._y2EditId = null; main.innerHTML = this._tYad2(); }
+    else if (name === 'yad2')      { this._y2ShowForm = false; this._y2EditId = null; main.innerHTML = this._tYad2(); this._applyY2Filter(); }
     else if (name === 'homepage')  main.innerHTML = this._tHomepage();
     else if (name === 'smartbtn')  main.innerHTML = this._tSmartBtn();
     else if (name === 'leads')     main.innerHTML = this._tLeads('all');
@@ -10277,13 +10277,28 @@ const AdminApp = {
   /* ══════════════════════════════════════════════════════════════
      YAD2 MANAGEMENT
   ══════════════════════════════════════════════════════════════ */
-  _tYad2(filterMfr, filterAd, filterMaxPrice) {
+  _tYad2() {
+    return '<div class="adm-screen"><div class="adm-topbar">' +
+      '<h1 class="adm-title">יד 2 — ניהול מלאי</h1>' +
+      '<button class="adm-btn" style="background:#1a4731;color:#a8d5b5;border:1px solid #2a6344;" onclick="AdminApp.editY2(null)">+ הוסף רכב</button>' +
+      '</div><div class="adm-content">' +
+      '<div class="adm-toolbar">' +
+        '<input class="adm-search-input" placeholder="מספר מודעה..." id="adm-y2-ad" oninput="AdminApp._applyY2Filter()" autocomplete="off">' +
+        '<input class="adm-search-input" placeholder="יצרן..." id="adm-y2-mfr" oninput="AdminApp._applyY2Filter()" autocomplete="off">' +
+        '<input class="adm-search-input" placeholder="מחיר מקסימום..." type="text" inputmode="numeric" id="adm-y2-maxprice" oninput="AdminApp._applyY2Filter()" autocomplete="off">' +
+        '<button class="adm-btn adm-btn-sec" onclick="AdminApp._clearY2Filter()">נקה</button>' +
+      '</div>' +
+      '<div id="adm-y2-table-wrap"></div>' +
+      (this._y2ShowForm ? this._tY2Form(this._y2EditId) : '') +
+      '</div></div>';
+  },
+
+  _y2FilteredRows(filterAd, filterMfr, filterMaxPrice) {
     let veh = typeof Y2_Engine !== 'undefined'
       ? Y2_Engine.vehicles.filter(v => v.listing_type === 'yad2') : [];
     if (filterMfr)      veh = veh.filter(v => v.manufacturer.toLowerCase().includes(filterMfr.toLowerCase()));
     if (filterAd)       veh = veh.filter(v => (v.ad_number||'').includes(filterAd));
     if (filterMaxPrice) veh = veh.filter(v => v.price <= parseInt(filterMaxPrice));
-
     const rows = veh.map(v =>
       '<tr>' +
       '<td>' + this._esc(v.ad_number||'') + '</td>' +
@@ -10299,44 +10314,34 @@ const AdminApp = {
         '<button class="adm-btn adm-btn-sm adm-btn-danger" onclick="AdminApp.deleteY2(\'' + v.id + '\')">מחיקה</button>' +
       '</td></tr>'
     ).join('');
-
-    const mfrVal  = filterMfr       ? ' value="' + this._esc(filterMfr) + '"'       : '';
-    const adVal   = filterAd        ? ' value="' + this._esc(filterAd) + '"'         : '';
-    const mpVal   = filterMaxPrice  ? ' value="' + this._esc(filterMaxPrice) + '"'   : '';
-
-    return '<div class="adm-screen"><div class="adm-topbar">' +
-      '<h1 class="adm-title">יד 2 — ניהול מלאי</h1>' +
-      '<button class="adm-btn adm-btn-primary" onclick="AdminApp.editY2(null)">+ הוסף רכב</button>' +
-      '</div><div class="adm-content">' +
-      '<div class="adm-toolbar">' +
-        '<input class="adm-search-input" placeholder="מספר מודעה..." id="adm-y2-ad" oninput="AdminApp._applyY2Filter()"' + adVal + '>' +
-        '<input class="adm-search-input" placeholder="יצרן..." id="adm-y2-mfr" oninput="AdminApp._applyY2Filter()"' + mfrVal + '>' +
-        '<input class="adm-search-input" placeholder="מחיר מקסימום..." type="text" inputmode="numeric" id="adm-y2-maxprice" oninput="AdminApp._applyY2Filter()"' + mpVal + '>' +
-        '<button class="adm-btn adm-btn-sec" onclick="AdminApp._clearY2Filter()">נקה</button>' +
-      '</div>' +
-      '<div class="adm-panel" style="overflow-x:auto">' +
+    return '<div class="adm-panel" style="overflow-x:auto">' +
       '<div class="adm-panel-head">כלי רכב (' + veh.length + ')</div>' +
       '<table class="adm-table"><thead><tr>' +
         '<th>מ׳ מודעה</th><th>יצרן</th><th>דגם</th><th>שנה</th><th>ק״מ</th><th>מחיר</th><th>יד</th><th>סטטוס</th><th>פעולות</th>' +
       '</tr></thead><tbody>' +
         (rows || '<tr><td colspan="9" class="adm-empty">לא נמצאו רכבים</td></tr>') +
-      '</tbody></table></div>' +
-      (this._y2ShowForm ? this._tY2Form(this._y2EditId) : '') +
-      '</div></div>';
+      '</tbody></table></div>';
   },
 
   _applyY2Filter() {
     const ad  = (document.getElementById('adm-y2-ad')||{}).value || '';
     const mfr = (document.getElementById('adm-y2-mfr')||{}).value || '';
     const mp  = (document.getElementById('adm-y2-maxprice')||{}).value || '';
-    const main = document.getElementById('adm-main');
-    if (main) main.innerHTML = this._tYad2(mfr, ad, mp);
+    // Only update the table — never re-render the inputs
+    const wrap = document.getElementById('adm-y2-table-wrap');
+    if (wrap) wrap.innerHTML = this._y2FilteredRows(ad, mfr, mp);
   },
 
   _clearY2Filter() {
     this._y2ShowForm = false;
-    const main = document.getElementById('adm-main');
-    if (main) main.innerHTML = this._tYad2();
+    const adEl = document.getElementById('adm-y2-ad');
+    const mfrEl = document.getElementById('adm-y2-mfr');
+    const mpEl  = document.getElementById('adm-y2-maxprice');
+    if (adEl)  adEl.value  = '';
+    if (mfrEl) mfrEl.value = '';
+    if (mpEl)  mpEl.value  = '';
+    const wrap = document.getElementById('adm-y2-table-wrap');
+    if (wrap) wrap.innerHTML = this._y2FilteredRows('', '', '');
   },
 
   _tY2Form(id) {
@@ -10393,7 +10398,14 @@ const AdminApp = {
     this._y2EditId = id;
     this._y2ShowForm = true;
     const main = document.getElementById('adm-main');
-    if (main) main.innerHTML = this._tYad2();
+    if (main) {
+      main.innerHTML = this._tYad2();
+      this._applyY2Filter();
+      requestAnimationFrame(() => {
+        const form = document.getElementById('adm-y2-form');
+        if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
   },
 
   saveY2(id) {
