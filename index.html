@@ -7168,6 +7168,27 @@ const ShellRouter = {
    captures general leads. Zero UI awareness.
    ============================================================ */
 
+/* ── LEAD PERSISTENCE HELPERS ──────────────────────────────── */
+const LeadStore = {
+  KEYS: {
+    hp:    'drive_hp_leads',
+    y1:    'drive_y1_leads',
+    y2:    'drive_y2_leads',
+    admin: 'drive_admin_leads',
+    sb:    'drive_sb_leads',
+  },
+  load(key) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e) { return null; }
+  },
+  save(key, arr) {
+    try { localStorage.setItem(key, JSON.stringify(arr)); } catch(e) {}
+  },
+  clear(key) {
+    try { localStorage.setItem(key, '[]'); } catch(e) {}
+  },
+};
+/* ─────────────────────────────────────────────────────────── */
+
 const HP_Engine = {
 
   // Full Yad1 vehicle dataset — mirrors drive-yad1.html HP_Engine.vehicles (yad1 only)
@@ -7221,7 +7242,7 @@ const HP_Engine = {
 
   AVAIL_LABELS: { stock:'במלאי', order:'הזמנה מוקדמת', sold:'נמכר' },
 
-  leads: [],
+  leads: LeadStore.load(LeadStore.KEYS.hp) || [],
 
   // Returns all active yad1 vehicles for the rotating stage
   getStageVehicles() {
@@ -7238,6 +7259,7 @@ const HP_Engine = {
       status: 'NEW',
     };
     this.leads.unshift(lead);
+    LeadStore.save(LeadStore.KEYS.hp, this.leads);
     return lead;
   },
 
@@ -7848,7 +7870,7 @@ const Y1_Engine = {
     },
   ],
 
-  leads: [],
+  leads: LeadStore.load(LeadStore.KEYS.y1) || [],
 
   // Shared service — same as Yad2
   getVehiclesByType(type, filters) {
@@ -7867,6 +7889,7 @@ const Y1_Engine = {
   captureLead(data) {
     const lead = { id: 'l' + Date.now(), ...data, created_at: new Date().toISOString(), status: 'NEW' };
     this.leads.unshift(lead);
+    LeadStore.save(LeadStore.KEYS.y1, this.leads);
     return lead;
   },
 
@@ -8318,7 +8341,7 @@ const Y2_Engine = {
     { listing_type:'yad2', id:'v1004', ad_number:'38244', manufacturer:'Ford', model:'F150', sub_model:'XLT', year:2023, km:25000, price:205000, gearbox:'אוטומטי', engine_type:'PETROL', engine_volume:3500, hand:1, exterior_color:'כחול', status:'ACTIVE', category:'Pickup', entry_date:'2025-02-15', notes:'', images:['https://via.placeholder.com/600x400?text=Ford+F150'] },
   ],
 
-  leads: [],
+  leads: LeadStore.load(LeadStore.KEYS.y2) || [],
 
   importHistory: [
     { id:'i001', filename:'inventory_march25.xlsx', date:'27/3/2025', created:38, updated:194, deactivated:15, errors:3, status:'COMPLETED_WITH_ERRORS' },
@@ -8361,6 +8384,7 @@ const Y2_Engine = {
   captureLead(data) {
     const lead = { id: 'l' + Date.now(), ...data, created_at: new Date().toLocaleString('he-IL'), status: 'NEW', notes: '' };
     this.leads.unshift(lead);
+    LeadStore.save(LeadStore.KEYS.y2, this.leads);
     return lead;
   },
 
@@ -10072,7 +10096,7 @@ if (DRIVE_SMART_BTN_ENABLED) {
         created_at: new Date().toISOString(),
         status: 'new',
       };
-      if(typeof SB!=='undefined'&&Array.isArray(SB.leads)) SB.leads.unshift(_lead);
+      if(typeof SB!=='undefined'&&Array.isArray(SB.leads)){ SB.leads.unshift(_lead); LeadStore.save(LeadStore.KEYS.sb, SB.leads); }
       // --- WhatsApp ---
       const _waNum=(typeof SB!=='undefined'&&SB.settings&&SB.settings.action_value)?SB.settings.action_value.replace(/\D/g,''):'';
       if(_waNum){
@@ -10442,7 +10466,7 @@ const AdminApp = {
   _y2EditId:   null,
 
   /* ── Extra leads (yad1 / homepage / smart_button sources) */
-  leads: [],
+  leads: LeadStore.load(LeadStore.KEYS.admin) || [],
 
   /* ── Homepage content (demo — not wired to live HP rendering) */
   homepageContent: {
@@ -11103,7 +11127,7 @@ const SB = {
   ],
 
   /* ─── LEADS — rental inquiries only (separate from car-sales) */
-  leads: [],
+  leads: LeadStore.load(LeadStore.KEYS.sb) || [],
 
   _esc(s) {
     return String(s == null ? '' : s)
