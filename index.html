@@ -10089,7 +10089,17 @@ if (DRIVE_SMART_BTN_ENABLED) {
         created_at: new Date().toISOString(),
         status: 'new',
       };
-      if(typeof SB!=='undefined'&&Array.isArray(SB.leads)){ SB.leads.unshift(_lead); LeadStore.save(LeadStore.KEYS.sb, SB.leads); }
+      if(typeof SB!=='undefined'&&Array.isArray(SB.leads)){
+        // [DIAG-1] lead created
+        console.log('[SB-DIAG] lead created:', JSON.parse(JSON.stringify(_lead)));
+        SB.leads.unshift(_lead);
+        // [DIAG-2] before LeadStore.save
+        console.log('[SB-DIAG] LeadStore.KEYS.sb:', LeadStore.KEYS.sb);
+        console.log('[SB-DIAG] SB.leads.length before save:', SB.leads.length);
+        console.log('[SB-DIAG] SB.leads before save:', JSON.stringify(SB.leads));
+        LeadStore.save(LeadStore.KEYS.sb, SB.leads);
+        console.log('[SB-DIAG] localStorage after save:', localStorage.getItem(LeadStore.KEYS.sb));
+      }
       // --- WhatsApp ---
       const _waNum=(typeof SB!=='undefined'&&SB.settings&&SB.settings.action_value)?SB.settings.action_value.replace(/\D/g,''):'';
       if(_waNum){
@@ -11376,6 +11386,9 @@ const SB = {
      C. LEADS — rental inquiries (separate from car-sales leads)
   ══════════════════════════════════════════════════════════════ */
   _tLeads(filter) {
+    // [DIAG-4] SB._tLeads render
+    console.log('[SB-DIAG] _tLeads called, this.leads.length:', this.leads.length);
+    console.log('[SB-DIAG] _tLeads this.leads:', JSON.parse(JSON.stringify(this.leads)));
     const cats = ['all', ...new Set(this.leads.map(l => l.category_name))];
     const list = filter === 'all' ? this.leads : this.leads.filter(l => l.category_name === filter);
 
@@ -11414,6 +11427,11 @@ const SB = {
     if (el) el.innerHTML = this._tLeads(filter);
   },
 };
+
+// [DIAG-3] SB initialization
+console.log('[SB-DIAG] SB init — raw localStorage:', localStorage.getItem(LeadStore.KEYS.sb));
+console.log('[SB-DIAG] SB init — LeadStore.load result:', LeadStore.load(LeadStore.KEYS.sb));
+console.log('[SB-DIAG] SB init — final SB.leads:', JSON.parse(JSON.stringify(SB.leads)));
 
 // Intercept ShellRouter admin navigation
 const _origShellGo = ShellRouter.go.bind(ShellRouter);
