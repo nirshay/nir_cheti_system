@@ -2043,7 +2043,14 @@ body {
   padding: 0 var(--spacing-page-x) 80px;
 }
 @media (max-width: 860px) { .yad1-catalog-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 520px) { .yad1-catalog-grid { grid-template-columns: 1fr; } }
+@media (max-width: 520px) {
+  .yad1-catalog-grid {
+    grid-template-columns: 1fr;
+    padding-left: 12px;
+    padding-right: 12px;
+    overflow-x: hidden;
+  }
+}
 
 /* Yad1 vehicle card */
 .yad1-card {
