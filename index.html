@@ -2098,28 +2098,19 @@ body {
   font-size: 11px; color: var(--color-text-muted); margin-top: 2px;
 }
 .yad1-card-cta {
-  display: flex; gap: 8px;
+  display: flex; gap: 10px; justify-content: flex-end;
 }
-.btn-wa-card {
-  display: flex; align-items: center; gap: 6px;
-  padding: 8px 14px;
-  background: var(--color-wa); color: #fff;
-  font-size: 12.5px; font-weight: 600;
-  border: none; border-radius: var(--radius-button);
-  cursor: pointer; font-family: 'Heebo', sans-serif;
-  transition: all var(--transition);
+.btn-circle-wa, .btn-circle-phone {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1;
+  transition: transform var(--transition), opacity var(--transition);
 }
-.btn-wa-card:hover { background: var(--color-wa-hover); }
-.btn-view-card {
-  padding: 8px 14px;
-  background: transparent; color: var(--color-text-muted);
-  font-size: 12.5px; font-weight: 500;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-button);
-  cursor: pointer; font-family: 'Heebo', sans-serif;
-  transition: all var(--transition);
-}
-.btn-view-card:hover { color: var(--color-text-primary); border-color: var(--color-text-muted); }
+.btn-circle-wa    { background: #25D366; }
+.btn-circle-phone { background: #FF6B00; }
+.btn-circle-wa:hover, .btn-circle-phone:hover { transform: scale(1.1); opacity: .9; }
 
 /* Featured card — visual parity, no layout override */
 .yad1-card.featured { grid-column: unset; }
@@ -7999,8 +7990,8 @@ const Y1_Structure = {
               <div class="yad1-card-price-note">${v.year} · ייבוא אישי</div>
             </div>
             ${!isSold ? `<div class="yad1-card-cta">
-              <button class="btn-wa-card" onclick="event.stopPropagation();y1_logLead('whatsapp','${v.id}','${v.manufacturer} ${v.model}')">💬</button>
-              <button class="btn-view-card" onclick="event.stopPropagation();y1_loadVehiclePage('${v.id}')">פרטים →</button>
+              <button class="btn-circle-phone" onclick="event.stopPropagation();y1_logLead('phone','${v.id}','${v.manufacturer} ${v.model}')">📞</button>
+              <button class="btn-circle-wa"    onclick="event.stopPropagation();y1_logLead('whatsapp','${v.id}','${v.manufacturer} ${v.model}')">💬</button>
             </div>` : `<span class="avail-badge avail-sold">נמכר</span>`}
           </div>
         </div>
