@@ -1641,7 +1641,8 @@ body {
 /* ── MOBILE ──────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .hp-header { padding: 0 20px; }
-  .hp-logo-img { height: 72px; }
+  .hp-logo-img { height: 90px; }
+  .y1-logo-img  { height: 90px; }
   .hp-nav { display: none; }
   .hp-header-right { display: none; }
   .hp-hamburger { display: flex; margin-left: auto; }
@@ -5606,7 +5607,7 @@ body {
     <img class="hp-logo-img" src="./image.png" alt="Drive Car Rental">
   </div>
   <nav class="hp-nav">
-    <span class="hp-nav-link" onclick="ShellRouter.go('yad1')">רכבי יד 1</span>
+    <span class="hp-nav-link" onclick="ShellRouter.go('yad1')">רכבים חדשים</span>
     <span class="hp-nav-link" onclick="ShellRouter.go('yad2')">רכבי יד 2</span>
     <span class="hp-nav-link" onclick="window.hp_scrollToSection('featured-section')">מבחר רכבים</span>
     <span class="hp-nav-link" onclick="window.hp_scrollToSection('contact-section')">צרו קשר</span>
@@ -5625,7 +5626,7 @@ body {
     <span class="hp-hamburger-bar"></span>
   </button>
   <div class="hp-mobile-menu" id="hp-mobile-menu" role="navigation">
-    <span class="hp-mobile-nav-item" onclick="hp_mobileGo('yad1')">רכבי יד 1</span>
+    <span class="hp-mobile-nav-item" onclick="hp_mobileGo('yad1')">רכבים חדשים</span>
     <span class="hp-mobile-nav-item" onclick="hp_mobileGo('yad2')">רכבי יד 2</span>
     <span class="hp-mobile-nav-item" onclick="hp_mobileScroll('featured-section')">מבחר רכבים</span>
     <span class="hp-mobile-nav-item" onclick="hp_mobileScroll('contact-section')">צרו קשר</span>
@@ -5817,7 +5818,7 @@ body {
         onmouseover="this.style.background='rgba(200,168,75,0.18)'"
         onmouseout="this.style.background='rgba(200,168,75,0.10)'"
       >
-        כל דגמי יד 1 ←
+        רכבים חדשים ←
       </button>
       <button
         onclick="ShellRouter.go('yad2')"
@@ -5882,7 +5883,7 @@ body {
     <div style="font-size:12px;color:#3d3d3d;margin-top:4px;">ייבוא אישי · מלאי יד 2 · שירות אישי</div>
   </div>
   <nav class="footer-links">
-    <span class="footer-link" onclick="ShellRouter.go('yad1')">יד 1 — פרמיום</span>
+    <span class="footer-link" onclick="ShellRouter.go('yad1')">רכבים חדשים</span>
     <span class="footer-link" onclick="ShellRouter.go('yad2')">יד 2 — מלאי</span>
     <span class="footer-link" onclick="window.hp_scrollToSection('contact-section')">צרו קשר</span>
     <span class="footer-link" onclick="ShellRouter.go('yad2')">מערכת ניהול</span>
@@ -6373,7 +6374,7 @@ body {
           </div>
           <nav class="header-nav">
             <span class="header-nav-link active">יד 2</span>
-            <span class="header-nav-link" onclick="ShellRouter.go('yad1')">יד 1</span>
+            <span class="header-nav-link" onclick="ShellRouter.go('yad1')">רכבים חדשים</span>
             <span class="header-nav-link" onclick="ShellRouter.go('home')">אודות</span>
           </nav>
           <div class="y2-social-row">
@@ -11666,7 +11667,7 @@ window.y1_showScreen = function(name) {
 
 <!-- Global mobile nav -->
 <div class="mob-nav" id="mob-nav" role="navigation">
-  <span class="mob-nav-item" onclick="mobNavGo('yad1')">רכבי יד 1</span>
+  <span class="mob-nav-item" onclick="mobNavGo('yad1')">רכבים חדשים</span>
   <span class="mob-nav-item" onclick="mobNavGo('yad2')">רכבי יד 2</span>
   <span class="mob-nav-item" onclick="mobNavContact()">צרו קשר</span>
 </div>
