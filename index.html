@@ -3564,6 +3564,34 @@ body {
 .catalog-results { flex: 1; min-width: 0; }
 .vehicles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: var(--spacing-row-gap, 14px); }
 
+/* ── MOBILE FILTER TOGGLE ────────────────────────────────── */
+.y2-filter-toggle {
+  display: none;
+  align-items: center; gap: 8px;
+  width: 100%; padding: 10px 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-button);
+  font-size: 14px; font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.y2-filter-toggle:hover { background: var(--color-surface-hover, var(--color-surface-sunken)); }
+.y2-filter-toggle-arrow { font-size: 11px; margin-right: auto; transition: transform 220ms ease; }
+.y2-filter-toggle.y2-open .y2-filter-toggle-arrow { transform: rotate(180deg); }
+
+@media (max-width: 768px) {
+  .y2-filter-toggle { display: flex; }
+  .catalog-body { flex-direction: column; padding: 12px 14px; gap: 0; }
+  .filter-sidebar { display: none; width: 100%; min-width: unset; margin-bottom: 12px; }
+  .filter-sidebar.y2-open { display: block; }
+  .filter-panel-card { position: static; }
+  .catalog-toolbar { padding: 10px 14px; }
+  .vehicles-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+
 /* View variants — toggled by class on #vehiclesGrid, not inline styles */
 .vehicles-grid.view-list {
   grid-template-columns: 1fr;
@@ -6249,10 +6277,16 @@ body {
         </div>
       </div>
 
+      <!-- Mobile filter toggle (hidden on desktop) -->
+      <button class="y2-filter-toggle" id="y2-filter-toggle" onclick="y2_toggleFilters()">
+        <span>⚙ סינון</span>
+        <span class="y2-filter-toggle-arrow">▼</span>
+      </button>
+
       <!-- Body -->
       <div class="catalog-body">
         <!-- Filters -->
-        <aside class="filter-sidebar">
+        <aside class="filter-sidebar" id="y2-filter-sidebar">
           <div class="filter-panel-card">
             <div class="filter-panel-header">
               <span class="filter-panel-title">סינון</span>
@@ -8895,6 +8929,13 @@ function y2_clearFilters() {
   _y2SearchQuery = '';
   y2_applyFilters();
 }
+function y2_toggleFilters() {
+  const sidebar = document.getElementById('y2-filter-sidebar');
+  const btn     = document.getElementById('y2-filter-toggle');
+  if (!sidebar || !btn) return;
+  const isOpen = sidebar.classList.toggle('y2-open');
+  btn.classList.toggle('y2-open', isOpen);
+}
 function applyFilter(field, val) {
   // legacy stub — kept to avoid errors from any remaining callers
   y2_applyFilters();
@@ -9564,6 +9605,7 @@ window.y2_showScreen        = y2_showScreen;
 window.y2_safeShowScreen    = y2_safeShowScreen;
 window.y2_loadVehiclePage   = y2_loadVehiclePage;
 window.y2_logLead           = y2_logLead;
+window.y2_toggleFilters     = y2_toggleFilters;
 window.y2_handleCatalogSearch = y2_handleCatalogSearch;
 window.y2_handleSort        = y2_handleSort;
 window.y2_setView           = y2_setView;
