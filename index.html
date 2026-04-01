@@ -10425,10 +10425,12 @@ if (DRIVE_SMART_BTN_ENABLED) {
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const btnWidth  = wrap.offsetWidth;
+      const btnHeight = wrap.offsetHeight;
       let nx = wrapStartX + (pt.clientX - dragStartX);
       let ny = wrapStartY + (pt.clientY - dragStartY);
-      nx = Math.max(EDGE_PAD, Math.min(vw - wrapW - EDGE_PAD, nx));
-      ny = Math.max(EDGE_PAD, Math.min(vh - wrapH - EDGE_PAD, ny));
+      nx = Math.max(EDGE_PAD, Math.min(vw - btnWidth  - EDGE_PAD, nx));
+      ny = Math.max(EDGE_PAD, Math.min(vh - btnHeight - EDGE_PAD, ny));
       wrap.style.left = nx + 'px';
       wrap.style.top  = ny + 'px';
     }
@@ -10436,14 +10438,12 @@ if (DRIVE_SMART_BTN_ENABLED) {
     function pUp(e) {
       if (!dragging) return;
       dragging = false;
+      const wasMoved = moved;
       moved = false;
       wrap.style.cursor = '';
-      if (moved) {
-        moved = false;
+      if (wasMoved) {
         snapToEdge();
         e.stopPropagation();
-      } else {
-        moved = false;
       }
     }
 
