@@ -5836,15 +5836,15 @@ body {
               <div class="lead-form-eyebrow">השאירו פרטים</div>
               <div class="lead-form-field">
                 <label class="lead-form-label">שם מלא</label>
-                <input class="lead-form-input" placeholder="שם ומשפחה">
+                <input id="y1-lead-name" class="lead-form-input" placeholder="שם ומשפחה">
               </div>
               <div class="lead-form-field">
                 <label class="lead-form-label">טלפון</label>
-                <input class="lead-form-input" type="tel" placeholder="08-6605010">
+                <input id="y1-lead-phone" class="lead-form-input" type="tel" placeholder="08-6605010">
               </div>
               <div class="lead-form-field">
                 <label class="lead-form-label">הודעה (אופציונלי)</label>
-                <textarea class="lead-form-textarea" placeholder="שאלות, בקשות מיוחדות..."></textarea>
+                <textarea id="y1-lead-message" class="lead-form-textarea" placeholder="שאלות, בקשות מיוחדות..."></textarea>
               </div>
               <button class="btn-lead-submit" onclick="y1_logLead('form')">שלח פנייה ←</button>
             </div>
@@ -8209,21 +8209,33 @@ function y1_renderAdminTable() {
 
 function y1_logLead(source, carId, carName) {
   // If carId/carName not explicitly passed, read from current vehicle state
-  const id   = carId   || y1_currentVehicleId;
-  const v    = Y1_Engine.vehicles.find(x => x.id === id);
-  const name = carName || (v ? `${v.manufacturer} ${v.model} ${v.year}` : '');
+  const id      = carId   || y1_currentVehicleId;
+  const v       = Y1_Engine.vehicles.find(x => x.id === id);
+  const nameCar = carName || (v ? `${v.manufacturer} ${v.model} ${v.year}` : '');
+
+  if (source === 'form') {
+    const name    = document.getElementById('y1-lead-name')?.value.trim()    || '';
+    const phone   = document.getElementById('y1-lead-phone')?.value.trim()   || '';
+    const message = document.getElementById('y1-lead-message')?.value.trim() || '';
+    if (!name || !phone) {
+      alert('אנא מלא שם וטלפון');
+      return;
+    }
+    Y1_Engine.captureLead({ name, phone, message, car_id: id, car_name: nameCar, listing_type: 'yad1', source: 'FORM' });
+    alert('✅ הפנייה נשלחה!\nנציג ייצור איתך קשר בהקדם.');
+    return;
+  }
+
   Y1_Engine.captureLead({
     name: '', phone: '',
-    car_id: id, car_name: name,
+    car_id: id, car_name: nameCar,
     listing_type: 'yad1', source: source.toUpperCase()
   });
   if (source === 'whatsapp') {
-    const txt = name ? `שלום, אני מעוניין ב-${name}` : 'שלום, אני מעוניין לקבל מידע על רכב';
+    const txt = nameCar ? `שלום, אני מעוניין ב-${nameCar}` : 'שלום, אני מעוניין לקבל מידע על רכב';
     window.open('https://wa.me/972549320181?text=' + encodeURIComponent(txt), '_blank');
   } else if (source === 'phone') {
     window.open('tel:0866050010');
-  } else {
-    alert('✅ הפנייה נשלחה!\nנציג ייצור איתך קשר בהקדם.');
   }
 }
 
