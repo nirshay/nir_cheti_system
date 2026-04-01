@@ -1650,7 +1650,7 @@ body {
   .hero { padding: 0 20px 72px; min-height: 90vh; }
   .hero-stats { display: none; }
   .split-section { grid-template-columns: 1fr; min-height: auto; }
-  .split-panel { min-height: 60vh; padding: 44px 24px; }
+  .split-panel { min-height: 60vh; padding: 44px 24px; overflow: clip; }
   .split-divider { display: none; }
   .trust-strip { gap: 0; overflow-x: auto; padding: 20px 24px; justify-content: flex-start; }
   .trust-item { padding: 0 20px; flex-shrink: 0; }
@@ -7292,6 +7292,12 @@ const ShellRouter = {
   },
 
   go(dest, hash) {
+    // Stop turntable rAF when navigating away from home
+    if (this.current === 'home' && dest !== 'home' &&
+        typeof HP_TurntableController !== 'undefined') {
+      HP_TurntableController.stop();
+    }
+
     // Hide all sections
     document.querySelectorAll('.shell-section').forEach(s => {
       s.classList.remove('active');
@@ -7333,7 +7339,11 @@ const ShellRouter = {
   _adminReady: false,
 
   _initHome() {
-    if (this._homeReady) return;
+    if (this._homeReady) {
+      // Resume turntable when returning to home
+      if (typeof HP_TurntableController !== 'undefined') HP_TurntableController.resume();
+      return;
+    }
     this._homeReady = true;
     try {
       renderFeatured();
@@ -7795,6 +7805,20 @@ const HP_TurntableController = {
   _onCardClick(id, name) {
     HP_Engine.captureLead({ source:'STAGE_CLICK', car_id:id, car_name:name, listing_type:'yad1' });
     ShellRouter.go('yad1');
+  },
+
+  stop() {
+    if (this._raf) {
+      cancelAnimationFrame(this._raf);
+      this._raf = null;
+    }
+  },
+
+  resume() {
+    if (!this._raf) {
+      this._lastTs = undefined;
+      this._raf = requestAnimationFrame(ts => this._tick(ts));
+    }
   },
 };
 
@@ -9584,7 +9608,7 @@ function y2_renderImportResult() {
 // Set Y2_DEBUG = false to silence logs in production.
 // ============================================================
 
-const Y2_DEBUG = true;
+const Y2_DEBUG = false;
 const y2_log = (...args) => { if (Y2_DEBUG) console.log('[Yad2]', ...args); };
 const y2_err = (...args) => { console.error('[Yad2 ERROR]', ...args); };
 
