@@ -1657,7 +1657,17 @@ body {
   .featured-section { padding: 56px 20px; }
   .featured-grid { grid-template-columns: 1fr; gap: 12px; overflow: hidden; }
   .featured-card  { min-width: 0; overflow: hidden; }
-  .hp-split-grid  { overflow-x: hidden; }
+  .hp-split-grid  {
+    display: flex; flex-direction: row;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px; padding-bottom: 4px;
+    scrollbar-width: none;
+    margin-bottom: 20px;
+  }
+  .hp-split-grid::-webkit-scrollbar { display: none; }
+  .hp-split-item { width: 75%; flex-shrink: 0; scroll-snap-align: start; }
   .lead-strip { flex-direction: column; gap: 40px; padding: 56px 20px; }
   .lead-strip-form { width: 100%; }
   .hp-footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -1666,7 +1676,6 @@ body {
 /* Very narrow screens — single column fallback */
 @media (max-width: 360px) {
   .featured-grid { grid-template-columns: 1fr; }
-  .hp-split-grid  { grid-template-columns: 1fr; }
 }
 
 /* ── YAD1 CSS ─────────────────────────────────────────────── */
