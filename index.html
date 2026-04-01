@@ -1991,11 +1991,13 @@ body {
 /* Vehicle grid */
 .yad1-catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2px;
   max-width: 1200px; margin: 0 auto;
   padding: 0 var(--spacing-page-x) 80px;
 }
+@media (max-width: 860px) { .yad1-catalog-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .yad1-catalog-grid { grid-template-columns: 1fr; } }
 
 /* Yad1 vehicle card */
 .yad1-card {
@@ -2015,7 +2017,7 @@ body {
 }
 .yad1-card-img {
   position: relative;
-  width: 100%; height: 220px;
+  width: 100%; height: 180px;
   background: linear-gradient(145deg, var(--p-gray-800) 0%, var(--p-gray-700) 100%);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
@@ -2119,10 +2121,10 @@ body {
 }
 .btn-view-card:hover { color: var(--color-text-primary); border-color: var(--color-text-muted); }
 
-/* Featured card — spans 2 cols on desktop */
-.yad1-card.featured { grid-column: span 2; }
-.yad1-card.featured .yad1-card-img { height: 300px; }
-.yad1-card.featured .yad1-card-name { font-size: 28px; }
+/* Featured card — visual parity, no layout override */
+.yad1-card.featured { grid-column: unset; }
+.yad1-card.featured .yad1-card-img { height: 180px; }
+.yad1-card.featured .yad1-card-name { font-size: inherit; }
 
 /* ============================================================
    SCREEN 2: YAD1 VEHICLE PAGE
@@ -7967,7 +7969,7 @@ const Y1_Structure = {
     const availLabel = Y1_Engine.AVAIL_LABELS[v.availability]  || '';
     const isSold = v.status === 'SOLD';
     return `
-      <div class="yad1-card ${v.is_featured ? 'featured' : ''}"
+      <div class="yad1-card"
            onclick="${!isSold ? "y1_showScreen('vehicle')" : ''}"
            style="${isSold ? 'opacity:0.55;cursor:default;' : ''}">
         <div class="yad1-card-img">
