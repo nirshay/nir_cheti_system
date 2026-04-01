@@ -10483,7 +10483,12 @@ const AdminApp = {
   },
 
   _refreshBadge() {
-    const all = [...this.leads, ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads : [])];
+    const all = [
+      ...this.leads,
+      ...(typeof HP_Engine !== 'undefined' ? HP_Engine.leads.map(l => ({...l, source:'homepage'})) : []),
+      ...(typeof Y1_Engine !== 'undefined' ? Y1_Engine.leads.map(l => ({...l, source:'yad1'}))    : []),
+      ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads.map(l => ({...l, source:'yad2'}))    : []),
+    ];
     const count = all.filter(l => l.status === 'NEW' || !l.status).length;
     const el = document.getElementById('adm-leads-badge');
     if (el) el.textContent = count || '';
@@ -10920,7 +10925,12 @@ const AdminApp = {
      LEADS
   ══════════════════════════════════════════════════════════════ */
   _tLeads(filter) {
-    const all = [...this.leads, ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads : [])];
+    const all = [
+      ...this.leads,
+      ...(typeof HP_Engine !== 'undefined' ? HP_Engine.leads.map(l => ({...l, source:'homepage'})) : []),
+      ...(typeof Y1_Engine !== 'undefined' ? Y1_Engine.leads.map(l => ({...l, source:'yad1'}))    : []),
+      ...(typeof Y2_Engine !== 'undefined' ? Y2_Engine.leads.map(l => ({...l, source:'yad2'}))    : []),
+    ];
     const filtered = filter === 'all' ? all : all.filter(l => (l.source||'yad2') === filter);
     const sources = ['all','yad1','yad2','homepage','smart_button'];
 
