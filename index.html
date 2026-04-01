@@ -1654,10 +1654,17 @@ body {
   .trust-strip { gap: 0; overflow-x: auto; padding: 20px 24px; justify-content: flex-start; }
   .trust-item { padding: 0 20px; flex-shrink: 0; }
   .featured-section { padding: 56px 20px; }
-  .featured-grid { grid-template-columns: 1fr; gap: 2px; }
+  .featured-grid { grid-template-columns: 1fr 1fr; gap: 8px; overflow-x: hidden; }
+  .hp-split-grid  { overflow-x: hidden; }
   .lead-strip { flex-direction: column; gap: 40px; padding: 56px 20px; }
   .lead-strip-form { width: 100%; }
   .hp-footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+
+/* Very narrow screens — single column fallback */
+@media (max-width: 360px) {
+  .featured-grid { grid-template-columns: 1fr; }
+  .hp-split-grid  { grid-template-columns: 1fr; }
 }
 
 /* ── YAD1 CSS ─────────────────────────────────────────────── */
