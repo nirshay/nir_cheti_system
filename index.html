@@ -8306,15 +8306,7 @@ const Y2_Engine = {
     { listing_type:'yad2', id:'v1004', ad_number:'38244', manufacturer:'Ford', model:'F150', sub_model:'XLT', year:2023, km:25000, price:205000, gearbox:'אוטומטי', engine_type:'PETROL', engine_volume:3500, hand:1, exterior_color:'כחול', status:'ACTIVE', category:'Pickup', entry_date:'2025-02-15', notes:'', images:['https://via.placeholder.com/600x400?text=Ford+F150'] },
   ],
 
-  leads: [
-    { id:'l001', name:'יוסי כהן', phone:'050-111-2222', car_name:'Toyota Corolla Cross 2022', listing_type:'yad2', source:'FORM', status:'NEW', message:'מתעניין ברכב, אפשר לקבל מחיר סופי?', created_at:'2025-03-27 09:14', notes:'' },
-    { id:'l002', name:'רחל לוי', phone:'052-333-4444', car_name:'Hyundai Tucson 2023', listing_type:'yad2', source:'WHATSAPP', status:'NEW', message:'', created_at:'2025-03-27 08:45', notes:'' },
-    { id:'l003', name:'אבי מזרחי', phone:'054-555-6666', car_name:'Kia Sportage 2022', listing_type:'yad2', source:'PHONE', status:'CONTACTED', message:'', created_at:'2025-03-26 16:20', notes:'דיברנו, מגיע לנסיעת מבחן ב-29/3' },
-    { id:'l004', name:'מירה ברגר', phone:'058-777-8888', car_name:'Mazda CX-5 2021', listing_type:'yad2', source:'FORM', status:'IN_PROGRESS', message:'האם הרכב עבר תאונות? מה מצב הפח?', created_at:'2025-03-26 11:30', notes:'בודקת אפשרות מימון' },
-    { id:'l005', name:'שלמה פרץ', phone:'050-999-0000', car_name:'Toyota Yaris 2023', listing_type:'yad2', source:'WHATSAPP', status:'NEW', message:'', created_at:'2025-03-25 14:55', notes:'' },
-    { id:'l006', name:'נועה שפירא', phone:'052-111-3333', car_name:'Kia Niro EV 2023', listing_type:'yad2', source:'FORM', status:'NEW', message:'מה הטווח של הרכב? יש תחנות טעינה במגדל העמק?', created_at:'2025-03-25 10:12', notes:'' },
-    { id:'l007', name:'דוד אברהם', phone:'054-222-4444', car_name:'Honda Civic 2022', listing_type:'yad2', source:'PHONE', status:'CLOSED', message:'', created_at:'2025-03-24 09:00', notes:'נמכר לאחר' },
-  ],
+  leads: [],
 
   importHistory: [
     { id:'i001', filename:'inventory_march25.xlsx', date:'27/3/2025', created:38, updated:194, deactivated:15, errors:3, status:'COMPLETED_WITH_ERRORS' },
@@ -10438,14 +10430,7 @@ const AdminApp = {
   _y2EditId:   null,
 
   /* ── Extra leads (yad1 / homepage / smart_button sources) */
-  leads: [
-    { id:'la001', name:'יוסי כהן',   phone:'050-111-2222', message:'מעוניין ב-Hummer EV 3X',    source:'yad1',         created_at:'2026-03-31 09:14' },
-    { id:'la002', name:'רחל לוי',    phone:'052-333-4444', message:'',                           source:'homepage',     created_at:'2026-03-30 08:45' },
-    { id:'la003', name:'אבי מזרחי',  phone:'054-555-6666', message:'שאלה על Sierra Denali EV',  source:'yad1',         created_at:'2026-03-29 16:20' },
-    { id:'la004', name:'מירה ברגר',  phone:'058-777-8888', message:'רוצה הצעת מחיר',            source:'smart_button', created_at:'2026-03-28 11:30' },
-    { id:'la005', name:'נועה שפירא', phone:'052-111-3333', message:'שאלה על Silverado EV',      source:'yad1',         created_at:'2026-03-27 10:12' },
-    { id:'la006', name:'דוד אברהם',  phone:'054-222-4444', message:'',                           source:'homepage',     created_at:'2026-03-26 09:00' },
-  ],
+  leads: [],
 
   /* ── Homepage content (demo — not wired to live HP rendering) */
   homepageContent: {
@@ -11106,11 +11091,7 @@ const SB = {
   ],
 
   /* ─── LEADS — rental inquiries only (separate from car-sales) */
-  leads: [
-    { id:'sbl001', name:'דני כהן',   phone:'052-100-2000', category_name:'משפחתי', pickup_date:'2026-04-01', pickup_time:'09:00', return_date:'2026-04-05', return_time:'18:00', message:'',              created_at:'2026-03-31 10:00' },
-    { id:'sbl002', name:'מיכל לוי',  phone:'054-300-4000', category_name:'קטן',    pickup_date:'2026-04-03', pickup_time:'08:00', return_date:'2026-04-04', return_time:'20:00', message:'חנייה כלולה?', created_at:'2026-03-30 14:20' },
-    { id:'sbl003', name:'אלון פרץ',  phone:'050-500-6000', category_name:'מנהלים', pickup_date:'2026-04-07', pickup_time:'10:00', return_date:'2026-04-10', return_time:'16:00', message:'',              created_at:'2026-03-29 09:45' },
-  ],
+  leads: [],
 
   _esc(s) {
     return String(s == null ? '' : s)
