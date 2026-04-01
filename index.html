@@ -7489,9 +7489,7 @@ const HP_Structure = {
   renderStageCard(v) {
     const engineLabel = HP_Engine.ENGINE_TYPE_LABELS[v.engine_type] || v.engine_type;
     const driveLabel  = (v.drivetrain || '4X4').replace('4X4', '4×4');
-    const imgContent  = (v.images && v.images.length > 0)
-      ? `<img src="${v.images[0]}" alt="${v.manufacturer} ${v.model}" class="stage-card-img-photo" loading="lazy">`
-      : `<div class="stage-card-img-emoji">${v.emoji}</div>`;
+    const imgContent  = `<div class="stage-card-img-emoji">${v.emoji}</div>`;
 
     return `
       <div class="stage-card" data-id="${v.id}" onclick="StageController.navigateToVehicle('${v.id}')">
@@ -7884,9 +7882,7 @@ function renderSplitPreviews() {
     const veh = Y1_Engine.vehicles.filter(v => v.status === 'ACTIVE').slice(0, 4);
     g1.innerHTML = veh.map(v => {
       const priceStr = v.price > 0 ? '₪' + v.price.toLocaleString() : 'מחיר לפי בקשה';
-      const imgHtml = v.images && v.images.length
-        ? `<div class="hp-split-item-img"><img src="${v.images[0]}" alt="${v.model}" loading="lazy"></div>`
-        : `<div class="hp-split-item-img">${v.emoji || '🚗'}</div>`;
+      const imgHtml = `<div class="hp-split-item-img">${v.emoji || '🚗'}</div>`;
       return `<div class="hp-split-item" onclick="event.stopPropagation();ShellRouter.go('yad1')">
         ${imgHtml}
         <div class="hp-split-item-model">${v.manufacturer} ${v.model}</div>
@@ -7898,9 +7894,7 @@ function renderSplitPreviews() {
     const veh = Y2_Engine.vehicles.filter(v => v.listing_type === 'yad2' && v.status === 'ACTIVE').slice(0, 4);
     g2.innerHTML = veh.map(v => {
       const priceStr = v.price > 0 ? '₪' + v.price.toLocaleString() : 'מחיר לפי בקשה';
-      const imgHtml = v.images && v.images.length
-        ? `<div class="hp-split-item-img"><img src="${v.images[0]}" alt="${v.model}" loading="lazy"></div>`
-        : `<div class="hp-split-item-img">🚗</div>`;
+      const imgHtml = `<div class="hp-split-item-img">🚗</div>`;
       return `<div class="hp-split-item" onclick="event.stopPropagation();ShellRouter.go('yad2')">
         ${imgHtml}
         <div class="hp-split-item-model">${v.manufacturer} ${v.model} ${v.year}</div>
@@ -8207,10 +8201,7 @@ const Y1_Structure = {
            onclick="${!isSold ? "y1_showScreen('vehicle')" : ''}"
            style="${isSold ? 'opacity:0.55;cursor:default;' : ''}">
         <div class="yad1-card-img">
-          ${v.images && v.images.length > 0
-            ? `<img src="${v.images[0]}" alt="${v.manufacturer} ${v.model}" class="yad1-card-img-photo">`
-            : `<div class="yad1-card-img-placeholder">${v.emoji}</div>`
-          }
+          <div class="yad1-card-img-placeholder">${v.emoji}</div>
           <div class="yad1-card-img-overlay"></div>
           <div class="yad1-card-availability">
             <span class="avail-badge ${availClass}">
@@ -8294,9 +8285,7 @@ const Y1_Structure = {
       <tr>
         <td><input type="checkbox"></td>
         <td class="cell-emoji">${
-          v.images && v.images.length > 0
-            ? `<img src="${v.images[0]}" alt="" style="width:44px;height:32px;object-fit:cover;border-radius:3px;display:block;">`
-            : v.emoji
+          v.emoji
         }</td>
         <td>
           <div class="cell-strong">${v.manufacturer} ${v.model}</div>
@@ -8395,15 +8384,7 @@ function y1_renderVehiclePage(id) {
 
     // Hero background image — overlays on top of emoji when present
     let heroBgImg = hero.querySelector('.hero-bg-img');
-    if (v.images && v.images.length > 0) {
-      if (!heroBgImg) {
-        heroBgImg = document.createElement('div');
-        heroBgImg.className = 'hero-bg-img';
-        hero.insertBefore(heroBgImg, hero.querySelector('.hero-gradient-overlay'));
-      }
-      heroBgImg.style.backgroundImage = `url('${v.images[0]}')`;
-      heroBgImg.style.opacity = '1';
-    } else if (heroBgImg) {
+    if (heroBgImg) { heroBgImg.style.opacity = '0'; } else if (heroBgImg) {
       heroBgImg.style.opacity = '0';
     }
   }
@@ -8411,11 +8392,7 @@ function y1_renderVehiclePage(id) {
   // Gallery main image
   const galleryMain = document.querySelector('.gallery-main-emoji');
   if (galleryMain) {
-    if (v.images && v.images.length > 0) {
-      galleryMain.innerHTML = `<img src="${v.images[0]}" alt="${v.manufacturer} ${v.model}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`;
-    } else {
-      galleryMain.textContent = v.emoji;
-    }
+    galleryMain.textContent = v.emoji;
   }
 
   // Gallery thumbs
@@ -8721,10 +8698,7 @@ const Y2_Structure = {
 
   renderVehicleCard(v) {
     const isSold = v.status === 'SOLD';
-    const hasImage = v.images && v.images.length > 0;
-    const imgContent = hasImage
-      ? `<img src="${v.images[0]}" alt="${v.manufacturer} ${v.model}" style="width:100%;height:100%;object-fit:cover;">`
-      : '🚗';
+    const imgContent = '🚗';
     return `
       <div class="vehicle-card" onclick="y2_loadVehiclePage('${v.id}')">
         <div class="vehicle-card-img">
@@ -8760,9 +8734,7 @@ const Y2_Structure = {
   renderAdminRow(v, i) {
     const statusClass = Y2_Engine.VEHICLE_STATUS_CLASSES[v.status] || 'badge-inactive';
     const statusLabel = Y2_Engine.VEHICLE_STATUS_LABELS[v.status]  || v.status;
-    const thumbContent = (v.images && v.images.length > 0)
-      ? `<img src="${v.images[0]}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:5px;">`
-      : '🚗';
+    const thumbContent = '🚗';
     return `
       <tr id="arow-${v.id}">
         <td><input type="checkbox"></td>
@@ -8946,11 +8918,7 @@ function y2_renderVehiclePage(id) {
   // Gallery — use images[0] if available
   const galleryMain = document.querySelector('.gallery-main');
   if (galleryMain) {
-    if (v.images && v.images.length > 0) {
-      galleryMain.innerHTML = `<img src="${v.images[0]}" alt="${v.manufacturer} ${v.model}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`;
-    } else {
-      galleryMain.innerHTML = '🚗<div style="position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;padding:3px 8px;border-radius:4px;">1 / 1</div>';
-    }
+    galleryMain.innerHTML = '🚗<div style="position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;padding:3px 8px;border-radius:4px;">1 / 1</div>';
   }
 
   // Notes
