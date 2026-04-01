@@ -5405,7 +5405,7 @@ body {
     <span class="hp-nav-link" onclick="ShellRouter.go('yad1')">רכבי יד 1</span>
     <span class="hp-nav-link" onclick="ShellRouter.go('yad2')">רכבי יד 2</span>
     <span class="hp-nav-link" onclick="window.hp_scrollToSection('featured-section')">מבחר רכבים</span>
-    <span class="hp-nav-link" onclick="console.log('[DEBUG] צור קשר clicked, typeof window.hp_scrollToSection=', typeof window.hp_scrollToSection); window.hp_scrollToSection('contact-section')">צרו קשר</span>
+    <span class="hp-nav-link" onclick="window.hp_scrollToSection('contact-section')">צרו קשר</span>
   </nav>
   <div class="hp-header-right">
     <button class="hp-social-icon hp-social-icon-wa" onclick="window.logContact('whatsapp')" title="WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
@@ -6158,8 +6158,8 @@ body {
           </div>
           <nav class="header-nav">
             <span class="header-nav-link active">יד 2</span>
-            <span class="header-nav-link" onclick="console.log('[Nav] יד 1 clicked'); ShellRouter.go('yad1')">יד 1</span>
-            <span class="header-nav-link" onclick="console.log('[Nav] אודות clicked'); ShellRouter.go('home')">אודות</span>
+            <span class="header-nav-link" onclick="ShellRouter.go('yad1')">יד 1</span>
+            <span class="header-nav-link" onclick="ShellRouter.go('home')">אודות</span>
           </nav>
           <div class="y2-social-row">
             <button class="y2-social-icon y2-social-wa" onclick="window.logContact('whatsapp')" title="WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
@@ -7033,7 +7033,6 @@ body {
 </style>
 
 <script>
-console.log("DRIVE SHELL BOOT START — v" + new Date().toISOString());
 /* ============================================================
    SHELL ROUTER — Development preview only
    Replaces window.location.href cross-file navigation with
@@ -7053,8 +7052,6 @@ const ShellRouter = {
   },
 
   go(dest, hash) {
-    console.log('[ShellRouter] navigating to:', dest, hash || '');
-
     // Hide all sections
     document.querySelectorAll('.shell-section').forEach(s => {
       s.classList.remove('active');
@@ -7088,8 +7085,6 @@ const ShellRouter = {
     if (dest === 'yad1')  this._initYad1();
     if (dest === 'yad2')  this._initYad2(hash);
     if (dest === 'admin') this._initAdmin();
-
-    console.log('[ShellRouter] section active:', sectionId);
   },
 
   _homeReady:  false,
@@ -7105,7 +7100,6 @@ const ShellRouter = {
       renderSplitPreviews();
       updateCounts();
       if (typeof HP_TurntableController !== 'undefined') HP_TurntableController.init();
-      console.log('[ShellRouter] home init OK');
     } catch(e) { console.error('[ShellRouter] home init error:', e); }
   },
 
@@ -7114,7 +7108,6 @@ const ShellRouter = {
     this._yad1Ready = true;
     try {
       y1_showScreen('catalog');
-      console.log('[ShellRouter] yad1 init OK');
     } catch(e) { console.error('[ShellRouter] yad1 init error:', e); }
   },
 
@@ -7131,7 +7124,6 @@ const ShellRouter = {
       this._yad2Ready = true;
       try {
         y2_safeShowScreen(screen);
-        console.log('[ShellRouter] yad2 init OK → screen:', screen);
       } catch(e) { console.error('[ShellRouter] yad2 init error:', e); }
     } else {
       // Already inited — just switch screen if hash changes
@@ -7145,7 +7137,6 @@ const ShellRouter = {
     try {
       if (typeof AdminApp !== 'undefined') {
         AdminApp.init();
-        console.log('[ShellRouter] admin init OK');
       }
     } catch(e) { console.error('[ShellRouter] admin init error:', e); }
   },
@@ -7622,7 +7613,6 @@ window.hp_scrollToSection = function hp_scrollToSection(id) {
   const top = el.getBoundingClientRect().top + window.scrollY - 72;
   window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 };
-console.log("hp_scrollToSection assigned:", typeof window.hp_scrollToSection);
 
 // Render featured grid
 function renderFeatured() {
@@ -8728,14 +8718,12 @@ function y2_renderVehiclePage(id) {
 }
 
 function y2_renderCatalog(vehicles) {
-  console.log('[Yad2] renderCatalog called — vehicles:', vehicles.length);
   y2_log('renderCatalog start — vehicles:', vehicles.length);
   const grid = document.getElementById('y2-vehiclesGrid');
   if (!grid) { y2_err('renderCatalog: #y2-vehiclesGrid not found'); return; }
   const countEl = document.getElementById('y2-resultsCount');
   if (countEl) countEl.textContent = vehicles.length;
   grid.innerHTML = vehicles.map(v => Y2_Structure.renderVehicleCard(v)).join('');
-  console.log('[Yad2] renderCatalog done — cards in DOM:', grid.children.length, '| active screen:', document.querySelector('#y2-publicDomain .screen.active')?.id);
   y2_log('renderCatalog end — rendered', vehicles.length, 'cards');
 }
 
@@ -9157,7 +9145,6 @@ function y2_handleFileSelect(file) {
       try {
         const wb = window.XLSX.read(e.target.result, { type: 'array', cellDates: false });
         Y2_ImportState.result = EasyListParser.parseWorkbook(wb);
-        console.log('[EasyList] Parsed:', Y2_ImportState.result.stats);
         y2_setImportStep(1);
       } catch(err) {
         y2_err('Parse error:', err);
@@ -9342,7 +9329,6 @@ function y2_renderImportResult() {
     status:      'COMPLETED',
   });
 
-  console.log('[EasyList] Import complete — created:', created, 'updated:', updated, 'errors:', result.stats.errors);
 }
 
 // ============================================================
@@ -9460,8 +9446,6 @@ const y2_initScreen = Y2_HASH_SCREEN_MAP[window.location.hash] || 'catalog';
 // Boot homepage immediately
 ShellRouter._initHome();
 
-console.log('[DriveShell] ready. Use ShellRouter.go("home"|"yad1"|"yad2") to navigate.');
-
 // ── WINDOW ASSIGNMENTS ───────────────────────────────────────
 // Explicitly attach every function called from inline onclick/oninput/onchange
 // to window. Required in sandboxed iframe environments (e.g. Claude preview)
@@ -9513,12 +9497,6 @@ window.y2_handleFileSelect  = y2_handleFileSelect;
 window.Y2_ImportState       = Y2_ImportState;
 window.EasyListParser       = EasyListParser;
 
-// ── RUNTIME PROOF ────────────────────────────────────────────
-console.log('[DriveShell] typeof window.hp_scrollToSection =', typeof window.hp_scrollToSection);
-console.log('[DriveShell] typeof window.logContact =', typeof window.logContact);
-console.log('[DriveShell] typeof window.y1_showScreen =', typeof window.y1_showScreen);
-console.log('[DriveShell] typeof window.y2_showScreen =', typeof window.y2_showScreen);
-console.log('[DriveShell] window assignments complete');
 </script>
 
 <!-- ============================================================
@@ -9544,8 +9522,6 @@ console.log('[DriveShell] window assignments complete');
 const DRIVE_SMART_BTN_ENABLED = true;
 
 if (DRIVE_SMART_BTN_ENABLED) {
-  // Diagnostic: confirm script block is executing
-  console.log('[SmartButton] script block executing');
 
 /**
  * smart-button.js  —  Drive Car Rental
@@ -9557,8 +9533,7 @@ if (DRIVE_SMART_BTN_ENABLED) {
   'use strict';
 
   const mount = document.getElementById('drive-smart-btn-mount');
-  if (!mount) { console.warn('[SmartButton] DIAGNOSIS: mount #drive-smart-btn-mount NOT found'); return; }
-  console.log('[SmartButton] DIAGNOSIS: mount found', mount);
+  if (!mount) { console.warn('[SmartButton] mount #drive-smart-btn-mount not found'); return; }
 
   /* ── CSS ─────────────────────────────────────────────────── */
   const style = document.createElement('style');
@@ -9917,12 +9892,11 @@ if (DRIVE_SMART_BTN_ENABLED) {
   let stepIdx=-1,isOpen=false;
 
   /* ── OPEN / CLOSE ────────────────────────────────────────── */
-  function openButton(){if(isOpen)return;isOpen=true;resetState();stepIdx=0;wrap.className='sb-open sb-show sb-active';console.log('[SmartButton] DIAGNOSIS: openButton, wrap classes=',wrap.className);buildProgress();render(false);}
+  function openButton(){if(isOpen)return;isOpen=true;resetState();stepIdx=0;wrap.className='sb-open sb-show sb-active';buildProgress();render(false);}
   function closeButton(){isOpen=false;stepIdx=-1;wrap.className='sb-idle sb-show sb-active';hideInputs();hideCat();setColor(COLORS.idle);showEl(['sb-idle-icon','sb-idle-label'],true);showEl(['sb-step-label','sb-main','sb-div','sb-sub','sb-extra1','sb-extra2','sb-extra3'],false);showArrows(false);showHArrows();}
 
   /* ── RENDER ──────────────────────────────────────────────── */
   function render(anim){
-    console.log('[SmartButton] DIAGNOSIS: render called, stepIdx='+stepIdx+', step='+STEPS[stepIdx].id);
     const step=STEPS[stepIdx],c=COLORS[step.color],dot=c.dot;
     setColor(c);updateProgress(stepIdx,dot);
     hideCat();hideInputs();showArrows(false);setExtras('','','');
@@ -10001,7 +9975,6 @@ if (DRIVE_SMART_BTN_ENABLED) {
       case 'confirm':{
         const pd=getData();
         const ref=Math.floor(Math.random()*90000+10000);
-        console.log('[SmartButton] reservation:',JSON.stringify(buildReservation(ref),null,2));
         const all=['sb-main','sb-div','sb-sub','sb-extra1','sb-extra2','sb-extra3'];
         all.forEach(id=>{const e=$(id);if(e)e.style.opacity='0';});
         setTimeout(()=>{
@@ -10089,17 +10062,7 @@ if (DRIVE_SMART_BTN_ENABLED) {
         created_at: new Date().toISOString(),
         status: 'new',
       };
-      if(typeof SB!=='undefined'&&Array.isArray(SB.leads)){
-        // [DIAG-1] lead created
-        console.log('[SB-DIAG] lead created:', JSON.parse(JSON.stringify(_lead)));
-        SB.leads.unshift(_lead);
-        // [DIAG-2] before LeadStore.save
-        console.log('[SB-DIAG] LeadStore.KEYS.sb:', LeadStore.KEYS.sb);
-        console.log('[SB-DIAG] SB.leads.length before save:', SB.leads.length);
-        console.log('[SB-DIAG] SB.leads before save:', JSON.stringify(SB.leads));
-        LeadStore.save(LeadStore.KEYS.sb, SB.leads);
-        console.log('[SB-DIAG] localStorage after save:', localStorage.getItem(LeadStore.KEYS.sb));
-      }
+      if(typeof SB!=='undefined'&&Array.isArray(SB.leads)){ SB.leads.unshift(_lead); LeadStore.save(LeadStore.KEYS.sb, SB.leads); }
       // --- WhatsApp ---
       const _waNum=(typeof SB!=='undefined'&&SB.settings&&SB.settings.action_value)?SB.settings.action_value.replace(/\D/g,''):'';
       if(_waNum){
@@ -10192,8 +10155,6 @@ if (DRIVE_SMART_BTN_ENABLED) {
     }
 
     function pDown(e) {
-      // DIAGNOSIS: confirm pDown is reachable
-      console.log('[SmartButton] pointer down — isOpen:', isOpen, 'type:', e.type);
       if (isOpen) return;
       if (e.type === 'mousedown' && e.button !== 0) return;
       const pt = e.touches ? e.touches[0] : e;
@@ -10206,7 +10167,6 @@ if (DRIVE_SMART_BTN_ENABLED) {
       wrapH = r.height;
       dragging = true;
       moved    = false;
-      console.log('[SmartButton] drag ready — wrapStart:', wrapStartX, wrapStartY);
     }
 
     function pMove(e) {
@@ -10223,7 +10183,6 @@ if (DRIVE_SMART_BTN_ENABLED) {
         wrapStartY = parseFloat(wrap.style.top);
         wrap.style.cursor = 'grabbing';
         pressedAt = 0;
-        console.log('[SmartButton] drag start — from:', wrapStartX, wrapStartY);
       }
 
       e.preventDefault();
@@ -10243,7 +10202,6 @@ if (DRIVE_SMART_BTN_ENABLED) {
       dragging = false;
       moved = false;
       wrap.style.cursor = '';
-      console.log('[SmartButton] drag end — dragging reset = false, moved was:', moved);
       if (moved) {
         moved = false;
         snapToEdge();
@@ -10272,11 +10230,8 @@ if (DRIVE_SMART_BTN_ENABLED) {
     document.addEventListener('mouseup',     pUp,   { capture: true, passive: false });
     document.addEventListener('touchend',    pUp,   { capture: true, passive: false });
     document.addEventListener('touchcancel', () => {
-      console.log('[SmartButton] dragging reset = false (touchcancel)');
       dragging = false; moved = false; wrap.style.cursor = '';
     }, { capture: true });
-
-    console.log('[SmartButton] drag initialized — capture on #sb-sil + document');
   })();
 
   /* ── EXPOSE FOR INLINE BUTTON ────────────────────────────── */
@@ -10286,16 +10241,7 @@ if (DRIVE_SMART_BTN_ENABLED) {
   setColor(COLORS.idle);
   requestAnimationFrame(()=>{
     wrap.classList.add('sb-show','sb-active');
-    const cs = window.getComputedStyle(wrap);
-    console.log('[SmartButton] DIAGNOSIS: wrap visible —',
-      'opacity:', cs.opacity,
-      'visibility:', cs.visibility,
-      'display:', cs.display,
-      'position:', cs.position,
-      'bottom:', cs.bottom,
-      'z-index:', cs.zIndex);
   });
-  console.log('[SmartButton] ready — tap dome to start.');
 })();
 
 }
@@ -11386,9 +11332,6 @@ const SB = {
      C. LEADS — rental inquiries (separate from car-sales leads)
   ══════════════════════════════════════════════════════════════ */
   _tLeads(filter) {
-    // [DIAG-4] SB._tLeads render
-    console.log('[SB-DIAG] _tLeads called, this.leads.length:', this.leads.length);
-    console.log('[SB-DIAG] _tLeads this.leads:', JSON.parse(JSON.stringify(this.leads)));
     const cats = ['all', ...new Set(this.leads.map(l => l.category_name))];
     const list = filter === 'all' ? this.leads : this.leads.filter(l => l.category_name === filter);
 
@@ -11427,11 +11370,6 @@ const SB = {
     if (el) el.innerHTML = this._tLeads(filter);
   },
 };
-
-// [DIAG-3] SB initialization
-console.log('[SB-DIAG] SB init — raw localStorage:', localStorage.getItem(LeadStore.KEYS.sb));
-console.log('[SB-DIAG] SB init — LeadStore.load result:', LeadStore.load(LeadStore.KEYS.sb));
-console.log('[SB-DIAG] SB init — final SB.leads:', JSON.parse(JSON.stringify(SB.leads)));
 
 // Intercept ShellRouter admin navigation
 const _origShellGo = ShellRouter.go.bind(ShellRouter);
