@@ -7112,7 +7112,8 @@ body {
         </div>
       </nav>
       <div class="adm-sidebar-footer">
-        <span class="adm-user-label">admin</span>
+        <span class="adm-user-label">Drive@paz</span>
+        <button class="adm-logout-btn" style="font-size:11px;padding:4px 10px;" onclick="AdminAuth.changePassword()">שנה סיסמה</button>
         <button class="adm-logout-btn" onclick="AdminAuth.logout()">יציאה</button>
       </div>
     </aside>
@@ -10609,10 +10610,20 @@ if (DRIVE_SMART_BTN_ENABLED) {
 
 <script>
 const AdminAuth = {
-  // NOTE: Front-end demo protection only — credentials visible in source.
-  CREDS: { username: 'admin', password: '123456' },
-  LS_KEY: 'isAdminAuthenticated',
+  // Default credentials — localStorage overrides if set
+  _DEFAULT_USER: 'Drive@paz',
+  _DEFAULT_PASS: '123456',
+  LS_KEY:  'isAdminAuthenticated',
+  LS_USER: 'admin_username',
+  LS_PASS: 'admin_password',
   _pendingDest: null,
+
+  _getCreds() {
+    return {
+      username: localStorage.getItem(this.LS_USER) || this._DEFAULT_USER,
+      password: localStorage.getItem(this.LS_PASS) || this._DEFAULT_PASS,
+    };
+  },
 
   isAuthenticated() {
     return localStorage.getItem(this.LS_KEY) === 'true';
@@ -10632,11 +10643,11 @@ const AdminAuth = {
     const username = document.getElementById('admin-login-user').value.trim();
     const password = document.getElementById('admin-login-password').value;
     const errEl    = document.getElementById('admin-login-error');
-    if (username === this.CREDS.username && password === this.CREDS.password) {
+    const creds    = this._getCreds();
+    if (username === creds.username && password === creds.password) {
       localStorage.setItem(this.LS_KEY, 'true');
       document.getElementById('admin-login-overlay').style.display = 'none';
       if (this._pendingDest) {
-        const dest = this._pendingDest;
         this._pendingDest = null;
         ShellRouter.go('admin');
       }
@@ -10653,6 +10664,13 @@ const AdminAuth = {
   cancelLogin() {
     this._pendingDest = null;
     document.getElementById('admin-login-overlay').style.display = 'none';
+  },
+
+  changePassword() {
+    const newPass = prompt('סיסמה חדשה:');
+    if (!newPass || newPass.trim().length < 4) return;
+    localStorage.setItem(this.LS_PASS, newPass.trim());
+    alert('הסיסמה עודכנה בהצלחה');
   },
 };
 
