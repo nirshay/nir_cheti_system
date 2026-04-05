@@ -683,8 +683,8 @@ body {
   align-items: center;
   /* Controlled vertical placement — not center which loses header clearance */
   justify-content: flex-start;
-  padding-top: calc(64px + 48px); /* fixed header + breathing room */
-  padding-bottom: 120px;
+  padding-top: calc(64px + 32px); /* fixed header + breathing room */
+  padding-bottom: 60px;
   overflow: visible;
   background: #0a0906;
 }
@@ -1144,7 +1144,7 @@ body {
 
 /* ── MOBILE ────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .hp-hero-stage { min-height: 100vh; padding-top: calc(110px + 24px); padding-bottom: 120px; }
+  .hp-hero-stage { min-height: 100vh; padding-top: calc(110px + 16px); padding-bottom: 60px; }
   .hp-stage-scene { height: 380px; perspective: 800px; transform: scale(0.65); }
   .hp-stage-platform-wrap { width: 500px; height: 500px; }
   .hp-stage-floor { width: 500px; height: 500px; }
@@ -1415,7 +1415,7 @@ body {
 /* ── FEATURED VEHICLES ───────────────────────────────────── */
 .featured-section {
   background: var(--hp-gray-970);
-  padding: 80px 40px;
+  padding: 52px 40px;
 }
 .section-eyebrow {
   display: flex; align-items: center; gap: 10px;
@@ -1434,7 +1434,7 @@ body {
   line-height: 1.05;
 }
 .section-title em { color: var(--hp-amber-400); font-style: normal; }
-.section-sub { font-size: 15px; color: var(--hp-gray-400); margin-bottom: 48px; max-width: 440px; }
+.section-sub { font-size: 15px; color: var(--hp-gray-400); margin-bottom: 28px; max-width: 440px; }
 
 .featured-grid {
   display: grid;
@@ -1518,7 +1518,7 @@ body {
   background: linear-gradient(135deg, #0d0a04 0%, #110e06 50%, #0a0d14 100%);
   border-top: 1px solid rgba(200,168,75,0.12);
   border-bottom: 1px solid rgba(200,168,75,0.12);
-  padding: 72px 40px;
+  padding: 48px 40px;
   display: flex; align-items: center; gap: 80px;
 }
 .lead-strip-copy { flex: 1; }
@@ -1657,7 +1657,7 @@ body {
   .split-divider { display: none; }
   .trust-strip { gap: 0; overflow-x: auto; padding: 20px 24px; justify-content: flex-start; }
   .trust-item { padding: 0 20px; flex-shrink: 0; }
-  .featured-section { padding: 56px 20px; }
+  .featured-section { padding: 40px 20px; }
   .featured-grid { grid-template-columns: 1fr; gap: 12px; overflow: hidden; }
   .featured-card  { min-width: 0; overflow: hidden; }
   .hp-split-grid  {
@@ -1671,7 +1671,7 @@ body {
   }
   .hp-split-grid::-webkit-scrollbar { display: none; }
   .hp-split-item { width: 75%; flex-shrink: 0; scroll-snap-align: start; }
-  .lead-strip { flex-direction: column; gap: 40px; padding: 56px 20px; }
+  .lead-strip { flex-direction: column; gap: 40px; padding: 40px 20px; }
   .lead-strip-form { width: 100%; }
   .hp-footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; gap: 16px; }
 }
@@ -5927,7 +5927,7 @@ body {
        SHARED: YAD1 HEADER
   ============================================================ -->
   <header class="yad1-header" id="y1-yad1Header" dir="ltr">
-    <div class="header-logo" onclick="ShellRouter.go('home')" style="cursor:pointer;">
+    <div class="header-logo" onclick="window.location.href='https://drivetradecar.co.il/'" style="cursor:pointer;">
       <img class="y1-logo-img" src="./image.png" alt="Drive Car Rental">
     </div>
     <nav class="header-nav">
@@ -6382,7 +6382,7 @@ body {
       <header class="yad2-header">
         <div class="yad2-header-top" dir="ltr">
           <div>
-            <div class="yad2-logo-wrap" onclick="ShellRouter.go('home')" style="cursor:pointer;">
+            <div class="yad2-logo-wrap" onclick="window.location.href='https://drivetradecar.co.il/'" style="cursor:pointer;">
               <img class="y2-logo-img" src="./image.png" alt="Drive Car Rental">
             </div>
           </div>
@@ -6516,7 +6516,7 @@ body {
       <header class="yad2-header">
         <div class="yad2-header-top" dir="ltr">
           <div>
-            <div class="yad2-logo-wrap" onclick="ShellRouter.go('home')" style="cursor:pointer;">
+            <div class="yad2-logo-wrap" onclick="window.location.href='https://drivetradecar.co.il/'" style="cursor:pointer;">
               <img class="y2-logo-img" src="./image.png" alt="Drive Car Rental">
             </div>
           </div>
@@ -7082,7 +7082,7 @@ body {
   <div class="shell-section" id="shell-admin">
   <div class="adm-app" data-theme="adm">
     <aside class="adm-sidebar">
-      <div class="adm-brand" onclick="ShellRouter.go('home')" style="cursor:pointer;">
+      <div class="adm-brand" onclick="window.location.href='https://drivetradecar.co.il/'" style="cursor:pointer;">
         <img src="./image.png" alt="Drive Car Rental" style="height:110px;max-width:100%;object-fit:contain;display:block;transition:opacity 180ms ease;" onmouseover="this.style.opacity='0.82'" onmouseout="this.style.opacity='1'">
         <div class="adm-brand-sub">מערכת ניהול</div>
       </div>
@@ -10523,11 +10523,11 @@ if (DRIVE_SMART_BTN_ENABLED) {
      ADMIN LOGIN OVERLAY
 ============================================================ -->
 <div id="admin-login-overlay" style="display:none;">
-  <div class="admin-login-logo" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">
+  <div class="admin-login-logo" onclick="AdminAuth.cancelLogin();window.location.href='https://drivetradecar.co.il/'" title="חזרה לאתר">
     <img src="./image.png" alt="Drive" style="height:80px;width:auto;object-fit:contain;display:block;">
   </div>
   <div class="admin-login-box">
-    <button class="admin-login-dismiss" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">✕</button>
+    <button class="admin-login-dismiss" onclick="AdminAuth.cancelLogin();window.location.href='https://drivetradecar.co.il/'" title="חזרה לאתר">✕</button>
     <div class="admin-login-title">כניסת מנהלים</div>
     <div class="admin-login-sub">Admin Access Only</div>
     <div class="admin-login-field">
