@@ -10523,22 +10523,23 @@ if (DRIVE_SMART_BTN_ENABLED) {
      ADMIN LOGIN OVERLAY
 ============================================================ -->
 <div id="admin-login-overlay" style="display:none;">
+  <button class="admin-login-dismiss" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">✕</button>
   <div class="admin-login-box">
-    <button class="admin-login-close" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">✕</button>
-    <div class="admin-login-logo" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">Drive</div>
+    <div class="admin-login-logo" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">
+      <img src="./image.png" alt="Drive" style="height:80px;width:auto;object-fit:contain;display:block;margin:0 auto;">
+    </div>
     <div class="admin-login-title">כניסת מנהלים</div>
     <div class="admin-login-sub">Admin Access Only</div>
     <div class="admin-login-field">
       <label class="admin-login-label">שם משתמש</label>
-      <input id="admin-login-user" class="admin-login-input" type="text" placeholder="admin" dir="ltr" autocomplete="username">
+      <input id="admin-login-user" class="admin-login-input" type="text" placeholder="Drive@paz" dir="ltr" autocomplete="username">
     </div>
     <div class="admin-login-field">
       <label class="admin-login-label">סיסמה</label>
       <input id="admin-login-password" class="admin-login-input" type="password" placeholder="••••••" dir="ltr">
     </div>
-    <div id="admin-login-error" class="admin-login-error" style="display:none;">אימייל או סיסמה שגויים</div>
+    <div id="admin-login-error" class="admin-login-error" style="display:none;">שם משתמש או סיסמה שגויים</div>
     <button class="admin-login-btn" onclick="AdminAuth.attempt()">כניסה ←</button>
-    <button class="admin-login-cancel" onclick="AdminAuth.cancelLogin()">ביטול</button>
   </div>
 </div>
 
@@ -10549,35 +10550,41 @@ if (DRIVE_SMART_BTN_ENABLED) {
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
 }
+.admin-login-dismiss {
+  position: absolute; top: 28px; right: 28px;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.20);
+  color: rgba(255,255,255,0.82);
+  font-size: 22px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-family: 'Heebo', sans-serif;
+  transition: background 200ms, border-color 200ms, color 200ms, transform 200ms;
+  backdrop-filter: blur(4px);
+}
+.admin-login-dismiss:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.45);
+  color: #fff;
+  transform: scale(1.08);
+}
 .admin-login-box {
-  position: relative;
   background: #0e1016;
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 6px;
-  padding: 40px 36px 32px;
+  padding: 32px 36px 32px;
   width: 340px;
   display: flex; flex-direction: column; gap: 0;
   box-shadow: 0 24px 60px rgba(0,0,0,0.6);
   font-family: 'Heebo', sans-serif;
   direction: rtl;
 }
-.admin-login-close {
-  position: absolute; top: 14px; right: 14px;
-  background: none; border: none;
-  color: rgba(255,255,255,0.28); font-size: 15px;
-  width: 28px; height: 28px; border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-family: 'Heebo', sans-serif;
-  transition: color 180ms, background 180ms;
-}
-.admin-login-close:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.08); }
 .admin-login-logo {
-  font-size: 22px; font-weight: 900; color: #c8a84b;
-  letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 20px;
+  display: flex; justify-content: center;
+  margin-bottom: 24px;
   cursor: pointer; transition: opacity 180ms;
 }
-.admin-login-logo:hover { opacity: 0.75; }
+.admin-login-logo:hover { opacity: 0.80; }
 .admin-login-title {
   font-size: 20px; font-weight: 800; color: #f0ece4;
   margin-bottom: 4px;
