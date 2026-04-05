@@ -7745,7 +7745,7 @@ const HP_TurntableController = {
       const scale  = 1.20 - t2 * 0.82;      // 1.20 → 0.38
       const transY = -4   + t  * 34;         // -4px → 30px
       const opa    = 1.0  - t2 * 0.90;       // 1.00 → 0.10
-      const blur   = t    * 1.2;             // 0    → 1.2px
+      const blur   = 0;                      // no blur — depth via scale/opacity/brightness
       const brite  = 1.08 - t  * 0.80;       // 1.08 → 0.28
 
       const card = slot.querySelector('.hp-turntable-card');
