@@ -848,10 +848,7 @@ body {
   background: transparent;
   border: none;
   box-shadow: none;
-  transition:
-    transform     500ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity       500ms ease,
-    filter        500ms ease;
+  transition: none;
   backface-visibility: hidden;
   will-change: transform, opacity, filter;
 }
@@ -983,11 +980,7 @@ body {
   opacity: 1;
 }
 
-/* Active slot — front vehicle hover lifts slightly */
-.hp-turntable-slot[data-depth="0"]:hover .hp-turntable-card {
-  transform: scale(1.30) translateY(-8px);
-  filter: blur(0) brightness(1.12);
-}
+
 
 /* Floating CTA — appears only on front vehicle, positioned in 3D space */
 .hp-turntable-slot-cta {
@@ -7636,7 +7629,7 @@ const HP_TurntableController = {
   slotsEl:    null,
   angle:      0,          // current platform rotateY in degrees
   paused:     false,
-  SPEED:      0.018,      // degrees per ms  →  ~33s per full rotation at 60fps
+  SPEED:      0.010,      // degrees per ms  →  ~36s per full rotation at 60fps
   TILT:       16,         // rotateX tilt (degrees) — camera looks slightly down
   RADIUS:     280,        // translateZ distance from center (px)
   _lastTs:    undefined,
@@ -7741,24 +7734,37 @@ const HP_TurntableController = {
       distances.push({ slot, dist });
     });
 
-    // Sort by distance — closest = depth 0, next two = depth 1, rest = depth 2
+    // Sort by distance — closest = front
     distances.sort((a, b) => a.dist - b.dist);
-    distances.forEach(({ slot }, rank) => {
-      const depth = Math.min(rank, 4);
-      slot.dataset.depth = depth;
+
+    distances.forEach(({ slot, dist }, rank) => {
+      // Continuous t: 0 = front, 1 = back
+      const t  = dist / 180;
+      const t2 = t * t; // quadratic — gentler near front, steeper at back
+
+      const scale  = 1.20 - t2 * 0.82;      // 1.20 → 0.38
+      const transY = -4   + t  * 34;         // -4px → 30px
+      const opa    = 1.0  - t2 * 0.90;       // 1.00 → 0.10
+      const blur   = t    * 3;               // 0    → 3px
+      const brite  = 1.08 - t  * 0.80;       // 1.08 → 0.28
+
+      const card = slot.querySelector('.hp-turntable-card');
+      if (card) {
+        card.style.transform = `scale(${scale.toFixed(3)}) translateY(${transY.toFixed(1)}px)`;
+        card.style.opacity   = opa.toFixed(3);
+        card.style.filter    = `blur(${blur.toFixed(2)}px) brightness(${brite.toFixed(3)})`;
+      }
+
+      // Keep data-depth for label / CTA / glow CSS selectors only
+      slot.dataset.depth = Math.min(rank, 4);
     });
 
-    // Focus tracking — trigger pop animation and sync panel on change
+    // Focus tracking — panel sync only, no pop or forced reflow
     const frontSlot = distances[0].slot;
     const idx = parseInt(frontSlot.dataset.idx, 10);
     const v   = this.vehicles[idx];
     if (v && this._lastFocus !== v.id) {
       this._lastFocus = v.id;
-      // Pop animation — brief entering class
-      frontSlot.classList.remove('hp-slot-entering');
-      void frontSlot.offsetWidth; // reflow
-      frontSlot.classList.add('hp-slot-entering');
-      setTimeout(() => frontSlot.classList.remove('hp-slot-entering'), 600);
       this._syncPanel(v);
     }
   },
