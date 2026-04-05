@@ -862,19 +862,29 @@ body {
    2 = back (behind)
    ─────────────────────────────────────────────────────────── */
 .hp-turntable-slot[data-depth="0"] .hp-turntable-card {
-  transform: scale(1.25) translateY(-2px);
+  transform: scale(1.20) translateY(-4px);
   opacity: 1;
   filter: blur(0) brightness(1.08);
 }
 .hp-turntable-slot[data-depth="1"] .hp-turntable-card {
-  transform: scale(0.82);
-  opacity: 0.55;
-  filter: blur(0.5px) brightness(0.7);
+  transform: scale(0.88) translateY(4px);
+  opacity: 0.68;
+  filter: blur(0.4px) brightness(0.82);
 }
 .hp-turntable-slot[data-depth="2"] .hp-turntable-card {
-  transform: scale(0.58);
-  opacity: 0.25;
-  filter: blur(1.5px) brightness(0.4);
+  transform: scale(0.68) translateY(14px);
+  opacity: 0.42;
+  filter: blur(1.2px) brightness(0.58);
+}
+.hp-turntable-slot[data-depth="3"] .hp-turntable-card {
+  transform: scale(0.52) translateY(22px);
+  opacity: 0.24;
+  filter: blur(2px) brightness(0.42);
+}
+.hp-turntable-slot[data-depth="4"] .hp-turntable-card {
+  transform: scale(0.40) translateY(28px);
+  opacity: 0.12;
+  filter: blur(3px) brightness(0.28);
 }
 
 /* ── FOCUS MOMENT ─────────────────────────────────────────── */
@@ -883,9 +893,9 @@ body {
   animation: hp-vehicle-pop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @keyframes hp-vehicle-pop {
-  0%   { transform: scale(1.10) translateY(0px);  }
-  55%  { transform: scale(1.30) translateY(-10px); }
-  100% { transform: scale(1.25) translateY(-2px);  }
+  0%   { transform: scale(1.05) translateY(0px);   }
+  55%  { transform: scale(1.28) translateY(-10px); }
+  100% { transform: scale(1.20) translateY(-4px);  }
 }
 
 /* Ambient glow on floor when front vehicle is present */
@@ -7650,7 +7660,7 @@ const HP_TurntableController = {
   },
 
   _buildSlots() {
-    const n = Math.min(this.vehicles.length, 6);
+    const n = this.vehicles.length;
     const step = 360 / n;
     this.slotsEl.innerHTML = '';
 
@@ -7734,7 +7744,7 @@ const HP_TurntableController = {
     // Sort by distance — closest = depth 0, next two = depth 1, rest = depth 2
     distances.sort((a, b) => a.dist - b.dist);
     distances.forEach(({ slot }, rank) => {
-      const depth = rank === 0 ? 0 : rank <= 2 ? 1 : 2;
+      const depth = Math.min(rank, 4);
       slot.dataset.depth = depth;
     });
 
