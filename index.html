@@ -10515,7 +10515,8 @@ if (DRIVE_SMART_BTN_ENABLED) {
 ============================================================ -->
 <div id="admin-login-overlay" style="display:none;">
   <div class="admin-login-box">
-    <div class="admin-login-logo">Drive</div>
+    <button class="admin-login-close" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">✕</button>
+    <div class="admin-login-logo" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">Drive</div>
     <div class="admin-login-title">כניסת מנהלים</div>
     <div class="admin-login-sub">Admin Access Only</div>
     <div class="admin-login-field">
@@ -10540,6 +10541,7 @@ if (DRIVE_SMART_BTN_ENABLED) {
   display: flex; align-items: center; justify-content: center;
 }
 .admin-login-box {
+  position: relative;
   background: #0e1016;
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 6px;
@@ -10550,11 +10552,23 @@ if (DRIVE_SMART_BTN_ENABLED) {
   font-family: 'Heebo', sans-serif;
   direction: rtl;
 }
+.admin-login-close {
+  position: absolute; top: 14px; right: 14px;
+  background: none; border: none;
+  color: rgba(255,255,255,0.28); font-size: 15px;
+  width: 28px; height: 28px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-family: 'Heebo', sans-serif;
+  transition: color 180ms, background 180ms;
+}
+.admin-login-close:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.08); }
 .admin-login-logo {
   font-size: 22px; font-weight: 900; color: #c8a84b;
   letter-spacing: 2px; text-transform: uppercase;
   margin-bottom: 20px;
+  cursor: pointer; transition: opacity 180ms;
 }
+.admin-login-logo:hover { opacity: 0.75; }
 .admin-login-title {
   font-size: 20px; font-weight: 800; color: #f0ece4;
   margin-bottom: 4px;
