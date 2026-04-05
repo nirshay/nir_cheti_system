@@ -7114,11 +7114,11 @@ body {
       <div class="adm-sidebar-footer">
         <span class="adm-user-label">Drive@paz</span>
         <button class="adm-logout-btn" style="font-size:11px;padding:4px 10px;" onclick="AdminAuth.changePassword()">שנה סיסמה</button>
-        <button class="adm-logout-btn" onclick="AdminAuth.logout()">יציאה</button>
       </div>
     </aside>
     <div class="adm-main" id="adm-main"></div>
   </div>
+  <button class="adm-topbar-logout" onclick="AdminAuth.logout()">יציאה ←</button>
   </div><!-- /shell-admin -->
 
 </div><!-- /drive-shell -->
@@ -7162,6 +7162,15 @@ body {
 .adm-user-label { font-size:13px; color:var(--adm-text2); flex:1; }
 .adm-logout-btn { background:none; border:1px solid var(--adm-border2); color:var(--adm-text2); padding:5px 12px; border-radius:4px; cursor:pointer; font-size:12px; font-family:'Heebo',sans-serif; transition:150ms; }
 .adm-logout-btn:hover { border-color:var(--adm-red); color:var(--adm-red); }
+.adm-topbar-logout {
+  position: fixed; top: 20px; left: 20px; z-index: 200;
+  background: rgba(14,16,22,0.92); border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.55); padding: 7px 16px;
+  border-radius: 5px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: 'Heebo', sans-serif;
+  backdrop-filter: blur(8px); transition: border-color 180ms, color 180ms, background 180ms;
+}
+.adm-topbar-logout:hover { border-color: #e05050; color: #e05050; background: rgba(224,80,80,0.08); }
 
 /* Main */
 .adm-main { flex:1; display:flex; flex-direction:column; min-width:0; background:var(--adm-bg); }
