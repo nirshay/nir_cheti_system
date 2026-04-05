@@ -7658,7 +7658,7 @@ const HP_TurntableController = {
       const v = this.vehicles[i];
       const baseAngle = step * i;
 
-      const img = `<div class="hp-turntable-card-emoji">${v.emoji || '🚗'}</div>`;
+      const img = `<div class="hp-turntable-card-emoji"><img src="./Drive-pic-from-Adi/${(i % 8) + 6}.png" style="width:100%;height:100%;object-fit:contain;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display=''"><span style="display:none">${v.emoji || '🚗'}</span></div>`;
 
       const slot = document.createElement('div');
       slot.className = 'hp-turntable-slot';
@@ -7898,9 +7898,9 @@ function renderSplitPreviews() {
   const g2 = document.getElementById('hp-split-y2-grid');
   if (g1 && typeof Y1_Engine !== 'undefined') {
     const veh = Y1_Engine.vehicles.filter(v => v.status === 'ACTIVE').slice(0, 4);
-    g1.innerHTML = veh.map(v => {
+    g1.innerHTML = veh.map((v, i) => {
       const priceStr = v.price > 0 ? '₪' + v.price.toLocaleString() : 'מחיר לפי בקשה';
-      const imgHtml = `<div class="hp-split-item-img">${v.emoji || '🚗'}</div>`;
+      const imgHtml = `<div class="hp-split-item-img"><img src="./Drive-pic-from-Adi/${(i % 8) + 6}.png" style="width:100%;height:100%;object-fit:contain;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display=''"><span style="display:none">${v.emoji || '🚗'}</span></div>`;
       return `<div class="hp-split-item" onclick="event.stopPropagation();ShellRouter.go('yad1')">
         ${imgHtml}
         <div class="hp-split-item-model">${v.manufacturer} ${v.model}</div>
@@ -7910,9 +7910,9 @@ function renderSplitPreviews() {
   }
   if (g2 && typeof Y2_Engine !== 'undefined') {
     const veh = Y2_Engine.vehicles.filter(v => v.listing_type === 'yad2' && v.status === 'ACTIVE').slice(0, 4);
-    g2.innerHTML = veh.map(v => {
+    g2.innerHTML = veh.map((v, i) => {
       const priceStr = v.price > 0 ? '₪' + v.price.toLocaleString() : 'מחיר לפי בקשה';
-      const imgHtml = `<div class="hp-split-item-img">🚗</div>`;
+      const imgHtml = `<div class="hp-split-item-img"><img src="./Drive-pic-from-Adi/${(i % 8) + 6}.png" style="width:100%;height:100%;object-fit:contain;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display=''"><span style="display:none">🚗</span></div>`;
       return `<div class="hp-split-item" onclick="event.stopPropagation();ShellRouter.go('yad2')">
         ${imgHtml}
         <div class="hp-split-item-model">${v.manufacturer} ${v.model} ${v.year}</div>
