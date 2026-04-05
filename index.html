@@ -10664,6 +10664,25 @@ document.getElementById('admin-login-password').addEventListener('keydown', e =>
   if (e.key === 'Enter') AdminAuth.attempt();
 });
 
+// Hidden admin entry: 5 logo clicks within 4 seconds
+(function () {
+  var _n = 0, _t = null;
+  var hdr = document.getElementById('hp-hpHeader');
+  if (!hdr) return;
+  hdr.addEventListener('click', function (e) {
+    if (!e.target.closest('.hp-logo-wrap')) return;
+    clearTimeout(_t);
+    _n++;
+    if (_n >= 5) {
+      _n = 0;
+      e.stopPropagation(); // prevent logo's ShellRouter.go('home') on trigger click
+      ShellRouter.go('admin'); // AdminAuth intercepts if not authenticated
+      return;
+    }
+    _t = setTimeout(function () { _n = 0; }, 4000);
+  }, true); // capture phase — fires before logo's inline onclick
+})();
+
 /* ============================================================
    ADMIN MVP — AdminApp
    Static front-end admin panel. No backend. Demo data only.
