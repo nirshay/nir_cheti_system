@@ -10523,11 +10523,11 @@ if (DRIVE_SMART_BTN_ENABLED) {
      ADMIN LOGIN OVERLAY
 ============================================================ -->
 <div id="admin-login-overlay" style="display:none;">
-  <button class="admin-login-dismiss" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">✕</button>
+  <div class="admin-login-logo" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">
+    <img src="./image.png" alt="Drive" style="height:80px;width:auto;object-fit:contain;display:block;">
+  </div>
   <div class="admin-login-box">
-    <div class="admin-login-logo" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">
-      <img src="./image.png" alt="Drive" style="height:80px;width:auto;object-fit:contain;display:block;margin:0 auto;">
-    </div>
+    <button class="admin-login-dismiss" onclick="AdminAuth.cancelLogin();ShellRouter.go('home')" title="חזרה לאתר">✕</button>
     <div class="admin-login-title">כניסת מנהלים</div>
     <div class="admin-login-sub">Admin Access Only</div>
     <div class="admin-login-field">
@@ -10550,25 +10550,13 @@ if (DRIVE_SMART_BTN_ENABLED) {
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
 }
-.admin-login-dismiss {
-  position: absolute; top: 28px; right: 28px;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.20);
-  color: rgba(255,255,255,0.82);
-  font-size: 22px; line-height: 1;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-family: 'Heebo', sans-serif;
-  transition: background 200ms, border-color 200ms, color 200ms, transform 200ms;
-  backdrop-filter: blur(4px);
+.admin-login-logo {
+  position: absolute; top: 24px; left: 24px;
+  cursor: pointer; transition: opacity 180ms;
 }
-.admin-login-dismiss:hover {
-  background: rgba(255,255,255,0.15);
-  border-color: rgba(255,255,255,0.45);
-  color: #fff;
-  transform: scale(1.08);
-}
+.admin-login-logo:hover { opacity: 0.75; }
 .admin-login-box {
+  position: relative;
   background: #0e1016;
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 6px;
@@ -10579,12 +10567,24 @@ if (DRIVE_SMART_BTN_ENABLED) {
   font-family: 'Heebo', sans-serif;
   direction: rtl;
 }
-.admin-login-logo {
-  display: flex; justify-content: center;
-  margin-bottom: 24px;
-  cursor: pointer; transition: opacity 180ms;
+.admin-login-dismiss {
+  position: absolute; top: -22px; right: -22px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(14,16,22,0.95);
+  border: 1px solid rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.85);
+  font-size: 18px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-family: 'Heebo', sans-serif;
+  transition: background 180ms, border-color 180ms, color 180ms, transform 180ms;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.45);
 }
-.admin-login-logo:hover { opacity: 0.80; }
+.admin-login-dismiss:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.50);
+  color: #fff;
+  transform: scale(1.10);
+}
 .admin-login-title {
   font-size: 20px; font-weight: 800; color: #f0ece4;
   margin-bottom: 4px;
