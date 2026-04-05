@@ -5630,7 +5630,7 @@ body {
   <nav class="hp-nav">
     <span class="hp-nav-link" onclick="ShellRouter.go('yad1')">רכבים חדשים</span>
     <span class="hp-nav-link" onclick="ShellRouter.go('yad2')">רכבי יד 2</span>
-    <span class="hp-nav-link" onclick="window.hp_scrollToSection('featured-section')">מבחר רכבים</span>
+    <span class="hp-nav-link" onclick="window.hp_scrollToSection('contact-section')">צרו קשר</span>
     <span class="hp-nav-link" onclick="window.hp_scrollToSection('contact-section')">צרו קשר</span>
   </nav>
   <div class="hp-header-right">
@@ -5648,7 +5648,7 @@ body {
   <div class="hp-mobile-menu" id="hp-mobile-menu" role="navigation">
     <span class="hp-mobile-nav-item" onclick="hp_mobileGo('yad1')">רכבים חדשים</span>
     <span class="hp-mobile-nav-item" onclick="hp_mobileGo('yad2')">רכבי יד 2</span>
-    <span class="hp-mobile-nav-item" onclick="hp_mobileScroll('featured-section')">מבחר רכבים</span>
+    <span class="hp-mobile-nav-item" onclick="hp_mobileScroll('contact-section')">צרו קשר</span>
     <span class="hp-mobile-nav-item" onclick="hp_mobileScroll('contact-section')">צרו קשר</span>
   </div>
 </header>
@@ -5814,43 +5814,6 @@ body {
     </div>
   </div>
 </div>
-
-<!-- ============================================================
-     FEATURED VEHICLES
-============================================================ -->
-<section class="featured-section" id="hp-featured-section">
-  <div style="max-width:1280px;margin:0 auto;">
-    <div class="section-eyebrow reveal">
-      <span class="section-eyebrow-line"></span>
-      <span class="section-eyebrow-text">נבחרים עכשיו</span>
-    </div>
-    <h2 class="section-title reveal">רכבים <em>שכדאי לפגוש.</em></h2>
-    <p class="section-sub reveal">בחירה ידנית מתוך המלאי — יד 1 ויד 2.</p>
-
-    <div class="featured-grid" id="hp-featuredGrid">
-      <!-- Injected by JS -->
-    </div>
-
-    <div style="margin-top:32px;display:flex;gap:12px;" class="reveal">
-      <button
-        onclick="ShellRouter.go('yad1')"
-        style="padding:11px 24px;background:rgba(200,168,75,0.10);color:#c8a84b;border:1px solid rgba(200,168,75,0.28);font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;transition:all 200ms ease;"
-        onmouseover="this.style.background='rgba(200,168,75,0.18)'"
-        onmouseout="this.style.background='rgba(200,168,75,0.10)'"
-      >
-        רכבים חדשים ←
-      </button>
-      <button
-        onclick="ShellRouter.go('yad2')"
-        style="padding:11px 24px;background:#e8f0fe;color:#2356e8;border:1px solid rgba(35,86,232,0.22);font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;transition:all 200ms ease;"
-        onmouseover="this.style.background='#d0e1fd'"
-        onmouseout="this.style.background='#e8f0fe'"
-      >
-        כל מלאי יד 2 ←
-      </button>
-    </div>
-  </div>
-</section>
 
 <!-- ============================================================
      LEAD STRIP
@@ -7861,7 +7824,7 @@ window.hp_scrollToSection = function hp_scrollToSection(id) {
   // IDs were prefixed hp- during shell assembly — map bare IDs to prefixed ones
   const idMap = {
     'contact-section':  'hp-contact-section',
-    'featured-section': 'hp-featured-section',
+    'featured-section': 'hp-contact-section',
     'split-section':    'hp-split-section',
     'trust-strip':      'hp-trust-strip',
   };
